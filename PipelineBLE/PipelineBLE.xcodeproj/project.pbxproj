@@ -1,0 +1,489 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		B97BC49322FB3EEE00858CA9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97BC49222FB3EEE00858CA9 /* AppDelegate.swift */; };
+		B97BC49522FB3EEE00858CA9 /* SavedDevicesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97BC49422FB3EEE00858CA9 /* SavedDevicesViewController.swift */; };
+		B97BC49A22FB3EFF00858CA9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B97BC49922FB3EFF00858CA9 /* Assets.xcassets */; };
+		B97BC49D22FB3EFF00858CA9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B97BC49B22FB3EFF00858CA9 /* LaunchScreen.storyboard */; };
+		B97BC4AB22FB47C200858CA9 /* SavedDevicesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97BC4AA22FB47C200858CA9 /* SavedDevicesTableViewCell.swift */; };
+		B97BC4AE22FB4C7100858CA9 /* UARTViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97BC4AD22FB4C7100858CA9 /* UARTViewController.swift */; };
+		B97BC4BD22FB5EE400858CA9 /* UartDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97BC4B522FB5EE200858CA9 /* UartDataManager.swift */; };
+		B97BC4BE22FB5EE400858CA9 /* BleManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97BC4B622FB5EE200858CA9 /* BleManager.swift */; };
+		B97BC4BF22FB5EE400858CA9 /* BlePeripheral+Battery.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97BC4B722FB5EE300858CA9 /* BlePeripheral+Battery.swift */; };
+		B97BC4C022FB5EE400858CA9 /* BlePeripheral.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97BC4B822FB5EE300858CA9 /* BlePeripheral.swift */; };
+		B97BC4C122FB5EE400858CA9 /* UartLogManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97BC4B922FB5EE300858CA9 /* UartLogManager.swift */; };
+		B97BC4C222FB5EE400858CA9 /* BlePeripheral+Uart.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97BC4BA22FB5EE300858CA9 /* BlePeripheral+Uart.swift */; };
+		B97BC4C322FB5EE400858CA9 /* UartPacketManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97BC4BB22FB5EE300858CA9 /* UartPacketManager.swift */; };
+		B97BC4C422FB5EE400858CA9 /* BleUUIDNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97BC4BC22FB5EE400858CA9 /* BleUUIDNames.swift */; };
+		B97BC4CB22FB5EFF00858CA9 /* UartPeripheralService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97BC4C622FB5EFE00858CA9 /* UartPeripheralService.swift */; };
+		B97BC4CC22FB5EFF00858CA9 /* PeripheralService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97BC4C722FB5EFE00858CA9 /* PeripheralService.swift */; };
+		B97BC4CD22FB5EFF00858CA9 /* GattServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97BC4C822FB5EFF00858CA9 /* GattServer.swift */; };
+		B97BC4CE22FB5EFF00858CA9 /* UartPeripheralModePacketManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97BC4C922FB5EFF00858CA9 /* UartPeripheralModePacketManager.swift */; };
+		B97BC4CF22FB5EFF00858CA9 /* DeviceInformationPeripheralService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97BC4CA22FB5EFF00858CA9 /* DeviceInformationPeripheralService.swift */; };
+		B97BC4D122FB5F0900858CA9 /* UartPacketManagerBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97BC4D022FB5F0900858CA9 /* UartPacketManagerBase.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		B97BC48F22FB3EEE00858CA9 /* PipelineBLE.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PipelineBLE.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B97BC49222FB3EEE00858CA9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		B97BC49422FB3EEE00858CA9 /* SavedDevicesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedDevicesViewController.swift; sourceTree = "<group>"; };
+		B97BC49922FB3EFF00858CA9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		B97BC49C22FB3EFF00858CA9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		B97BC49E22FB3EFF00858CA9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B97BC4AA22FB47C200858CA9 /* SavedDevicesTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SavedDevicesTableViewCell.swift; sourceTree = "<group>"; };
+		B97BC4AD22FB4C7100858CA9 /* UARTViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UARTViewController.swift; sourceTree = "<group>"; };
+		B97BC4B522FB5EE200858CA9 /* UartDataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UartDataManager.swift; sourceTree = "<group>"; };
+		B97BC4B622FB5EE200858CA9 /* BleManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BleManager.swift; sourceTree = "<group>"; };
+		B97BC4B722FB5EE300858CA9 /* BlePeripheral+Battery.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "BlePeripheral+Battery.swift"; sourceTree = "<group>"; };
+		B97BC4B822FB5EE300858CA9 /* BlePeripheral.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlePeripheral.swift; sourceTree = "<group>"; };
+		B97BC4B922FB5EE300858CA9 /* UartLogManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UartLogManager.swift; sourceTree = "<group>"; };
+		B97BC4BA22FB5EE300858CA9 /* BlePeripheral+Uart.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "BlePeripheral+Uart.swift"; sourceTree = "<group>"; };
+		B97BC4BB22FB5EE300858CA9 /* UartPacketManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UartPacketManager.swift; sourceTree = "<group>"; };
+		B97BC4BC22FB5EE400858CA9 /* BleUUIDNames.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BleUUIDNames.swift; sourceTree = "<group>"; };
+		B97BC4C622FB5EFE00858CA9 /* UartPeripheralService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UartPeripheralService.swift; sourceTree = "<group>"; };
+		B97BC4C722FB5EFE00858CA9 /* PeripheralService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeripheralService.swift; sourceTree = "<group>"; };
+		B97BC4C822FB5EFF00858CA9 /* GattServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GattServer.swift; sourceTree = "<group>"; };
+		B97BC4C922FB5EFF00858CA9 /* UartPeripheralModePacketManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UartPeripheralModePacketManager.swift; sourceTree = "<group>"; };
+		B97BC4CA22FB5EFF00858CA9 /* DeviceInformationPeripheralService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceInformationPeripheralService.swift; sourceTree = "<group>"; };
+		B97BC4D022FB5F0900858CA9 /* UartPacketManagerBase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UartPacketManagerBase.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		B97BC48C22FB3EEE00858CA9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		B97BC48622FB3EEE00858CA9 = {
+			isa = PBXGroup;
+			children = (
+				B97BC49122FB3EEE00858CA9 /* PipelineBLE */,
+				B97BC49022FB3EEE00858CA9 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		B97BC49022FB3EEE00858CA9 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B97BC48F22FB3EEE00858CA9 /* PipelineBLE.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		B97BC49122FB3EEE00858CA9 /* PipelineBLE */ = {
+			isa = PBXGroup;
+			children = (
+				B97BC4AF22FB5DE600858CA9 /* Common */,
+				B97BC4A422FB407000858CA9 /* Controllers */,
+				B97BC49222FB3EEE00858CA9 /* AppDelegate.swift */,
+				B97BC49922FB3EFF00858CA9 /* Assets.xcassets */,
+				B97BC49B22FB3EFF00858CA9 /* LaunchScreen.storyboard */,
+				B97BC49E22FB3EFF00858CA9 /* Info.plist */,
+			);
+			path = PipelineBLE;
+			sourceTree = "<group>";
+		};
+		B97BC4A422FB407000858CA9 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				B97BC4A622FB408E00858CA9 /* ConnectedDeviceViewControllers */,
+				B97BC4A522FB408200858CA9 /* MainPageViewControllers */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		B97BC4A522FB408200858CA9 /* MainPageViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				B97BC4A922FB40B200858CA9 /* PastDataControllers */,
+				B97BC4A822FB40A600858CA9 /* AvailableDevicesControllers */,
+				B97BC4A722FB409A00858CA9 /* SavedDevicesControllers */,
+			);
+			path = MainPageViewControllers;
+			sourceTree = "<group>";
+		};
+		B97BC4A622FB408E00858CA9 /* ConnectedDeviceViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				B97BC4AC22FB4C5500858CA9 /* UARTControllers */,
+			);
+			path = ConnectedDeviceViewControllers;
+			sourceTree = "<group>";
+		};
+		B97BC4A722FB409A00858CA9 /* SavedDevicesControllers */ = {
+			isa = PBXGroup;
+			children = (
+				B97BC49422FB3EEE00858CA9 /* SavedDevicesViewController.swift */,
+				B97BC4AA22FB47C200858CA9 /* SavedDevicesTableViewCell.swift */,
+			);
+			path = SavedDevicesControllers;
+			sourceTree = "<group>";
+		};
+		B97BC4A822FB40A600858CA9 /* AvailableDevicesControllers */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = AvailableDevicesControllers;
+			sourceTree = "<group>";
+		};
+		B97BC4A922FB40B200858CA9 /* PastDataControllers */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = PastDataControllers;
+			sourceTree = "<group>";
+		};
+		B97BC4AC22FB4C5500858CA9 /* UARTControllers */ = {
+			isa = PBXGroup;
+			children = (
+				B97BC4AD22FB4C7100858CA9 /* UARTViewController.swift */,
+			);
+			path = UARTControllers;
+			sourceTree = "<group>";
+		};
+		B97BC4AF22FB5DE600858CA9 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				B97BC4B022FB5E4800858CA9 /* AdafruitKit */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		B97BC4B022FB5E4800858CA9 /* AdafruitKit */ = {
+			isa = PBXGroup;
+			children = (
+				B97BC4B122FB5E5D00858CA9 /* Ble */,
+			);
+			path = AdafruitKit;
+			sourceTree = "<group>";
+		};
+		B97BC4B122FB5E5D00858CA9 /* Ble */ = {
+			isa = PBXGroup;
+			children = (
+				B97BC4D022FB5F0900858CA9 /* UartPacketManagerBase.swift */,
+				B97BC4C522FB5EEA00858CA9 /* BlePeripheralMode */,
+				B97BC4B422FB5EC900858CA9 /* BleCentralMode */,
+			);
+			path = Ble;
+			sourceTree = "<group>";
+		};
+		B97BC4B422FB5EC900858CA9 /* BleCentralMode */ = {
+			isa = PBXGroup;
+			children = (
+				B97BC4B622FB5EE200858CA9 /* BleManager.swift */,
+				B97BC4B822FB5EE300858CA9 /* BlePeripheral.swift */,
+				B97BC4B722FB5EE300858CA9 /* BlePeripheral+Battery.swift */,
+				B97BC4BA22FB5EE300858CA9 /* BlePeripheral+Uart.swift */,
+				B97BC4BC22FB5EE400858CA9 /* BleUUIDNames.swift */,
+				B97BC4B522FB5EE200858CA9 /* UartDataManager.swift */,
+				B97BC4B922FB5EE300858CA9 /* UartLogManager.swift */,
+				B97BC4BB22FB5EE300858CA9 /* UartPacketManager.swift */,
+			);
+			path = BleCentralMode;
+			sourceTree = "<group>";
+		};
+		B97BC4C522FB5EEA00858CA9 /* BlePeripheralMode */ = {
+			isa = PBXGroup;
+			children = (
+				B97BC4CA22FB5EFF00858CA9 /* DeviceInformationPeripheralService.swift */,
+				B97BC4C822FB5EFF00858CA9 /* GattServer.swift */,
+				B97BC4C722FB5EFE00858CA9 /* PeripheralService.swift */,
+				B97BC4C922FB5EFF00858CA9 /* UartPeripheralModePacketManager.swift */,
+				B97BC4C622FB5EFE00858CA9 /* UartPeripheralService.swift */,
+			);
+			path = BlePeripheralMode;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		B97BC48E22FB3EEE00858CA9 /* PipelineBLE */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B97BC4A122FB3EFF00858CA9 /* Build configuration list for PBXNativeTarget "PipelineBLE" */;
+			buildPhases = (
+				B97BC48B22FB3EEE00858CA9 /* Sources */,
+				B97BC48C22FB3EEE00858CA9 /* Frameworks */,
+				B97BC48D22FB3EEE00858CA9 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PipelineBLE;
+			productName = PipelineBLE;
+			productReference = B97BC48F22FB3EEE00858CA9 /* PipelineBLE.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		B97BC48722FB3EEE00858CA9 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1020;
+				LastUpgradeCheck = 1020;
+				ORGANIZATIONNAME = "Samuel Peterson";
+				TargetAttributes = {
+					B97BC48E22FB3EEE00858CA9 = {
+						CreatedOnToolsVersion = 10.2.1;
+					};
+				};
+			};
+			buildConfigurationList = B97BC48A22FB3EEE00858CA9 /* Build configuration list for PBXProject "PipelineBLE" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = B97BC48622FB3EEE00858CA9;
+			productRefGroup = B97BC49022FB3EEE00858CA9 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				B97BC48E22FB3EEE00858CA9 /* PipelineBLE */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		B97BC48D22FB3EEE00858CA9 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B97BC49D22FB3EFF00858CA9 /* LaunchScreen.storyboard in Resources */,
+				B97BC49A22FB3EFF00858CA9 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		B97BC48B22FB3EEE00858CA9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B97BC4CE22FB5EFF00858CA9 /* UartPeripheralModePacketManager.swift in Sources */,
+				B97BC4AB22FB47C200858CA9 /* SavedDevicesTableViewCell.swift in Sources */,
+				B97BC4C322FB5EE400858CA9 /* UartPacketManager.swift in Sources */,
+				B97BC4CD22FB5EFF00858CA9 /* GattServer.swift in Sources */,
+				B97BC49522FB3EEE00858CA9 /* SavedDevicesViewController.swift in Sources */,
+				B97BC4AE22FB4C7100858CA9 /* UARTViewController.swift in Sources */,
+				B97BC4C222FB5EE400858CA9 /* BlePeripheral+Uart.swift in Sources */,
+				B97BC49322FB3EEE00858CA9 /* AppDelegate.swift in Sources */,
+				B97BC4BF22FB5EE400858CA9 /* BlePeripheral+Battery.swift in Sources */,
+				B97BC4C022FB5EE400858CA9 /* BlePeripheral.swift in Sources */,
+				B97BC4BD22FB5EE400858CA9 /* UartDataManager.swift in Sources */,
+				B97BC4CF22FB5EFF00858CA9 /* DeviceInformationPeripheralService.swift in Sources */,
+				B97BC4D122FB5F0900858CA9 /* UartPacketManagerBase.swift in Sources */,
+				B97BC4C122FB5EE400858CA9 /* UartLogManager.swift in Sources */,
+				B97BC4BE22FB5EE400858CA9 /* BleManager.swift in Sources */,
+				B97BC4CC22FB5EFF00858CA9 /* PeripheralService.swift in Sources */,
+				B97BC4C422FB5EE400858CA9 /* BleUUIDNames.swift in Sources */,
+				B97BC4CB22FB5EFF00858CA9 /* UartPeripheralService.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		B97BC49B22FB3EFF00858CA9 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B97BC49C22FB3EFF00858CA9 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		B97BC49F22FB3EFF00858CA9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		B97BC4A022FB3EFF00858CA9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		B97BC4A222FB3EFF00858CA9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = JQS7TGC8Z2;
+				INFOPLIST_FILE = PipelineBLE/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.SamPeterson.PipelineBLE;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		B97BC4A322FB3EFF00858CA9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = JQS7TGC8Z2;
+				INFOPLIST_FILE = PipelineBLE/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.SamPeterson.PipelineBLE;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		B97BC48A22FB3EEE00858CA9 /* Build configuration list for PBXProject "PipelineBLE" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B97BC49F22FB3EFF00858CA9 /* Debug */,
+				B97BC4A022FB3EFF00858CA9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B97BC4A122FB3EFF00858CA9 /* Build configuration list for PBXNativeTarget "PipelineBLE" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B97BC4A222FB3EFF00858CA9 /* Debug */,
+				B97BC4A322FB3EFF00858CA9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = B97BC48722FB3EEE00858CA9 /* Project object */;
+}
