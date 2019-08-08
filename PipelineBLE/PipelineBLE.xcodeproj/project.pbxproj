@@ -3,10 +3,11 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1DEF37D8C53C6E82192CB0E5 /* Pods_PipelineBLE.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65CB36934AAD2748645405D5 /* Pods_PipelineBLE.framework */; };
 		B97BC49322FB3EEE00858CA9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97BC49222FB3EEE00858CA9 /* AppDelegate.swift */; };
 		B97BC49522FB3EEE00858CA9 /* SavedDevicesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97BC49422FB3EEE00858CA9 /* SavedDevicesViewController.swift */; };
 		B97BC49A22FB3EFF00858CA9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B97BC49922FB3EFF00858CA9 /* Assets.xcassets */; };
@@ -27,9 +28,25 @@
 		B97BC4CE22FB5EFF00858CA9 /* UartPeripheralModePacketManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97BC4C922FB5EFF00858CA9 /* UartPeripheralModePacketManager.swift */; };
 		B97BC4CF22FB5EFF00858CA9 /* DeviceInformationPeripheralService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97BC4CA22FB5EFF00858CA9 /* DeviceInformationPeripheralService.swift */; };
 		B97BC4D122FB5F0900858CA9 /* UartPacketManagerBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97BC4D022FB5F0900858CA9 /* UartPacketManagerBase.swift */; };
+		B97BC4D722FB648F00858CA9 /* MSWeakTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = B97BC4D522FB648E00858CA9 /* MSWeakTimer.m */; };
+		B97BC4D922FB67AB00858CA9 /* LocalizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97BC4D822FB67AB00858CA9 /* LocalizationManager.swift */; };
+		B97BC4DB22FB683400858CA9 /* LogHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97BC4DA22FB683400858CA9 /* LogHelper.swift */; };
+		B97BC4DD22FB686B00858CA9 /* CommandQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97BC4DC22FB686B00858CA9 /* CommandQueue.swift */; };
+		B97BC4DF22FB6AC200858CA9 /* DataConversions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97BC4DE22FB6AC200858CA9 /* DataConversions.swift */; };
+		B97BC4E222FB6AE400858CA9 /* AlertHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97BC4E122FB6AE400858CA9 /* AlertHelper.swift */; };
+		B97BC4E422FB6AEC00858CA9 /* Data+ScanValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97BC4E322FB6AEC00858CA9 /* Data+ScanValue.swift */; };
+		B97BC4E622FB6AF600858CA9 /* DataDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97BC4E522FB6AF600858CA9 /* DataDownloader.swift */; };
+		B97BC4E822FB6AFE00858CA9 /* KeyboardPositionNotifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97BC4E722FB6AFE00858CA9 /* KeyboardPositionNotifier.swift */; };
+		B97BC4EC22FB6B5D00858CA9 /* MqttManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97BC4EA22FB6B5D00858CA9 /* MqttManager.swift */; };
+		B97BC4ED22FB6B5D00858CA9 /* MqttSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97BC4EB22FB6B5D00858CA9 /* MqttSettings.swift */; };
+		B97BC4EF22FC8FEF00858CA9 /* MainPageTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97BC4EE22FC8FEF00858CA9 /* MainPageTabBarController.swift */; };
+		B97BC4F122FC90DE00858CA9 /* AvailableDevicesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97BC4F022FC90DE00858CA9 /* AvailableDevicesViewController.swift */; };
+		B97BC4F322FCA27900858CA9 /* PastDataViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97BC4F222FCA27900858CA9 /* PastDataViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		11510BAA3628386FECC3B2F8 /* Pods-PipelineBLE.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PipelineBLE.debug.xcconfig"; path = "Target Support Files/Pods-PipelineBLE/Pods-PipelineBLE.debug.xcconfig"; sourceTree = "<group>"; };
+		65CB36934AAD2748645405D5 /* Pods_PipelineBLE.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PipelineBLE.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B97BC48F22FB3EEE00858CA9 /* PipelineBLE.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PipelineBLE.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B97BC49222FB3EEE00858CA9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B97BC49422FB3EEE00858CA9 /* SavedDevicesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedDevicesViewController.swift; sourceTree = "<group>"; };
@@ -52,6 +69,23 @@
 		B97BC4C922FB5EFF00858CA9 /* UartPeripheralModePacketManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UartPeripheralModePacketManager.swift; sourceTree = "<group>"; };
 		B97BC4CA22FB5EFF00858CA9 /* DeviceInformationPeripheralService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceInformationPeripheralService.swift; sourceTree = "<group>"; };
 		B97BC4D022FB5F0900858CA9 /* UartPacketManagerBase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UartPacketManagerBase.swift; sourceTree = "<group>"; };
+		B97BC4D422FB648E00858CA9 /* PipelineBLE-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PipelineBLE-Bridging-Header.h"; sourceTree = "<group>"; };
+		B97BC4D522FB648E00858CA9 /* MSWeakTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSWeakTimer.m; sourceTree = "<group>"; };
+		B97BC4D622FB648F00858CA9 /* MSWeakTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSWeakTimer.h; sourceTree = "<group>"; };
+		B97BC4D822FB67AB00858CA9 /* LocalizationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalizationManager.swift; sourceTree = "<group>"; };
+		B97BC4DA22FB683400858CA9 /* LogHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogHelper.swift; sourceTree = "<group>"; };
+		B97BC4DC22FB686B00858CA9 /* CommandQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommandQueue.swift; sourceTree = "<group>"; };
+		B97BC4DE22FB6AC200858CA9 /* DataConversions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataConversions.swift; sourceTree = "<group>"; };
+		B97BC4E122FB6AE400858CA9 /* AlertHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertHelper.swift; sourceTree = "<group>"; };
+		B97BC4E322FB6AEC00858CA9 /* Data+ScanValue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Data+ScanValue.swift"; sourceTree = "<group>"; };
+		B97BC4E522FB6AF600858CA9 /* DataDownloader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataDownloader.swift; sourceTree = "<group>"; };
+		B97BC4E722FB6AFE00858CA9 /* KeyboardPositionNotifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyboardPositionNotifier.swift; sourceTree = "<group>"; };
+		B97BC4EA22FB6B5D00858CA9 /* MqttManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MqttManager.swift; sourceTree = "<group>"; };
+		B97BC4EB22FB6B5D00858CA9 /* MqttSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MqttSettings.swift; sourceTree = "<group>"; };
+		B97BC4EE22FC8FEF00858CA9 /* MainPageTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainPageTabBarController.swift; sourceTree = "<group>"; };
+		B97BC4F022FC90DE00858CA9 /* AvailableDevicesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvailableDevicesViewController.swift; sourceTree = "<group>"; };
+		B97BC4F222FCA27900858CA9 /* PastDataViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PastDataViewController.swift; sourceTree = "<group>"; };
+		C2FF2DC3A457339C6DFFB7F3 /* Pods-PipelineBLE.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PipelineBLE.release.xcconfig"; path = "Target Support Files/Pods-PipelineBLE/Pods-PipelineBLE.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,17 +93,37 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1DEF37D8C53C6E82192CB0E5 /* Pods_PipelineBLE.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4AC6268059E52908A9BDD1A2 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				11510BAA3628386FECC3B2F8 /* Pods-PipelineBLE.debug.xcconfig */,
+				C2FF2DC3A457339C6DFFB7F3 /* Pods-PipelineBLE.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		71C228D8CA8321CCAF6758D9 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				65CB36934AAD2748645405D5 /* Pods_PipelineBLE.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		B97BC48622FB3EEE00858CA9 = {
 			isa = PBXGroup;
 			children = (
 				B97BC49122FB3EEE00858CA9 /* PipelineBLE */,
 				B97BC49022FB3EEE00858CA9 /* Products */,
+				4AC6268059E52908A9BDD1A2 /* Pods */,
+				71C228D8CA8321CCAF6758D9 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -106,6 +160,7 @@
 		B97BC4A522FB408200858CA9 /* MainPageViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				B97BC4EE22FC8FEF00858CA9 /* MainPageTabBarController.swift */,
 				B97BC4A922FB40B200858CA9 /* PastDataControllers */,
 				B97BC4A822FB40A600858CA9 /* AvailableDevicesControllers */,
 				B97BC4A722FB409A00858CA9 /* SavedDevicesControllers */,
@@ -133,6 +188,7 @@
 		B97BC4A822FB40A600858CA9 /* AvailableDevicesControllers */ = {
 			isa = PBXGroup;
 			children = (
+				B97BC4F022FC90DE00858CA9 /* AvailableDevicesViewController.swift */,
 			);
 			path = AvailableDevicesControllers;
 			sourceTree = "<group>";
@@ -140,6 +196,7 @@
 		B97BC4A922FB40B200858CA9 /* PastDataControllers */ = {
 			isa = PBXGroup;
 			children = (
+				B97BC4F222FCA27900858CA9 /* PastDataViewController.swift */,
 			);
 			path = PastDataControllers;
 			sourceTree = "<group>";
@@ -163,6 +220,9 @@
 		B97BC4B022FB5E4800858CA9 /* AdafruitKit */ = {
 			isa = PBXGroup;
 			children = (
+				B97BC4E922FB6B5000858CA9 /* Mqtt */,
+				B97BC4E022FB6AC600858CA9 /* Utils */,
+				B97BC4D222FB645600858CA9 /* EmbeddedFrameworks */,
 				B97BC4B122FB5E5D00858CA9 /* Ble */,
 			);
 			path = AdafruitKit;
@@ -205,6 +265,48 @@
 			path = BlePeripheralMode;
 			sourceTree = "<group>";
 		};
+		B97BC4D222FB645600858CA9 /* EmbeddedFrameworks */ = {
+			isa = PBXGroup;
+			children = (
+				B97BC4D322FB647300858CA9 /* MSWeakTimer */,
+			);
+			path = EmbeddedFrameworks;
+			sourceTree = "<group>";
+		};
+		B97BC4D322FB647300858CA9 /* MSWeakTimer */ = {
+			isa = PBXGroup;
+			children = (
+				B97BC4D622FB648F00858CA9 /* MSWeakTimer.h */,
+				B97BC4D522FB648E00858CA9 /* MSWeakTimer.m */,
+				B97BC4D422FB648E00858CA9 /* PipelineBLE-Bridging-Header.h */,
+			);
+			path = MSWeakTimer;
+			sourceTree = "<group>";
+		};
+		B97BC4E022FB6AC600858CA9 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				B97BC4E322FB6AEC00858CA9 /* Data+ScanValue.swift */,
+				B97BC4E122FB6AE400858CA9 /* AlertHelper.swift */,
+				B97BC4DE22FB6AC200858CA9 /* DataConversions.swift */,
+				B97BC4E522FB6AF600858CA9 /* DataDownloader.swift */,
+				B97BC4DC22FB686B00858CA9 /* CommandQueue.swift */,
+				B97BC4E722FB6AFE00858CA9 /* KeyboardPositionNotifier.swift */,
+				B97BC4DA22FB683400858CA9 /* LogHelper.swift */,
+				B97BC4D822FB67AB00858CA9 /* LocalizationManager.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		B97BC4E922FB6B5000858CA9 /* Mqtt */ = {
+			isa = PBXGroup;
+			children = (
+				B97BC4EA22FB6B5D00858CA9 /* MqttManager.swift */,
+				B97BC4EB22FB6B5D00858CA9 /* MqttSettings.swift */,
+			);
+			path = Mqtt;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -212,9 +314,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = B97BC4A122FB3EFF00858CA9 /* Build configuration list for PBXNativeTarget "PipelineBLE" */;
 			buildPhases = (
+				DD8BA0D1B5AFE4C077B13B42 /* [CP] Check Pods Manifest.lock */,
 				B97BC48B22FB3EEE00858CA9 /* Sources */,
 				B97BC48C22FB3EEE00858CA9 /* Frameworks */,
 				B97BC48D22FB3EEE00858CA9 /* Resources */,
+				5BF21C6CE5578010982397D8 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -237,6 +341,7 @@
 				TargetAttributes = {
 					B97BC48E22FB3EEE00858CA9 = {
 						CreatedOnToolsVersion = 10.2.1;
+						LastSwiftMigration = 1020;
 					};
 				};
 			};
@@ -270,29 +375,85 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		5BF21C6CE5578010982397D8 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-PipelineBLE/Pods-PipelineBLE-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-PipelineBLE/Pods-PipelineBLE-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-PipelineBLE/Pods-PipelineBLE-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		DD8BA0D1B5AFE4C077B13B42 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-PipelineBLE-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		B97BC48B22FB3EEE00858CA9 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B97BC4D922FB67AB00858CA9 /* LocalizationManager.swift in Sources */,
 				B97BC4CE22FB5EFF00858CA9 /* UartPeripheralModePacketManager.swift in Sources */,
 				B97BC4AB22FB47C200858CA9 /* SavedDevicesTableViewCell.swift in Sources */,
+				B97BC4DD22FB686B00858CA9 /* CommandQueue.swift in Sources */,
 				B97BC4C322FB5EE400858CA9 /* UartPacketManager.swift in Sources */,
 				B97BC4CD22FB5EFF00858CA9 /* GattServer.swift in Sources */,
 				B97BC49522FB3EEE00858CA9 /* SavedDevicesViewController.swift in Sources */,
 				B97BC4AE22FB4C7100858CA9 /* UARTViewController.swift in Sources */,
+				B97BC4F322FCA27900858CA9 /* PastDataViewController.swift in Sources */,
 				B97BC4C222FB5EE400858CA9 /* BlePeripheral+Uart.swift in Sources */,
+				B97BC4EC22FB6B5D00858CA9 /* MqttManager.swift in Sources */,
 				B97BC49322FB3EEE00858CA9 /* AppDelegate.swift in Sources */,
 				B97BC4BF22FB5EE400858CA9 /* BlePeripheral+Battery.swift in Sources */,
+				B97BC4DB22FB683400858CA9 /* LogHelper.swift in Sources */,
+				B97BC4E222FB6AE400858CA9 /* AlertHelper.swift in Sources */,
+				B97BC4ED22FB6B5D00858CA9 /* MqttSettings.swift in Sources */,
+				B97BC4F122FC90DE00858CA9 /* AvailableDevicesViewController.swift in Sources */,
 				B97BC4C022FB5EE400858CA9 /* BlePeripheral.swift in Sources */,
 				B97BC4BD22FB5EE400858CA9 /* UartDataManager.swift in Sources */,
 				B97BC4CF22FB5EFF00858CA9 /* DeviceInformationPeripheralService.swift in Sources */,
+				B97BC4E822FB6AFE00858CA9 /* KeyboardPositionNotifier.swift in Sources */,
+				B97BC4E622FB6AF600858CA9 /* DataDownloader.swift in Sources */,
+				B97BC4DF22FB6AC200858CA9 /* DataConversions.swift in Sources */,
+				B97BC4EF22FC8FEF00858CA9 /* MainPageTabBarController.swift in Sources */,
 				B97BC4D122FB5F0900858CA9 /* UartPacketManagerBase.swift in Sources */,
+				B97BC4D722FB648F00858CA9 /* MSWeakTimer.m in Sources */,
 				B97BC4C122FB5EE400858CA9 /* UartLogManager.swift in Sources */,
 				B97BC4BE22FB5EE400858CA9 /* BleManager.swift in Sources */,
 				B97BC4CC22FB5EFF00858CA9 /* PeripheralService.swift in Sources */,
 				B97BC4C422FB5EE400858CA9 /* BleUUIDNames.swift in Sources */,
 				B97BC4CB22FB5EFF00858CA9 /* UartPeripheralService.swift in Sources */,
+				B97BC4E422FB6AEC00858CA9 /* Data+ScanValue.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -428,8 +589,10 @@
 		};
 		B97BC4A222FB3EFF00858CA9 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 11510BAA3628386FECC3B2F8 /* Pods-PipelineBLE.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = JQS7TGC8Z2;
 				INFOPLIST_FILE = PipelineBLE/Info.plist;
@@ -439,6 +602,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.SamPeterson.PipelineBLE;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "PipelineBLE/Common/AdafruitKit/EmbeddedFrameworks/MSWeakTimer/PipelineBLE-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -446,8 +611,10 @@
 		};
 		B97BC4A322FB3EFF00858CA9 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C2FF2DC3A457339C6DFFB7F3 /* Pods-PipelineBLE.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = JQS7TGC8Z2;
 				INFOPLIST_FILE = PipelineBLE/Info.plist;
@@ -457,6 +624,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.SamPeterson.PipelineBLE;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "PipelineBLE/Common/AdafruitKit/EmbeddedFrameworks/MSWeakTimer/PipelineBLE-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
