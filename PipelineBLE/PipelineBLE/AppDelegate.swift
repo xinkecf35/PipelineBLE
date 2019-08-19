@@ -19,11 +19,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.makeKeyAndVisible()
         
-        //  Specify the new root view controller
-        let controller = SavedDevicesViewController()
-        let navigationController = UINavigationController(rootViewController: controller)
-        window?.rootViewController = navigationController
-        
+        //  Specify a tab bar controller for the main screen
+        window?.rootViewController = MainPageTabBarController()
         
         return true
     }

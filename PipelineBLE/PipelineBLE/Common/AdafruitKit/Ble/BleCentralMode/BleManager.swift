@@ -11,7 +11,7 @@ import CoreBluetooth
 
 #if COMMANDLINE
 #else
-    import MSWeakTimer
+    //import MSWeakTimer
 #endif
 
 class BleManager: NSObject {

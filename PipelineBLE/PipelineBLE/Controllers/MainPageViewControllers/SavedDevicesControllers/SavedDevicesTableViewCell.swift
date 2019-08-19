@@ -17,6 +17,13 @@ class SavedDevicesTableViewCell: UITableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
+    
+    override var isHighlighted: Bool {
+        didSet{
+            backgroundColor = isHighlighted ? UIColor.darkGray : UIColor.white
+        }
+    }
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?){
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         

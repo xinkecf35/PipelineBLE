@@ -10,7 +10,7 @@ import Foundation
 import CoreBluetooth
 #if COMMANDLINE
 #else
-    import MSWeakTimer
+    //import MSWeakTimer
 #endif
 
 class BlePeripheral: NSObject {
