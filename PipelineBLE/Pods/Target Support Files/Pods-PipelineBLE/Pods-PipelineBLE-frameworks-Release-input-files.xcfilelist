@@ -2,3 +2,4 @@ ${PODS_ROOT}/Target Support Files/Pods-PipelineBLE/Pods-PipelineBLE-frameworks.s
 ${BUILT_PRODUCTS_DIR}/CocoaAsyncSocket/CocoaAsyncSocket.framework
 ${BUILT_PRODUCTS_DIR}/CocoaMQTT/CocoaMQTT.framework
 ${BUILT_PRODUCTS_DIR}/MSWeakTimer/MSWeakTimer.framework
+${BUILT_PRODUCTS_DIR}/UIColor+Hex/UIColor_Hex.framework
