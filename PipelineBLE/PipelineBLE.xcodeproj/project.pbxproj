@@ -49,8 +49,8 @@
 		B9CA504A230C7435007E31D8 /* DfuUpdateProcess.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9CA5047230C7435007E31D8 /* DfuUpdateProcess.swift */; };
 		B9CA504B230C7436007E31D8 /* FirmwareUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9CA5048230C7435007E31D8 /* FirmwareUpdater.swift */; };
 		B9CA5051230C7E10007E31D8 /* DefaultPreferences.plist in Resources */ = {isa = PBXBuildFile; fileRef = B9CA5050230C7E10007E31D8 /* DefaultPreferences.plist */; };
-		B9D97D212300AF0600882E66 /* PeripheralList.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9D97D1F2300AF0600882E66 /* PeripheralList.swift */; };
-		B9D97D222300AF0600882E66 /* RssiUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9D97D202300AF0600882E66 /* RssiUI.swift */; };
+		B9CA505E230C953B007E31D8 /* RssiUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9CA505C230C953B007E31D8 /* RssiUI.swift */; };
+		B9CA505F230C953B007E31D8 /* PeripheralList.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9CA505D230C953B007E31D8 /* PeripheralList.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -101,8 +101,8 @@
 		B9CA5047230C7435007E31D8 /* DfuUpdateProcess.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DfuUpdateProcess.swift; sourceTree = "<group>"; };
 		B9CA5048230C7435007E31D8 /* FirmwareUpdater.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirmwareUpdater.swift; sourceTree = "<group>"; };
 		B9CA5050230C7E10007E31D8 /* DefaultPreferences.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = DefaultPreferences.plist; sourceTree = "<group>"; };
-		B9D97D1F2300AF0600882E66 /* PeripheralList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PeripheralList.swift; path = ../../../../../../BLEApp/Bluefruit_LE_Connect_v2/Bluefruit/Common/Modules/Scanner/PeripheralList.swift; sourceTree = "<group>"; };
-		B9D97D202300AF0600882E66 /* RssiUI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RssiUI.swift; path = ../../../../../../BLEApp/Bluefruit_LE_Connect_v2/Bluefruit/Common/Modules/Scanner/RssiUI.swift; sourceTree = "<group>"; };
+		B9CA505C230C953B007E31D8 /* RssiUI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RssiUI.swift; sourceTree = "<group>"; };
+		B9CA505D230C953B007E31D8 /* PeripheralList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeripheralList.swift; sourceTree = "<group>"; };
 		C2FF2DC3A457339C6DFFB7F3 /* Pods-PipelineBLE.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PipelineBLE.release.xcconfig"; path = "Target Support Files/Pods-PipelineBLE/Pods-PipelineBLE.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -369,8 +369,8 @@
 		B9D97D1E2300AED400882E66 /* PeripheralModules */ = {
 			isa = PBXGroup;
 			children = (
-				B9D97D1F2300AF0600882E66 /* PeripheralList.swift */,
-				B9D97D202300AF0600882E66 /* RssiUI.swift */,
+				B9CA505D230C953B007E31D8 /* PeripheralList.swift */,
+				B9CA505C230C953B007E31D8 /* RssiUI.swift */,
 			);
 			path = PeripheralModules;
 			sourceTree = "<group>";
@@ -499,6 +499,7 @@
 				B97BC4D922FB67AB00858CA9 /* LocalizationManager.swift in Sources */,
 				B97BC4CE22FB5EFF00858CA9 /* UartPeripheralModePacketManager.swift in Sources */,
 				B97BC4AB22FB47C200858CA9 /* SavedDevicesTableViewCell.swift in Sources */,
+				B9CA505E230C953B007E31D8 /* RssiUI.swift in Sources */,
 				B97BC4DD22FB686B00858CA9 /* CommandQueue.swift in Sources */,
 				B97BC4C322FB5EE400858CA9 /* UartPacketManager.swift in Sources */,
 				B97BC4CD22FB5EFF00858CA9 /* GattServer.swift in Sources */,
@@ -516,11 +517,9 @@
 				B94CD1F1230735C80077F77E /* HandoffManager.swift in Sources */,
 				B97BC4E222FB6AE400858CA9 /* AlertHelper.swift in Sources */,
 				B97BC4ED22FB6B5D00858CA9 /* MqttSettings.swift in Sources */,
-				B9D97D212300AF0600882E66 /* PeripheralList.swift in Sources */,
 				B97BC4F122FC90DE00858CA9 /* AvailableDevicesViewController.swift in Sources */,
 				B97BC4C022FB5EE400858CA9 /* BlePeripheral.swift in Sources */,
 				B97BC4BD22FB5EE400858CA9 /* UartDataManager.swift in Sources */,
-				B9D97D222300AF0600882E66 /* RssiUI.swift in Sources */,
 				B97BC4CF22FB5EFF00858CA9 /* DeviceInformationPeripheralService.swift in Sources */,
 				B94CD1EA23071C050077F77E /* Preferences.swift in Sources */,
 				B97BC4E822FB6AFE00858CA9 /* KeyboardPositionNotifier.swift in Sources */,
@@ -528,6 +527,7 @@
 				B97BC4DF22FB6AC200858CA9 /* DataConversions.swift in Sources */,
 				B97BC4EF22FC8FEF00858CA9 /* MainPageTabBarController.swift in Sources */,
 				B97BC4D122FB5F0900858CA9 /* UartPacketManagerBase.swift in Sources */,
+				B9CA505F230C953B007E31D8 /* PeripheralList.swift in Sources */,
 				B97BC4C122FB5EE400858CA9 /* UartLogManager.swift in Sources */,
 				B97BC4BE22FB5EE400858CA9 /* BleManager.swift in Sources */,
 				B9CA504B230C7436007E31D8 /* FirmwareUpdater.swift in Sources */,
