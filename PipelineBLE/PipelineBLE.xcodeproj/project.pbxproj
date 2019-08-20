@@ -31,7 +31,6 @@
 		B97BC4CE22FB5EFF00858CA9 /* UartPeripheralModePacketManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97BC4C922FB5EFF00858CA9 /* UartPeripheralModePacketManager.swift */; };
 		B97BC4CF22FB5EFF00858CA9 /* DeviceInformationPeripheralService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97BC4CA22FB5EFF00858CA9 /* DeviceInformationPeripheralService.swift */; };
 		B97BC4D122FB5F0900858CA9 /* UartPacketManagerBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97BC4D022FB5F0900858CA9 /* UartPacketManagerBase.swift */; };
-		B97BC4D722FB648F00858CA9 /* MSWeakTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = B97BC4D522FB648E00858CA9 /* MSWeakTimer.m */; };
 		B97BC4D922FB67AB00858CA9 /* LocalizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97BC4D822FB67AB00858CA9 /* LocalizationManager.swift */; };
 		B97BC4DB22FB683400858CA9 /* LogHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97BC4DA22FB683400858CA9 /* LogHelper.swift */; };
 		B97BC4DD22FB686B00858CA9 /* CommandQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97BC4DC22FB686B00858CA9 /* CommandQueue.swift */; };
@@ -45,6 +44,11 @@
 		B97BC4EF22FC8FEF00858CA9 /* MainPageTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97BC4EE22FC8FEF00858CA9 /* MainPageTabBarController.swift */; };
 		B97BC4F122FC90DE00858CA9 /* AvailableDevicesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97BC4F022FC90DE00858CA9 /* AvailableDevicesViewController.swift */; };
 		B97BC4F322FCA27900858CA9 /* PastDataViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97BC4F222FCA27900858CA9 /* PastDataViewController.swift */; };
+		B9CA5044230C3725007E31D8 /* MSWeakTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = B9CA5043230C3725007E31D8 /* MSWeakTimer.m */; };
+		B9CA5049230C7435007E31D8 /* ReleasesParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9CA5046230C7435007E31D8 /* ReleasesParser.swift */; };
+		B9CA504A230C7435007E31D8 /* DfuUpdateProcess.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9CA5047230C7435007E31D8 /* DfuUpdateProcess.swift */; };
+		B9CA504B230C7436007E31D8 /* FirmwareUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9CA5048230C7435007E31D8 /* FirmwareUpdater.swift */; };
+		B9CA5051230C7E10007E31D8 /* DefaultPreferences.plist in Resources */ = {isa = PBXBuildFile; fileRef = B9CA5050230C7E10007E31D8 /* DefaultPreferences.plist */; };
 		B9D97D212300AF0600882E66 /* PeripheralList.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9D97D1F2300AF0600882E66 /* PeripheralList.swift */; };
 		B9D97D222300AF0600882E66 /* RssiUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9D97D202300AF0600882E66 /* RssiUI.swift */; };
 /* End PBXBuildFile section */
@@ -77,9 +81,6 @@
 		B97BC4C922FB5EFF00858CA9 /* UartPeripheralModePacketManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UartPeripheralModePacketManager.swift; sourceTree = "<group>"; };
 		B97BC4CA22FB5EFF00858CA9 /* DeviceInformationPeripheralService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceInformationPeripheralService.swift; sourceTree = "<group>"; };
 		B97BC4D022FB5F0900858CA9 /* UartPacketManagerBase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UartPacketManagerBase.swift; sourceTree = "<group>"; };
-		B97BC4D422FB648E00858CA9 /* PipelineBLE-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PipelineBLE-Bridging-Header.h"; sourceTree = "<group>"; };
-		B97BC4D522FB648E00858CA9 /* MSWeakTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSWeakTimer.m; sourceTree = "<group>"; };
-		B97BC4D622FB648F00858CA9 /* MSWeakTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSWeakTimer.h; sourceTree = "<group>"; };
 		B97BC4D822FB67AB00858CA9 /* LocalizationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalizationManager.swift; sourceTree = "<group>"; };
 		B97BC4DA22FB683400858CA9 /* LogHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogHelper.swift; sourceTree = "<group>"; };
 		B97BC4DC22FB686B00858CA9 /* CommandQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommandQueue.swift; sourceTree = "<group>"; };
@@ -93,6 +94,13 @@
 		B97BC4EE22FC8FEF00858CA9 /* MainPageTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainPageTabBarController.swift; sourceTree = "<group>"; };
 		B97BC4F022FC90DE00858CA9 /* AvailableDevicesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvailableDevicesViewController.swift; sourceTree = "<group>"; };
 		B97BC4F222FCA27900858CA9 /* PastDataViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PastDataViewController.swift; sourceTree = "<group>"; };
+		B9CA5041230C3725007E31D8 /* MSWeakTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSWeakTimer.h; sourceTree = "<group>"; };
+		B9CA5042230C3725007E31D8 /* PipelineBLE-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PipelineBLE-Bridging-Header.h"; sourceTree = "<group>"; };
+		B9CA5043230C3725007E31D8 /* MSWeakTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSWeakTimer.m; sourceTree = "<group>"; };
+		B9CA5046230C7435007E31D8 /* ReleasesParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReleasesParser.swift; sourceTree = "<group>"; };
+		B9CA5047230C7435007E31D8 /* DfuUpdateProcess.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DfuUpdateProcess.swift; sourceTree = "<group>"; };
+		B9CA5048230C7435007E31D8 /* FirmwareUpdater.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirmwareUpdater.swift; sourceTree = "<group>"; };
+		B9CA5050230C7E10007E31D8 /* DefaultPreferences.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = DefaultPreferences.plist; sourceTree = "<group>"; };
 		B9D97D1F2300AF0600882E66 /* PeripheralList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PeripheralList.swift; path = ../../../../../../BLEApp/Bluefruit_LE_Connect_v2/Bluefruit/Common/Modules/Scanner/PeripheralList.swift; sourceTree = "<group>"; };
 		B9D97D202300AF0600882E66 /* RssiUI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RssiUI.swift; path = ../../../../../../BLEApp/Bluefruit_LE_Connect_v2/Bluefruit/Common/Modules/Scanner/RssiUI.swift; sourceTree = "<group>"; };
 		C2FF2DC3A457339C6DFFB7F3 /* Pods-PipelineBLE.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PipelineBLE.release.xcconfig"; path = "Target Support Files/Pods-PipelineBLE/Pods-PipelineBLE.release.xcconfig"; sourceTree = "<group>"; };
@@ -143,6 +151,7 @@
 				B97BC49022FB3EEE00858CA9 /* Products */,
 				4AC6268059E52908A9BDD1A2 /* Pods */,
 				71C228D8CA8321CCAF6758D9 /* Frameworks */,
+				B9CA504C230C7DEA007E31D8 /* Resources */,
 			);
 			sourceTree = "<group>";
 		};
@@ -157,6 +166,7 @@
 		B97BC49122FB3EEE00858CA9 /* PipelineBLE */ = {
 			isa = PBXGroup;
 			children = (
+				B9CA504F230C7E02007E31D8 /* Resources */,
 				B97BC4AF22FB5DE600858CA9 /* Common */,
 				B97BC4A422FB407000858CA9 /* Controllers */,
 				B97BC49222FB3EEE00858CA9 /* AppDelegate.swift */,
@@ -234,6 +244,7 @@
 				B94CD1E923071C040077F77E /* Preferences.swift */,
 				B94CD1ED230735B30077F77E /* Watch */,
 				B9D97D1E2300AED400882E66 /* PeripheralModules */,
+				B9CA5045230C741E007E31D8 /* Dfu */,
 				B97BC4B022FB5E4800858CA9 /* AdafruitKit */,
 			);
 			path = Common;
@@ -242,9 +253,9 @@
 		B97BC4B022FB5E4800858CA9 /* AdafruitKit */ = {
 			isa = PBXGroup;
 			children = (
+				B9CA503F230C36FE007E31D8 /* EmbeddedFrameworks */,
 				B97BC4E922FB6B5000858CA9 /* Mqtt */,
 				B97BC4E022FB6AC600858CA9 /* Utils */,
-				B97BC4D222FB645600858CA9 /* EmbeddedFrameworks */,
 				B97BC4B122FB5E5D00858CA9 /* Ble */,
 			);
 			path = AdafruitKit;
@@ -287,24 +298,6 @@
 			path = BlePeripheralMode;
 			sourceTree = "<group>";
 		};
-		B97BC4D222FB645600858CA9 /* EmbeddedFrameworks */ = {
-			isa = PBXGroup;
-			children = (
-				B97BC4D322FB647300858CA9 /* MSWeakTimer */,
-			);
-			path = EmbeddedFrameworks;
-			sourceTree = "<group>";
-		};
-		B97BC4D322FB647300858CA9 /* MSWeakTimer */ = {
-			isa = PBXGroup;
-			children = (
-				B97BC4D622FB648F00858CA9 /* MSWeakTimer.h */,
-				B97BC4D522FB648E00858CA9 /* MSWeakTimer.m */,
-				B97BC4D422FB648E00858CA9 /* PipelineBLE-Bridging-Header.h */,
-			);
-			path = MSWeakTimer;
-			sourceTree = "<group>";
-		};
 		B97BC4E022FB6AC600858CA9 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
@@ -327,6 +320,50 @@
 				B97BC4EB22FB6B5D00858CA9 /* MqttSettings.swift */,
 			);
 			path = Mqtt;
+			sourceTree = "<group>";
+		};
+		B9CA503F230C36FE007E31D8 /* EmbeddedFrameworks */ = {
+			isa = PBXGroup;
+			children = (
+				B9CA5040230C370A007E31D8 /* MSWeakTimer */,
+			);
+			path = EmbeddedFrameworks;
+			sourceTree = "<group>";
+		};
+		B9CA5040230C370A007E31D8 /* MSWeakTimer */ = {
+			isa = PBXGroup;
+			children = (
+				B9CA5041230C3725007E31D8 /* MSWeakTimer.h */,
+				B9CA5043230C3725007E31D8 /* MSWeakTimer.m */,
+				B9CA5042230C3725007E31D8 /* PipelineBLE-Bridging-Header.h */,
+			);
+			path = MSWeakTimer;
+			sourceTree = "<group>";
+		};
+		B9CA5045230C741E007E31D8 /* Dfu */ = {
+			isa = PBXGroup;
+			children = (
+				B9CA5047230C7435007E31D8 /* DfuUpdateProcess.swift */,
+				B9CA5048230C7435007E31D8 /* FirmwareUpdater.swift */,
+				B9CA5046230C7435007E31D8 /* ReleasesParser.swift */,
+			);
+			path = Dfu;
+			sourceTree = "<group>";
+		};
+		B9CA504C230C7DEA007E31D8 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				B9CA5050230C7E10007E31D8 /* DefaultPreferences.plist */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		B9CA504F230C7E02007E31D8 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Resources;
+			path = ../Resources;
 			sourceTree = "<group>";
 		};
 		B9D97D1E2300AED400882E66 /* PeripheralModules */ = {
@@ -406,6 +443,7 @@
 			files = (
 				B97BC49D22FB3EFF00858CA9 /* LaunchScreen.storyboard in Resources */,
 				B97BC49A22FB3EFF00858CA9 /* Assets.xcassets in Resources */,
+				B9CA5051230C7E10007E31D8 /* DefaultPreferences.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -465,6 +503,7 @@
 				B97BC4C322FB5EE400858CA9 /* UartPacketManager.swift in Sources */,
 				B97BC4CD22FB5EFF00858CA9 /* GattServer.swift in Sources */,
 				B94CD1F0230735C80077F77E /* WatchSessionManager.swift in Sources */,
+				B9CA5044230C3725007E31D8 /* MSWeakTimer.m in Sources */,
 				B97BC49522FB3EEE00858CA9 /* SavedDevicesViewController.swift in Sources */,
 				B97BC4AE22FB4C7100858CA9 /* UARTViewController.swift in Sources */,
 				B97BC4F322FCA27900858CA9 /* PastDataViewController.swift in Sources */,
@@ -473,6 +512,7 @@
 				B97BC49322FB3EEE00858CA9 /* AppDelegate.swift in Sources */,
 				B97BC4BF22FB5EE400858CA9 /* BlePeripheral+Battery.swift in Sources */,
 				B97BC4DB22FB683400858CA9 /* LogHelper.swift in Sources */,
+				B9CA5049230C7435007E31D8 /* ReleasesParser.swift in Sources */,
 				B94CD1F1230735C80077F77E /* HandoffManager.swift in Sources */,
 				B97BC4E222FB6AE400858CA9 /* AlertHelper.swift in Sources */,
 				B97BC4ED22FB6B5D00858CA9 /* MqttSettings.swift in Sources */,
@@ -488,11 +528,12 @@
 				B97BC4DF22FB6AC200858CA9 /* DataConversions.swift in Sources */,
 				B97BC4EF22FC8FEF00858CA9 /* MainPageTabBarController.swift in Sources */,
 				B97BC4D122FB5F0900858CA9 /* UartPacketManagerBase.swift in Sources */,
-				B97BC4D722FB648F00858CA9 /* MSWeakTimer.m in Sources */,
 				B97BC4C122FB5EE400858CA9 /* UartLogManager.swift in Sources */,
 				B97BC4BE22FB5EE400858CA9 /* BleManager.swift in Sources */,
+				B9CA504B230C7436007E31D8 /* FirmwareUpdater.swift in Sources */,
 				B97BC4CC22FB5EFF00858CA9 /* PeripheralService.swift in Sources */,
 				B97BC4C422FB5EE400858CA9 /* BleUUIDNames.swift in Sources */,
+				B9CA504A230C7435007E31D8 /* DfuUpdateProcess.swift in Sources */,
 				B97BC4CB22FB5EFF00858CA9 /* UartPeripheralService.swift in Sources */,
 				B97BC4E422FB6AEC00858CA9 /* Data+ScanValue.swift in Sources */,
 			);
