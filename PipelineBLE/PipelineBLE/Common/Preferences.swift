@@ -456,6 +456,7 @@ class Preferences {
 
     // MARK: - Defaults
     static func registerDefaults() {
+        //  This is used to reach the defaults present in DefaultPreferences.plist. Also initializes them
         let path = Bundle.main.path(forResource: "DefaultPreferences", ofType: "plist")!
         let defaultPrefs = NSDictionary(contentsOfFile: path) as! [String: AnyObject]
 
