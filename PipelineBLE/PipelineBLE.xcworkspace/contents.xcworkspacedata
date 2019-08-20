@@ -4,6 +4,10 @@
    <FileRef
       location = "group:PipelineBLE.xcodeproj">
    </FileRef>
+   <Group
+      location = "group:PipelineBLE/../Resources"
+      name = "Resources">
+   </Group>
    <FileRef
       location = "group:Pods/Pods.xcodeproj">
    </FileRef>

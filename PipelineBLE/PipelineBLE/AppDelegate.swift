@@ -7,6 +7,7 @@
 //
 
 import UIKit
+//import WatchConnectivity
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -15,12 +16,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        //  Calls the Preferences.swift file to register the default parameters
+        //  that are present in ~/Resources/DefaultPreferences.plist
+        Preferences.registerDefaults()
         
+        //  ###Used for connection to AppleWatch. Don't include
+        //WatchSessionManager.shared.activate(with: self)
+        
+        //  Used to create the active window for start up
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.makeKeyAndVisible()
         
         //  Specify a tab bar controller for the main screen
         window?.rootViewController = MainPageTabBarController()
+        
+        //  ###Used for connection to AppleWatch. Don't include
+        //WatchSessionManager.shared.session?.sendMessage(["isActive": true], replyHandler: nil, errorHandler: nil)
         
         return true
     }
@@ -49,4 +60,58 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
 }
+
+// MARK: - WCSessionDelegate
+/*  This is used for AppleWatch Connectivity. Don't need, so leave commented
+extension AppDelegate: WCSessionDelegate {
+    func sessionReachabilityDidChange(_ session: WCSession) {
+        DLog("sessionReachabilityDidChange: \(session.isReachable ? "reachable":"not reachable")")
+        
+        if session.isReachable {
+            // Update foreground status
+            let isActive = UIApplication.shared.applicationState != .inactive
+            WatchSessionManager.shared.session?.sendMessage(["isActive": isActive], replyHandler: nil, errorHandler: nil)
+            
+            NotificationCenter.default.post(name: .watchSessionDidBecomeActive, object: nil, userInfo: nil)
+        }
+    }
+    
+    func session(_ session: WCSession, didReceiveMessage message: [String : Any]) {
+        if message["command"] != nil {
+            DLog("watchCommand notification")
+            NotificationCenter.default.post(name: .didReceiveWatchCommand, object: nil, userInfo: message)
+        }
+    }
+    
+    func session(_ session: WCSession, didReceiveMessage message: [String : Any], replyHandler: @escaping ([String : Any]) -> Void) {
+        var replyValues: [String: AnyObject] = [:]
+        
+        if let command = message["command"] as? String {
+            switch command {
+            case "isActive":
+                let isActive = UIApplication.shared.applicationState != .inactive
+                replyValues[command] = isActive as AnyObject
+                
+            default:
+                DLog("didReceiveMessage with unknown command: \(command)")
+            }
+        }
+        
+        replyHandler(replyValues)
+    }
+    
+    @available(iOS 9.3, *)
+    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
+        DLog("activationDidCompleteWithState: \(activationState.rawValue)")
+    }
+    
+    func sessionDidBecomeInactive(_ session: WCSession) {
+        DLog("sessionDidBecomeInactive")
+    }
+    
+    func sessionDidDeactivate(_ session: WCSession) {
+        DLog("sessionDidDeactivate")
+    }
+}
+*/
 
