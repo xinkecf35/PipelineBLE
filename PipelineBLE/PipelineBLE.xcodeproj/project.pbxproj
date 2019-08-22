@@ -51,6 +51,7 @@
 		B9CA5051230C7E10007E31D8 /* DefaultPreferences.plist in Resources */ = {isa = PBXBuildFile; fileRef = B9CA5050230C7E10007E31D8 /* DefaultPreferences.plist */; };
 		B9CA505E230C953B007E31D8 /* RssiUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9CA505C230C953B007E31D8 /* RssiUI.swift */; };
 		B9CA505F230C953B007E31D8 /* PeripheralList.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9CA505D230C953B007E31D8 /* PeripheralList.swift */; };
+		B9CA5064230DC5D9007E31D8 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = B9CA5062230DC5D9007E31D8 /* Localizable.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -103,6 +104,7 @@
 		B9CA5050230C7E10007E31D8 /* DefaultPreferences.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = DefaultPreferences.plist; sourceTree = "<group>"; };
 		B9CA505C230C953B007E31D8 /* RssiUI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RssiUI.swift; sourceTree = "<group>"; };
 		B9CA505D230C953B007E31D8 /* PeripheralList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeripheralList.swift; sourceTree = "<group>"; };
+		B9CA5063230DC5D9007E31D8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Localizable.strings; sourceTree = "<group>"; };
 		C2FF2DC3A457339C6DFFB7F3 /* Pods-PipelineBLE.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PipelineBLE.release.xcconfig"; path = "Target Support Files/Pods-PipelineBLE/Pods-PipelineBLE.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -353,6 +355,7 @@
 		B9CA504C230C7DEA007E31D8 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				B9CA5060230DC592007E31D8 /* Localization */,
 				B9CA5050230C7E10007E31D8 /* DefaultPreferences.plist */,
 			);
 			path = Resources;
@@ -364,6 +367,22 @@
 			);
 			name = Resources;
 			path = ../Resources;
+			sourceTree = "<group>";
+		};
+		B9CA5060230DC592007E31D8 /* Localization */ = {
+			isa = PBXGroup;
+			children = (
+				B9CA5061230DC5CA007E31D8 /* en.lproj */,
+			);
+			path = Localization;
+			sourceTree = "<group>";
+		};
+		B9CA5061230DC5CA007E31D8 /* en.lproj */ = {
+			isa = PBXGroup;
+			children = (
+				B9CA5062230DC5D9007E31D8 /* Localizable.strings */,
+			);
+			path = en.lproj;
 			sourceTree = "<group>";
 		};
 		B9D97D1E2300AED400882E66 /* PeripheralModules */ = {
@@ -442,6 +461,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B97BC49D22FB3EFF00858CA9 /* LaunchScreen.storyboard in Resources */,
+				B9CA5064230DC5D9007E31D8 /* Localizable.strings in Resources */,
 				B97BC49A22FB3EFF00858CA9 /* Assets.xcassets in Resources */,
 				B9CA5051230C7E10007E31D8 /* DefaultPreferences.plist in Resources */,
 			);
@@ -548,6 +568,14 @@
 				B97BC49C22FB3EFF00858CA9 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		B9CA5062230DC5D9007E31D8 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B9CA5063230DC5D9007E31D8 /* en */,
+			);
+			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
