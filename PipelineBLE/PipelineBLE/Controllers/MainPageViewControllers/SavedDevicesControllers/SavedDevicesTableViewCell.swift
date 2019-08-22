@@ -10,13 +10,23 @@ import UIKit
 
 class SavedDevicesTableViewCell: UITableViewCell {
     
+    //  Mark: UI components and peripheral data
     public let deviceName: UILabel = {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 18)
-        label.text = "Hello World"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
+    public let signalImage: UIImage = {
+        let image = UIImage()
+        return image
+    }()
+    public let subtitle: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    public var peripheral: BlePeripheral?
     
     override var isHighlighted: Bool {
         didSet{

@@ -58,9 +58,25 @@ class SavedDevicesViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        // Flush any pending state notifications
+        didUpdateBleState()
+        
         //  Ble Notifications
         registerNotifications(enabled: true)
         DLog("Scanner: Register notifications")
+        
+        let isFullScreen = UIScreen.main.traitCollection.horizontalSizeClass == .compact
+        
+        if isFullScreen {
+            print("isFullScreen")
+            // If only connected to 1 peripheral and coming back to this
+            let connectedPeripherals = BleManager.shared.connectedPeripherals()
+            if connectedPeripherals.count == 1, let peripheral = connectedPeripherals.first {
+                DLog("Disconnect from previously connected peripheral")
+                // Disconnect from peripheral
+                BleManager.shared.disconnect(from: peripheral)
+            }
+        }
         
         //  Scan for peripherals
         BleManager.shared.startScan()
@@ -85,7 +101,7 @@ class SavedDevicesViewController: UITableViewController {
             WatchSessionManager.shared.updateApplicationContext(mode: .scan)
         }
         
-        print("Count: \(peripheralList.filteredPeripherals(forceUpdate: false).count)")
+        //print("Count: \(peripheralList.filteredPeripherals(forceUpdate: false).count)")
         return peripheralList.filteredPeripherals(forceUpdate: false).count
     }
     
@@ -93,21 +109,44 @@ class SavedDevicesViewController: UITableViewController {
         //  Create a cell of type SavedDevicesTableViewCell
         let cell = tableView.dequeueReusableCell(withIdentifier: "SavedDevice", for: indexPath) as! SavedDevicesTableViewCell
         
-        //  Get information to pass to the cell
+        //  Get the actual peripheral object
         let peripheral = peripheralList.filteredPeripherals(forceUpdate: false)[indexPath.row]
+        cell.peripheral = peripheral
         let localizationManager = LocalizationManager.shared
-        cell.deviceName.text = peripheral.name ?? localizationManager.localizedString("scanner_unnamed")
-        print(peripheral.name ?? localizationManager.localizedString("scanner_unnamed"))
         
-        //  Send the cell the necessary data to configure itself
-        //cell.deviceName.text = dummyData[indexPath.row]
+        //  Send information to the cell about the peripheral
+        cell.deviceName.text = peripheral.name ?? localizationManager.localizedString("scanner_unnamed")
+        
+        //  Check to see if it is connectable and if UART is enabled. Pass as the subtitle
+        var subtitle: String? = nil
+        if peripheral.advertisement.isConnectable == false {
+            subtitle = localizationManager.localizedString("scanner_notconnectable")
+        }
+        else if peripheral.isUartAdvertised() == true {
+            subtitle = localizationManager.localizedString("scanner_uartavailable")
+        }
+        cell.subtitle.text = subtitle
+        
+        //  ***DEBUG
+        //print(peripheral.name ?? localizationManager.localizedString("scanner_unnamed"))
+        //print(subtitle ?? "subtitle undefined")
+        
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("Selected \(indexPath.row)")
-        let connectToDevice = UARTViewController()
-        navigationController?.pushViewController(connectToDevice, animated: true)
+        //  Grab the peripheral that was selected
+        let peripheral = peripheralList.filteredPeripherals(forceUpdate: false)[indexPath.row]
+        
+        //  Display what peripheral was selected
+        print("Selected \(peripheral.name ?? "No name available")")
+        
+        //  Connect to the peripheral
+        connect(peripheral: peripheral)
+        
+//        let connectToDevice = UARTViewController()
+//        connectToDevice.deviceName.text = peripheral.name ?? "No name available"
+//        navigationController?.pushViewController(connectToDevice, animated: true)
     }
     
     @objc func onTableRefresh(_ sender: AnyObject) {
@@ -149,8 +188,15 @@ class SavedDevicesViewController: UITableViewController {
 //    func loadDetailRootController() {
 //        detailRootController = self.storyboard?.instantiateViewController(withIdentifier: "PeripheralModulesNavigationController")
 //    }
-    
-//    fileprivate func showPeripheralDetails() {
+//
+    fileprivate func showPeripheralDetails() {
+        //  I think this function is actually called to continue on to connecting to the device
+        print("Believe we are changing devices here")
+        
+        let connectToDevice = UARTViewController()
+        connectToDevice.deviceName.text = selectedPeripheral?.name ?? "No name available"
+        navigationController?.pushViewController(connectToDevice, animated: true)
+        
 //        // Watch
 //        if !isMultiConnectEnabled {
 //            WatchSessionManager.shared.updateApplicationContext(mode: .connected)
@@ -161,7 +207,7 @@ class SavedDevicesViewController: UITableViewController {
 //            peripheralModulesViewController.blePeripheral = selectedPeripheral
 //            showDetailViewController(peripheralModulesNavigationController, sender: self)
 //        }
-//    }
+    }
     
     fileprivate func dismissInfoDialog(completion: (() -> Void)? = nil) {
         guard infoAlertController != nil else {
@@ -176,9 +222,28 @@ class SavedDevicesViewController: UITableViewController {
     // MARK: - Check Updates
     private func startUpdatesCheck(peripheral: BlePeripheral) {
         DLog("Check firmware updates")
-        
+        print("Reached the crash point")
         // Refresh available updates
-        firmwareUpdater.checkUpdatesForPeripheral(peripheral, delegate: self as! FirmwareUpdaterDelegate, shouldDiscoverServices: false, shouldRecommendBetaReleases: false, versionToIgnore: Preferences.softwareUpdateIgnoredVersion)
+        firmwareUpdater.checkUpdatesForPeripheral(peripheral, delegate: self as FirmwareUpdaterDelegate, shouldDiscoverServices: false, shouldRecommendBetaReleases: false, versionToIgnore: Preferences.softwareUpdateIgnoredVersion)
+    }
+    
+    fileprivate func showUpdateAvailableForRelease(_ latestRelease: FirmwareInfo) {
+        let localizationManager = LocalizationManager.shared
+        let alert = UIAlertController(title: localizationManager.localizedString("autoupdate_title"),
+                                      message: String(format: localizationManager.localizedString("autoupdate_description_format"), latestRelease.version),
+                                      preferredStyle: UIAlertController.Style.alert)
+        /*
+        alert.addAction(UIAlertAction(title: localizationManager.localizedString("autoupdate_update"), style: UIAlertAction.Style.default, handler: { [unowned self] _ in
+            self.showPeripheralUpdate()
+        }))
+        alert.addAction(UIAlertAction(title: localizationManager.localizedString("autoupdate_later"), style: UIAlertAction.Style.default, handler: { [unowned self] _ in
+            self.showPeripheralDetails()
+        }))*/
+        alert.addAction(UIAlertAction(title: localizationManager.localizedString("autoupdate_ignore"), style: UIAlertAction.Style.cancel, handler: { [unowned self] _ in
+            Preferences.softwareUpdateIgnoredVersion = latestRelease.version
+            self.showPeripheralDetails()
+        }))
+        self.present(alert, animated: true, completion: nil)
     }
     
 //    fileprivate func showPeripheralUpdate() {
@@ -338,6 +403,22 @@ extension SavedDevicesViewController{
         navigationController?.pushViewController(connectToDevice, animated: true)
     }
     
+    fileprivate func connect(peripheral: BlePeripheral) {
+        //####
+        print("Connect function from SavedDeviceViewController")
+        
+        // Connect to selected peripheral
+        selectedPeripheral = peripheral
+        BleManager.shared.connect(to: peripheral)
+        reloadBaseTable()
+    }
+    
+    fileprivate func disconnect(peripheral: BlePeripheral) {
+        selectedPeripheral = nil
+        BleManager.shared.disconnect(from: peripheral)
+        reloadBaseTable()
+    }
+    
     private func didConnectToPeripheral(notification: Notification) {
         guard let selectedPeripheral = selectedPeripheral, let identifier = notification.userInfo?[BleManager.NotificationUserInfoKey.uuid.rawValue] as? UUID, selectedPeripheral.identifier == identifier else {
             DLog("Connected to an unexpected peripheral")
@@ -378,6 +459,25 @@ extension SavedDevicesViewController{
         DispatchQueue.main.async {
             // Reload table
             self.reloadBaseTable()
+        }
+    }
+}
+
+// MARK: - FirmwareUpdaterDelegate
+extension SavedDevicesViewController: FirmwareUpdaterDelegate {
+
+    func onFirmwareUpdateAvailable(isUpdateAvailable: Bool, latestRelease: FirmwareInfo?, deviceDfuInfo: DeviceDfuInfo?) {
+
+        DLog("FirmwareUpdaterDelegate isUpdateAvailable: \(isUpdateAvailable)")
+
+        DispatchQueue.main.async {
+            self.dismissInfoDialog {
+                if isUpdateAvailable, let latestRelease = latestRelease {
+                    self.showUpdateAvailableForRelease(latestRelease)
+                } else {
+                    self.showPeripheralDetails()
+                }
+            }
         }
     }
 }
