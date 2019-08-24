@@ -36,7 +36,6 @@ class UARTViewController: UIViewController {
         deviceName.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         deviceName.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
         deviceName.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
-        
     }
     
     override func viewWillDisappear(_ animated: Bool) {

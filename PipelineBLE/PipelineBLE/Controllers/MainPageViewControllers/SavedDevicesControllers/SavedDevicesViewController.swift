@@ -11,8 +11,6 @@ import CoreBluetooth
 
 class SavedDevicesViewController: UITableViewController {
     
-    let dummyData = ["One","Two","Three","Four","Five","Six"]
-    
     //  Data for searching for peripheral
     fileprivate var peripheralList: PeripheralList!
     fileprivate var isBaseTableScrolling = false
@@ -81,6 +79,9 @@ class SavedDevicesViewController: UITableViewController {
         //  Scan for peripherals
         BleManager.shared.startScan()
         updateScannedPeripherals()
+        
+        //  Make sure the tab bar is visible
+        self.hidesBottomBarWhenPushed = false
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -190,11 +191,13 @@ class SavedDevicesViewController: UITableViewController {
 //    }
 //
     fileprivate func showPeripheralDetails() {
-        //  I think this function is actually called to continue on to connecting to the device
-        print("Believe we are changing devices here")
         
+        //  Create the view to push now that a device has been connected
         let connectToDevice = UARTViewController()
         connectToDevice.deviceName.text = selectedPeripheral?.name ?? "No name available"
+        
+        //  Hide the tab bar when pushed and then push the view
+        connectToDevice.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(connectToDevice, animated: true)
         
 //        // Watch
