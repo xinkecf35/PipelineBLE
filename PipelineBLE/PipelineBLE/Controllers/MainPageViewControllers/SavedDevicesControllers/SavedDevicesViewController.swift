@@ -112,11 +112,11 @@ class SavedDevicesViewController: UITableViewController {
         
         //  Get the actual peripheral object
         let peripheral = peripheralList.filteredPeripherals(forceUpdate: false)[indexPath.row]
-        cell.peripheral = peripheral
         let localizationManager = LocalizationManager.shared
         
         //  Send information to the cell about the peripheral
         cell.deviceName.text = peripheral.name ?? localizationManager.localizedString("scanner_unnamed")
+        cell.signalImage.image = RssiUI.signalImage(for: peripheral.rssi)
         
         //  Check to see if it is connectable and if UART is enabled. Pass as the subtitle
         var subtitle: String? = nil

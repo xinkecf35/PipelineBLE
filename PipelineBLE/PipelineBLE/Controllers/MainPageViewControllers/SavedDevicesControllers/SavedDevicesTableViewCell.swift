@@ -17,8 +17,8 @@ class SavedDevicesTableViewCell: UITableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    public let signalImage: UIImage = {
-        let image = UIImage()
+    public let signalImage: UIImageView = {
+        let image = UIImageView()
         return image
     }()
     public let subtitle: UILabel = {
@@ -26,7 +26,6 @@ class SavedDevicesTableViewCell: UITableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    public var peripheral: BlePeripheral?
     
     override var isHighlighted: Bool {
         didSet{
