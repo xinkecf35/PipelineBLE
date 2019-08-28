@@ -19,6 +19,7 @@ class SavedDevicesTableViewCell: UITableViewCell {
     }()
     public let signalImage: UIImageView = {
         let image = UIImageView()
+        image.translatesAutoresizingMaskIntoConstraints = false
         return image
     }()
     public let subtitle: UILabel = {

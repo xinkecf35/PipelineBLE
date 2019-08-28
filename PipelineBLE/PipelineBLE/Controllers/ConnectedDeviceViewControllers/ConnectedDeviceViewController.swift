@@ -25,27 +25,51 @@ class ConnectedDeviceViewController: UIViewController {
     }
     
     //  UI Components
-    let tableView: UITableView = {
+    lazy var tableView: UITableView = {
         let table = UITableView()
+        table.dataSource = self
+        table.delegate = self
         table.translatesAutoresizingMaskIntoConstraints = false
         return table
     }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        //  Do some initialization
+        if let peripheral = selectedPeripheral {
+            hasUart = peripheral.hasUart()
+        }
 
-        //  The cells will be taken from the saved devices table view cell
-        tableView.register(ConnectedDeviceTableViewCell.self, forCellReuseIdentifier: "ConnectedDevice")
+        //  Configure the view
+        UISettings()
+        
+        //  Register cells for their identifier
         tableView.register(AvailableModulesTableViewCell.self, forCellReuseIdentifier: "AvailableModule")
+        tableView.register(ConnectedDeviceTableViewCell.self, forCellReuseIdentifier: "ConnectedDevice")
+    }
+    
+    func UISettings(){
+        //  Change the page title in the navigation bar
+        self.title = "Device Menu"
+        
+        //  Add table view
+        view.addSubview(tableView)
+        tableView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        tableView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+        tableView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
     }
     
     fileprivate func DefineModes() -> [Modes]{
         if hasUart {
+            print("Modes: multiple")
             return [.uart, .buttons, .datastream, .savedData, .info]
         }
         else{
             //  Does not conform to the requirements... Decide to maybe display some
             //  generic information here
+            print("Modes: 1")
             return [.info]
         }
     }
@@ -65,10 +89,6 @@ class ConnectedDeviceViewController: UIViewController {
 }
 
 
-extension ConnectedDeviceViewController: UITableViewDelegate{
-    
-}
-
 extension ConnectedDeviceViewController: UITableViewDataSource {
     
     //  Use for knowing what section and what information to show
@@ -79,17 +99,21 @@ extension ConnectedDeviceViewController: UITableViewDataSource {
     
     //  Have two sections: Device and Modules
     func numberOfSections(in tableView: UITableView) -> Int {
+        print("Sections: \(2)")
         return 2
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        print("reached title for header in section")
         //  Grab the necessary section header
         var localizationKey: String!
         
         switch TableSection(rawValue: section)! {
         case .device:
+            print("TitleForHeader: Device")
             localizationKey = "peripheralmodules_sectiontitle_device_single"
         case .modules:
+            print("TitleForHeader: Module")
             localizationKey = "peripheralmodules_sectiontitle_modules"
         }
         
@@ -97,26 +121,32 @@ extension ConnectedDeviceViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        print("reached num rows in section")
         //  Find out how many modes depending on the section
         switch TableSection(rawValue: section)! {
         case .device:
             //  Only supporting one device
+            print("NumRowsSection: Device")
             return 1
         case .modules:
             //  Only have enough rows for the number of modules available
+            print("NumRowsSection: modules -- \(DefineModes().count)")
             return DefineModes().count
         }
         
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        print("reached cellfor row at")
         //  Need to choose the right cell to display depending on section
         var identifier: String
         switch TableSection(rawValue: indexPath.section)! {
         case .device:
             //  Need to display the device that is selected
+            print("CellForRowAt: Device")
             identifier = "ConnectedDevice"
         case .modules:
+            print("CellForRowAt: Module")
             identifier = "AvailableModule"
         }
         
@@ -125,5 +155,100 @@ extension ConnectedDeviceViewController: UITableViewDataSource {
         return cell
     }
     
+    
+}
+
+extension ConnectedDeviceViewController: UITableViewDelegate{
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        //  Will need to display localized strings
+        let localizationManager = LocalizationManager.shared
+        
+        //  Need to take action depending on what type of cell it is
+        switch TableSection(rawValue: indexPath.section)! {
+        case .device:
+            //  Make sure that the cell passed is of the right type
+            guard let deviceCell = cell as? ConnectedDeviceTableViewCell else { return }
+            
+            //  Will now need to send info about the device so it can be displayed
+            deviceCell.deviceName.text = selectedPeripheral!.name ?? localizationManager.localizedString("scanner_unnamed")
+            deviceCell.subtitle.text = selectedPeripheral!.isUartAdvertised() ? localizationManager.localizedString("scanner_uartavailable") : "UART Unavailable"
+            deviceCell.signalImage.image = RssiUI.signalImage(for: selectedPeripheral?.rssi)
+            
+        case .modules:
+            //  Need to make sure that the cell is of the right type
+            guard let moduleCell = cell as? AvailableModulesTableViewCell else { return }
+            
+            //  Create variables to store data that will be passed
+            var moduleName: String?
+            var moduleIcon: String?
+            let availableModules = DefineModes()
+            
+            //  Now need to see what module and info needs to be passed
+            switch availableModules[indexPath.row] {
+            case .uart:
+                moduleIcon = "UART_Icon"
+                moduleName = localizationManager.localizedString("uart_tab_title")
+            case .buttons:
+                moduleIcon = "Buttons_Icon"
+                moduleName = "Buttons"
+            case .datastream:
+                moduleIcon = "Data_Stream_Icon"
+                moduleName = "Data Stream"
+            case .savedData:
+                moduleIcon = "Saved_Data_ Icon"
+                moduleName = "Saved Data"
+            case .info:
+                moduleIcon = "Info_Icon"
+                moduleName = localizationManager.localizedString("info_tab_title")
+            }
+            
+            //  Now pass the data to the cell
+            print("**Name: \(moduleName)")
+            moduleCell.moduleName.text = moduleName
+            moduleCell.moduleImage.image = moduleIcon != nil ? UIImage(named: moduleIcon!) : nil
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        //  One of the modules has now been selected
+        switch TableSection(rawValue: indexPath.section)! {
+        case .device:
+            //  Don't want anything to happen here, so just return
+            return
+        case .modules:
+            //  Want to go to the selected module
+            let modes = DefineModes()
+            
+            switch modes[indexPath.row]{
+            case .uart:
+                //  Selected UART, need to open the view controller
+                let uartViewController = UARTViewController()
+                uartViewController.hidesBottomBarWhenPushed = true
+                navigationController?.pushViewController(uartViewController, animated: true)
+            case .buttons:
+                //  Need to open the buttons view controller
+                let buttonsViewController = ButtonsViewController()
+                buttonsViewController.hidesBottomBarWhenPushed = true
+                navigationController?.pushViewController(buttonsViewController, animated: true)
+            case .datastream:
+                //  Open data stream view controller
+                let dataStreamViewController = DataStreamViewController()
+                dataStreamViewController.hidesBottomBarWhenPushed = true
+                navigationController?.pushViewController(dataStreamViewController, animated: true)
+            case .savedData:
+                //  Open saved data view controller
+                let savedDataViewController = SavedDataViewController()
+                savedDataViewController.hidesBottomBarWhenPushed = true
+                navigationController?.pushViewController(savedDataViewController, animated: true)
+            case .info:
+                //  Open info view controller
+                let infoViewController = DeviceInfoViewController()
+                infoViewController.hidesBottomBarWhenPushed = true
+                navigationController?.pushViewController(infoViewController, animated: true)
+            }
+        }
+        tableView.deselectRow(at: indexPath, animated: indexPath.section == 0)
+    }
     
 }

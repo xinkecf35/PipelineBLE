@@ -8,34 +8,13 @@
 
 import UIKit
 
-class UARTViewController: UIViewController {
-
-    private let pageTitle = "UART"
-    
-    let deviceName: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 18)
-        label.text = "Hello World"
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    weak var blePeripheral: BlePeripheral?
+class UARTViewController: UARTBaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         //  Set some initial parameters
-        print("Opened")
-        view.backgroundColor = .darkGray
-        navigationItem.title = pageTitle
         
-        // Do any additional setup after loading the view.
-        view.addSubview(deviceName)
-        deviceName.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        deviceName.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        deviceName.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        deviceName.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
     }
     
     override func viewWillDisappear(_ animated: Bool) {

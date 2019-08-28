@@ -180,7 +180,7 @@ class SavedDevicesViewController: UITableViewController {
         _ = peripheralList.filteredPeripherals(forceUpdate: true)
         tableView.reloadData()
         
-        print("Filtered: \(peripheralList.filteredPeripherals(forceUpdate: false).count)")
+//        print("Filtered: \(peripheralList.filteredPeripherals(forceUpdate: false).count)")
     }
     
     
@@ -193,8 +193,10 @@ class SavedDevicesViewController: UITableViewController {
     fileprivate func showPeripheralDetails() {
         
         //  Create the view to push now that a device has been connected
-        let connectToDevice = UARTViewController()
-        connectToDevice.deviceName.text = selectedPeripheral?.name ?? "No name available"
+        let connectToDevice = ConnectedDeviceViewController()
+        
+        //  Send some initial data
+        connectToDevice.selectedPeripheral = selectedPeripheral
         
         //  Hide the tab bar when pushed and then push the view
         connectToDevice.hidesBottomBarWhenPushed = true
@@ -225,7 +227,6 @@ class SavedDevicesViewController: UITableViewController {
     // MARK: - Check Updates
     private func startUpdatesCheck(peripheral: BlePeripheral) {
         DLog("Check firmware updates")
-        print("Reached the crash point")
         // Refresh available updates
         firmwareUpdater.checkUpdatesForPeripheral(peripheral, delegate: self as FirmwareUpdaterDelegate, shouldDiscoverServices: false, shouldRecommendBetaReleases: false, versionToIgnore: Preferences.softwareUpdateIgnoredVersion)
     }
@@ -407,9 +408,6 @@ extension SavedDevicesViewController{
     }
     
     fileprivate func connect(peripheral: BlePeripheral) {
-        //####
-        print("Connect function from SavedDeviceViewController")
-        
         // Connect to selected peripheral
         selectedPeripheral = peripheral
         BleManager.shared.connect(to: peripheral)
