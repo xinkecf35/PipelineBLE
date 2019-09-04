@@ -48,6 +48,13 @@
 		B99E3C2D2314B7AA00C03948 /* AvailableModulesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B99E3C2C2314B7AA00C03948 /* AvailableModulesTableViewCell.swift */; };
 		B99E3C302314BB5300C03948 /* DeviceInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B99E3C2F2314BB5300C03948 /* DeviceInfoViewController.swift */; };
 		B99E3C322316C60B00C03948 /* UARTBaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B99E3C312316C60B00C03948 /* UARTBaseViewController.swift */; };
+		B99E3C342319C2D000C03948 /* DataFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B99E3C332319C2D000C03948 /* DataFormatter.swift */; };
+		B99E3C41231FFEFA00C03948 /* NSObject+ENHThrottledReloading.m in Sources */ = {isa = PBXBuildFile; fileRef = B99E3C40231FFEFA00C03948 /* NSObject+ENHThrottledReloading.m */; };
+		B99E3C442320007700C03948 /* CocoaCompatibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = B99E3C432320007700C03948 /* CocoaCompatibility.swift */; };
+		B99E3C46232000A100C03948 /* Color+DarkerLighter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B99E3C45232000A100C03948 /* Color+DarkerLighter.swift */; };
+		B99E3C4D23201DCB00C03948 /* UartStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B99E3C4A23201DCB00C03948 /* UartStyle.swift */; };
+		B99E3C4E23201DCB00C03948 /* UartDataExport.swift in Sources */ = {isa = PBXBuildFile; fileRef = B99E3C4B23201DCB00C03948 /* UartDataExport.swift */; };
+		B99E3C4F23201DCB00C03948 /* UartSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = B99E3C4C23201DCB00C03948 /* UartSettings.swift */; };
 		B9CA5044230C3725007E31D8 /* MSWeakTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = B9CA5043230C3725007E31D8 /* MSWeakTimer.m */; };
 		B9CA5049230C7435007E31D8 /* ReleasesParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9CA5046230C7435007E31D8 /* ReleasesParser.swift */; };
 		B9CA504A230C7435007E31D8 /* DfuUpdateProcess.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9CA5047230C7435007E31D8 /* DfuUpdateProcess.swift */; };
@@ -107,8 +114,16 @@
 		B99E3C2C2314B7AA00C03948 /* AvailableModulesTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvailableModulesTableViewCell.swift; sourceTree = "<group>"; };
 		B99E3C2F2314BB5300C03948 /* DeviceInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceInfoViewController.swift; sourceTree = "<group>"; };
 		B99E3C312316C60B00C03948 /* UARTBaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UARTBaseViewController.swift; sourceTree = "<group>"; };
+		B99E3C332319C2D000C03948 /* DataFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataFormatter.swift; sourceTree = "<group>"; };
+		B99E3C3F231FFEF400C03948 /* NSObject+ENHThrottledReloading.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+ENHThrottledReloading.h"; sourceTree = "<group>"; };
+		B99E3C40231FFEFA00C03948 /* NSObject+ENHThrottledReloading.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+ENHThrottledReloading.m"; sourceTree = "<group>"; };
+		B99E3C432320007700C03948 /* CocoaCompatibility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CocoaCompatibility.swift; sourceTree = "<group>"; };
+		B99E3C45232000A100C03948 /* Color+DarkerLighter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Color+DarkerLighter.swift"; sourceTree = "<group>"; };
+		B99E3C472320029300C03948 /* PipelineBLE-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PipelineBLE-Bridging-Header.h"; sourceTree = "<group>"; };
+		B99E3C4A23201DCB00C03948 /* UartStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UartStyle.swift; sourceTree = "<group>"; };
+		B99E3C4B23201DCB00C03948 /* UartDataExport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UartDataExport.swift; sourceTree = "<group>"; };
+		B99E3C4C23201DCB00C03948 /* UartSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UartSettings.swift; sourceTree = "<group>"; };
 		B9CA5041230C3725007E31D8 /* MSWeakTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSWeakTimer.h; sourceTree = "<group>"; };
-		B9CA5042230C3725007E31D8 /* PipelineBLE-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PipelineBLE-Bridging-Header.h"; sourceTree = "<group>"; };
 		B9CA5043230C3725007E31D8 /* MSWeakTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSWeakTimer.m; sourceTree = "<group>"; };
 		B9CA5046230C7435007E31D8 /* ReleasesParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReleasesParser.swift; sourceTree = "<group>"; };
 		B9CA5047230C7435007E31D8 /* DfuUpdateProcess.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DfuUpdateProcess.swift; sourceTree = "<group>"; };
@@ -184,7 +199,6 @@
 		B97BC49122FB3EEE00858CA9 /* PipelineBLE */ = {
 			isa = PBXGroup;
 			children = (
-				B9CA504F230C7E02007E31D8 /* Resources */,
 				B97BC4AF22FB5DE600858CA9 /* Common */,
 				B97BC4A422FB407000858CA9 /* Controllers */,
 				B97BC49222FB3EEE00858CA9 /* AppDelegate.swift */,
@@ -267,7 +281,11 @@
 		B97BC4AF22FB5DE600858CA9 /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				B99E3C332319C2D000C03948 /* DataFormatter.swift */,
+				B99E3C432320007700C03948 /* CocoaCompatibility.swift */,
+				B99E3C45232000A100C03948 /* Color+DarkerLighter.swift */,
 				B94CD1E923071C040077F77E /* Preferences.swift */,
+				B99E3C4823201DAD00C03948 /* Modules */,
 				B94CD1ED230735B30077F77E /* Watch */,
 				B9D97D1E2300AED400882E66 /* PeripheralModules */,
 				B9CA5045230C741E007E31D8 /* Dfu */,
@@ -356,6 +374,41 @@
 			path = DeviceInfoController;
 			sourceTree = "<group>";
 		};
+		B99E3C352319C4DB00C03948 /* External Tools */ = {
+			isa = PBXGroup;
+			children = (
+				B99E3C3E231FFEDA00C03948 /* NSObject+ENHThrottledReloading */,
+			);
+			path = "External Tools";
+			sourceTree = "<group>";
+		};
+		B99E3C3E231FFEDA00C03948 /* NSObject+ENHThrottledReloading */ = {
+			isa = PBXGroup;
+			children = (
+				B99E3C3F231FFEF400C03948 /* NSObject+ENHThrottledReloading.h */,
+				B99E3C40231FFEFA00C03948 /* NSObject+ENHThrottledReloading.m */,
+			);
+			path = "NSObject+ENHThrottledReloading";
+			sourceTree = "<group>";
+		};
+		B99E3C4823201DAD00C03948 /* Modules */ = {
+			isa = PBXGroup;
+			children = (
+				B99E3C4923201DB600C03948 /* UART */,
+			);
+			path = Modules;
+			sourceTree = "<group>";
+		};
+		B99E3C4923201DB600C03948 /* UART */ = {
+			isa = PBXGroup;
+			children = (
+				B99E3C4B23201DCB00C03948 /* UartDataExport.swift */,
+				B99E3C4C23201DCB00C03948 /* UartSettings.swift */,
+				B99E3C4A23201DCB00C03948 /* UartStyle.swift */,
+			);
+			path = UART;
+			sourceTree = "<group>";
+		};
 		B9CA503F230C36FE007E31D8 /* EmbeddedFrameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -369,7 +422,6 @@
 			children = (
 				B9CA5041230C3725007E31D8 /* MSWeakTimer.h */,
 				B9CA5043230C3725007E31D8 /* MSWeakTimer.m */,
-				B9CA5042230C3725007E31D8 /* PipelineBLE-Bridging-Header.h */,
 			);
 			path = MSWeakTimer;
 			sourceTree = "<group>";
@@ -387,18 +439,12 @@
 		B9CA504C230C7DEA007E31D8 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				B99E3C472320029300C03948 /* PipelineBLE-Bridging-Header.h */,
+				B99E3C352319C4DB00C03948 /* External Tools */,
 				B9CA5060230DC592007E31D8 /* Localization */,
 				B9CA5050230C7E10007E31D8 /* DefaultPreferences.plist */,
 			);
 			path = Resources;
-			sourceTree = "<group>";
-		};
-		B9CA504F230C7E02007E31D8 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Resources;
-			path = ../Resources;
 			sourceTree = "<group>";
 		};
 		B9CA5060230DC592007E31D8 /* Localization */ = {
@@ -579,7 +625,9 @@
 				B97BC4AB22FB47C200858CA9 /* SavedDevicesTableViewCell.swift in Sources */,
 				B9CA505E230C953B007E31D8 /* RssiUI.swift in Sources */,
 				B97BC4DD22FB686B00858CA9 /* CommandQueue.swift in Sources */,
+				B99E3C4E23201DCB00C03948 /* UartDataExport.swift in Sources */,
 				B97BC4C322FB5EE400858CA9 /* UartPacketManager.swift in Sources */,
+				B99E3C41231FFEFA00C03948 /* NSObject+ENHThrottledReloading.m in Sources */,
 				B97BC4CD22FB5EFF00858CA9 /* GattServer.swift in Sources */,
 				B94CD1F0230735C80077F77E /* WatchSessionManager.swift in Sources */,
 				B9CA5044230C3725007E31D8 /* MSWeakTimer.m in Sources */,
@@ -596,7 +644,9 @@
 				B94CD1F1230735C80077F77E /* HandoffManager.swift in Sources */,
 				B97BC4E222FB6AE400858CA9 /* AlertHelper.swift in Sources */,
 				B97BC4ED22FB6B5D00858CA9 /* MqttSettings.swift in Sources */,
+				B99E3C4F23201DCB00C03948 /* UartSettings.swift in Sources */,
 				B97BC4F122FC90DE00858CA9 /* AvailableDevicesViewController.swift in Sources */,
+				B99E3C342319C2D000C03948 /* DataFormatter.swift in Sources */,
 				B9CA506D230F3D83007E31D8 /* SavedDataViewController.swift in Sources */,
 				B97BC4C022FB5EE400858CA9 /* BlePeripheral.swift in Sources */,
 				B97BC4BD22FB5EE400858CA9 /* UartDataManager.swift in Sources */,
@@ -608,8 +658,10 @@
 				B97BC4DF22FB6AC200858CA9 /* DataConversions.swift in Sources */,
 				B97BC4EF22FC8FEF00858CA9 /* MainPageTabBarController.swift in Sources */,
 				B99E3C2B2314279700C03948 /* ConnectedDeviceTableViewCell.swift in Sources */,
+				B99E3C46232000A100C03948 /* Color+DarkerLighter.swift in Sources */,
 				B97BC4D122FB5F0900858CA9 /* UartPacketManagerBase.swift in Sources */,
 				B99E3C302314BB5300C03948 /* DeviceInfoViewController.swift in Sources */,
+				B99E3C442320007700C03948 /* CocoaCompatibility.swift in Sources */,
 				B9CA505F230C953B007E31D8 /* PeripheralList.swift in Sources */,
 				B97BC4C122FB5EE400858CA9 /* UartLogManager.swift in Sources */,
 				B9CA506F230F3E20007E31D8 /* ButtonsViewController.swift in Sources */,
@@ -619,6 +671,7 @@
 				B97BC4C422FB5EE400858CA9 /* BleUUIDNames.swift in Sources */,
 				B9CA504A230C7435007E31D8 /* DfuUpdateProcess.swift in Sources */,
 				B97BC4CB22FB5EFF00858CA9 /* UartPeripheralService.swift in Sources */,
+				B99E3C4D23201DCB00C03948 /* UartStyle.swift in Sources */,
 				B97BC4E422FB6AEC00858CA9 /* Data+ScanValue.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -776,7 +829,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.SamPeterson.PipelineBLE;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "PipelineBLE/Common/AdafruitKit/EmbeddedFrameworks/MSWeakTimer/PipelineBLE-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Resources/PipelineBLE-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -798,7 +851,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.SamPeterson.PipelineBLE;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "PipelineBLE/Common/AdafruitKit/EmbeddedFrameworks/MSWeakTimer/PipelineBLE-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Resources/PipelineBLE-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

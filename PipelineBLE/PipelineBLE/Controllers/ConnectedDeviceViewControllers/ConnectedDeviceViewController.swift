@@ -63,13 +63,11 @@ class ConnectedDeviceViewController: UIViewController {
     
     fileprivate func DefineModes() -> [Modes]{
         if hasUart {
-            print("Modes: multiple")
             return [.uart, .buttons, .datastream, .savedData, .info]
         }
         else{
             //  Does not conform to the requirements... Decide to maybe display some
             //  generic information here
-            print("Modes: 1")
             return [.info]
         }
     }
@@ -204,7 +202,7 @@ extension ConnectedDeviceViewController: UITableViewDelegate{
             }
             
             //  Now pass the data to the cell
-            print("**Name: \(moduleName)")
+            print("**Name: \(moduleName ?? "Unknown")")
             moduleCell.moduleName.text = moduleName
             moduleCell.moduleImage.image = moduleIcon != nil ? UIImage(named: moduleIcon!) : nil
         }
