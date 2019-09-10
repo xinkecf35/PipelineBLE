@@ -17,7 +17,7 @@ class UARTBaseViewController: UIViewController {
     let comTextView: UITextView = {
         let textView = UITextView()
         textView.returnKeyType = .done
-        //textView.isScrollEnabled = true
+        textView.isScrollEnabled = true
         textView.translatesAutoresizingMaskIntoConstraints = false
         return textView
     }()
@@ -71,6 +71,8 @@ class UARTBaseViewController: UIViewController {
         
         // UI
         reloadDataUI()
+        
+        print("Going to set up UART")
         
         // Enable Uart
         setupUart()
@@ -129,9 +131,19 @@ class UARTBaseViewController: UIViewController {
         return .black
     }
     
+    internal func send(message: String){
+        assert(false, "Should be implemented by subclasses")
+    }
+    
     fileprivate func fontForPacket(packet: UartPacket) -> UIFont {
         let font = packet.mode == .tx ? UARTViewController.dataTxFont : UARTViewController.dataRxFont
         return font
+    }
+    
+    internal func updateUartReadyUI(isReady: Bool) {
+        inputTextField.isEnabled = isReady
+        inputTextField.backgroundColor = isReady ? UIColor.white : UIColor.black.withAlphaComponent(0.1)
+        sendButton.isEnabled = isReady
     }
 
 }
@@ -189,6 +201,35 @@ extension UARTBaseViewController {
         
         
     }
+}
+
+extension UARTBaseViewController {
+    //  Keep track of all actions
+    @objc func onClickSend(_ sender: AnyObject) {
+        //guard let blePeripheral = blePeripheral else { return }
+        
+        var newText = inputTextField.text ?? ""
+        
+        // Eol
+        if Preferences.uartIsAutomaticEolEnabled {
+            newText += Preferences.uartEolCharacters
+        }
+        
+        send(message: newText)
+        
+        inputTextField.text = ""
+        inputTextField.resignFirstResponder()
+    }
+    
+    @objc func onClickClear(_ sender: AnyObject) {
+        uartData.clearPacketsCache()
+        reloadDataUI()
+    }
+    
+    func onInputTextFieldEdidtingDidEndOnExit(_ sender: UITextField) {
+        onClickSend(sender)
+    }
+    
 }
 
 extension UARTBaseViewController: KeyboardPositionNotifierDelegate {

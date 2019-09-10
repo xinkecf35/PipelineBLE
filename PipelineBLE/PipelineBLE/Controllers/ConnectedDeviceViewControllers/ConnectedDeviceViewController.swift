@@ -221,9 +221,23 @@ extension ConnectedDeviceViewController: UITableViewDelegate{
             switch modes[indexPath.row]{
             case .uart:
                 //  Selected UART, need to open the view controller
+                print("Selecting Row")
+                /*
+                if let uartViewController = self.storyboard?.instantiateViewController(withIdentifier: "UARTViewController") as? UARTViewController {
+                    print("success")
+                    uartViewController.blePeripheral = selectedPeripheral
+                    uartViewController.hidesBottomBarWhenPushed = true
+                    show(uartViewController, sender: self)
+                }
+                */
+                
+                
                 let uartViewController = UARTViewController()
+                self.storyboard?.instantiateViewController(withIdentifier: "UARTViewController")
                 uartViewController.hidesBottomBarWhenPushed = true
+                uartViewController.blePeripheral = selectedPeripheral
                 navigationController?.pushViewController(uartViewController, animated: true)
+                
             case .buttons:
                 //  Need to open the buttons view controller
                 let buttonsViewController = ButtonsViewController()

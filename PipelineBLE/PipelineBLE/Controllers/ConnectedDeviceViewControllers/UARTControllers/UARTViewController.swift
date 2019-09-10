@@ -16,13 +16,16 @@ class UARTViewController: UARTBaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Init Uart
+        //  Init Uart
         uartData = UartPacketManager(delegate: self, isPacketCacheEnabled: true, isMqttEnabled: true)
+        
+        //  Need to add actions for the buttons
+        sendButton.addTarget(self, action: #selector(onClickSend(_:)), for: .touchDown)
+        clearButton.addTarget(self, action: #selector(onClickClear(_:)), for: .touchDown)
         
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        
         
         //  TODO: Need to fix this, causing some issues
         //let disconnectFromDevice = SavedDevicesViewController()
@@ -98,10 +101,31 @@ class UARTViewController: UARTBaseViewController {
                     
                     // Done
                     DLog("Uart enabled")
+                    print("UART enabled")
                     context.updateUartReadyUI(isReady: true)
                 }
             }
         }
+    }
+    
+    override func send(message: String) {
+        guard let uartData = self.uartData as? UartPacketManager else { DLog("Error send with invalid uartData class"); return }
+        
+        print("Sending message: \(message)")
+        
+        //  Single peripheral mode
+        if let blePeripheral = blePeripheral {
+            uartData.send(blePeripheral: blePeripheral, text: message)
+        }
+    }
+    
+    //  Mark: - Style
+    override func colorForPacket(packet: UartPacket) -> UIColor {
+        var color: UIColor?
+        if let peripheralId = packet.peripheralId {
+            color = colorForPeripheral[peripheralId]
+        }
+        return color ?? UIColor.black
     }
     
 }
