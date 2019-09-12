@@ -14,36 +14,39 @@ class UARTBaseViewController: UIViewController {
     
     //  UI Components
     private let pageTitle = "UART"
-    let comTextView: UITextView = {
+    var comTextView: UITextView = {
         let textView = UITextView()
         textView.returnKeyType = .done
         textView.isScrollEnabled = true
+        textView.isEditable = false
+        textView.backgroundColor = UIColor(white: 1, alpha: 0.5)
         textView.translatesAutoresizingMaskIntoConstraints = false
         return textView
     }()
-    let inputTextField: UITextField = {
-        let textField = UITextField()
-        textField.backgroundColor = .white
-        textField.borderStyle = .line
-        textField.translatesAutoresizingMaskIntoConstraints = false
+    var inputTextField: UARTTextField = {
+        let textField = UARTTextField()
         return textField
     }()
-    let sendButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("Send", for: .normal)
-        button.translatesAutoresizingMaskIntoConstraints = false
+    var sendButton: UARTButtons = {
+        let button = UARTButtons()
+        button.configureVisual(text: "Send")
         return button
     }()
-    let clearButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("Clear", for: .normal)
-        button.translatesAutoresizingMaskIntoConstraints = false
+    var clearButton: UARTButtons = {
+        let button = UARTButtons()
+        button.configureVisual(text: "Clear")
         return button
     }()
+    /*
+    lazy var comControlsStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [inputTextField, sendButton, clearButton])
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }()*/
     var originalHeight: CGFloat?
     
-    fileprivate static var dataRxFont = UIFont(name: "CourierNewPSMT", size: 14)!
-    fileprivate static var dataTxFont = UIFont(name: "CourierNewPS-BoldMT", size: 14)!
+    fileprivate static var dataRxFont = UIFont(name: "CourierNewPSMT", size: 18)!
+    fileprivate static var dataTxFont = UIFont(name: "CourierNewPS-BoldMT", size: 18)!
     
     weak var blePeripheral: BlePeripheral?
     internal var uartData: UartPacketManagerBase!
@@ -142,7 +145,7 @@ class UARTBaseViewController: UIViewController {
     
     internal func updateUartReadyUI(isReady: Bool) {
         inputTextField.isEnabled = isReady
-        inputTextField.backgroundColor = isReady ? UIColor.white : UIColor.black.withAlphaComponent(0.1)
+        //inputTextField.backgroundColor = isReady ? UIColor.white : UIColor.black.withAlphaComponent(0.1)
         sendButton.isEnabled = isReady
     }
 
@@ -156,13 +159,13 @@ extension UARTBaseViewController {
         view.backgroundColor = .darkGray
         navigationItem.title = pageTitle
         originalHeight = view.frame.height
-        
+
         //  Add subviews to the main view
         view.addSubview(comTextView)
         view.addSubview(inputTextField)
         view.addSubview(sendButton)
         view.addSubview(clearButton)
-        
+
         //  Set up constraints for com box
         var textViewConstraint = navigationController?.navigationBar.frame.height ?? 20
         textViewConstraint += 30
@@ -171,35 +174,30 @@ extension UARTBaseViewController {
         comTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
         comTextView.bottomAnchor.constraint(equalTo: inputTextField.topAnchor, constant: -5).isActive = true
         comTextView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.7)
-        comTextView.backgroundColor = .blue
-        
+
         //  Set up constraints for the input text field
         inputTextField.topAnchor.constraint(equalTo: comTextView.bottomAnchor, constant: 5).isActive = true
         inputTextField.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -10).isActive = true
         inputTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
         inputTextField.trailingAnchor.constraint(equalTo: sendButton.leadingAnchor, constant: -5).isActive = true
         //inputTextField.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.7)
-        
+
         //  Set up constraints for the send button
         sendButton.topAnchor.constraint(equalTo: comTextView.bottomAnchor, constant: 5).isActive = true
         sendButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -10).isActive = true
         sendButton.leadingAnchor.constraint(equalTo: inputTextField.trailingAnchor, constant: 5).isActive = true
         sendButton.trailingAnchor.constraint(equalTo: clearButton.leadingAnchor, constant: -5).isActive = true
-        
-        
+
+
         //  Set up constraints for the clear button
         clearButton.topAnchor.constraint(equalTo: comTextView.bottomAnchor, constant: 5).isActive = true
         clearButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -10).isActive = true
         clearButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
         clearButton.leadingAnchor.constraint(equalTo: sendButton.trailingAnchor, constant: 5).isActive = true
-        
+
         //  Changing the size of the input text field
-        let inputSize = view.frame.width-30-sendButton.frame.width-clearButton.frame.width
-        inputTextField.widthAnchor.constraint(equalToConstant: inputSize)
-        
-        //  Add actions to buttons
-        
-        
+        sendButton.widthAnchor.constraint(equalToConstant: sendButton.intrinsicContentSize.width + 10).isActive = true
+        clearButton.widthAnchor.constraint(equalToConstant: clearButton.intrinsicContentSize.width + 10).isActive = true
     }
 }
 

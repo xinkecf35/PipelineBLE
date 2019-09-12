@@ -80,6 +80,7 @@ class UARTViewController: UARTBaseViewController {
                 }
             }
         } else if let blePeripheral = blePeripheral {         //  Single peripheral mode
+            //  Designate a color for the peripheral
             colorForPeripheral[blePeripheral.identifier] = colors.first
             blePeripheral.uartEnable(uartRxHandler: uartData.rxPacketReceived) { [weak self] error in
                 guard let context = self else { return }
