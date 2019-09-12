@@ -11,8 +11,6 @@ import CoreBluetooth
 
 class SavedDevicesViewController: UITableViewController {
     
-    let dummyData = ["One","Two","Three","Four","Five","Six"]
-    
     //  Data for searching for peripheral
     fileprivate var peripheralList: PeripheralList!
     fileprivate var isBaseTableScrolling = false
@@ -81,6 +79,9 @@ class SavedDevicesViewController: UITableViewController {
         //  Scan for peripherals
         BleManager.shared.startScan()
         updateScannedPeripherals()
+        
+        //  Make sure the tab bar is visible
+        self.hidesBottomBarWhenPushed = false
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -111,11 +112,11 @@ class SavedDevicesViewController: UITableViewController {
         
         //  Get the actual peripheral object
         let peripheral = peripheralList.filteredPeripherals(forceUpdate: false)[indexPath.row]
-        cell.peripheral = peripheral
         let localizationManager = LocalizationManager.shared
         
         //  Send information to the cell about the peripheral
         cell.deviceName.text = peripheral.name ?? localizationManager.localizedString("scanner_unnamed")
+        cell.signalImage.image = RssiUI.signalImage(for: peripheral.rssi)
         
         //  Check to see if it is connectable and if UART is enabled. Pass as the subtitle
         var subtitle: String? = nil
@@ -179,7 +180,7 @@ class SavedDevicesViewController: UITableViewController {
         _ = peripheralList.filteredPeripherals(forceUpdate: true)
         tableView.reloadData()
         
-        print("Filtered: \(peripheralList.filteredPeripherals(forceUpdate: false).count)")
+//        print("Filtered: \(peripheralList.filteredPeripherals(forceUpdate: false).count)")
     }
     
     
@@ -190,11 +191,15 @@ class SavedDevicesViewController: UITableViewController {
 //    }
 //
     fileprivate func showPeripheralDetails() {
-        //  I think this function is actually called to continue on to connecting to the device
-        print("Believe we are changing devices here")
         
-        let connectToDevice = UARTViewController()
-        connectToDevice.deviceName.text = selectedPeripheral?.name ?? "No name available"
+        //  Create the view to push now that a device has been connected
+        let connectToDevice = ConnectedDeviceViewController()
+        
+        //  Send some initial data
+        connectToDevice.selectedPeripheral = selectedPeripheral
+        
+        //  Hide the tab bar when pushed and then push the view
+        connectToDevice.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(connectToDevice, animated: true)
         
 //        // Watch
@@ -222,7 +227,6 @@ class SavedDevicesViewController: UITableViewController {
     // MARK: - Check Updates
     private func startUpdatesCheck(peripheral: BlePeripheral) {
         DLog("Check firmware updates")
-        print("Reached the crash point")
         // Refresh available updates
         firmwareUpdater.checkUpdatesForPeripheral(peripheral, delegate: self as FirmwareUpdaterDelegate, shouldDiscoverServices: false, shouldRecommendBetaReleases: false, versionToIgnore: Preferences.softwareUpdateIgnoredVersion)
     }
@@ -404,9 +408,6 @@ extension SavedDevicesViewController{
     }
     
     fileprivate func connect(peripheral: BlePeripheral) {
-        //####
-        print("Connect function from SavedDeviceViewController")
-        
         // Connect to selected peripheral
         selectedPeripheral = peripheral
         BleManager.shared.connect(to: peripheral)

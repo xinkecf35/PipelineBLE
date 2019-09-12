@@ -8,120 +8,125 @@
 
 import UIKit
 
-class UARTViewController: UIViewController {
-
-    private let pageTitle = "UART"
+class UARTViewController: UARTBaseViewController {
     
-    let deviceName: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 18)
-        label.text = "Hello World"
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    weak var blePeripheral: BlePeripheral?
+    //  Data
+    fileprivate var colorForPeripheral = [UUID: UIColor]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        //  Set some initial parameters
-        print("Opened")
-        view.backgroundColor = .darkGray
-        navigationItem.title = pageTitle
+        //  Init Uart
+        uartData = UartPacketManager(delegate: self, isPacketCacheEnabled: true, isMqttEnabled: true)
         
-        // Do any additional setup after loading the view.
-        view.addSubview(deviceName)
-        deviceName.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        deviceName.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        deviceName.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        deviceName.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+        //  Need to add actions for the buttons
+        sendButton.addTarget(self, action: #selector(onClickSend(_:)), for: .touchDown)
+        clearButton.addTarget(self, action: #selector(onClickClear(_:)), for: .touchDown)
         
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         
-        
         //  TODO: Need to fix this, causing some issues
         //let disconnectFromDevice = SavedDevicesViewController()
         //navigationController?.pushViewController(disconnectFromDevice, animated: true)
     }
-    /*
-    // MARK: - BLE Notifications
-    private weak var willConnectToPeripheralObserver: NSObjectProtocol?
-    private weak var willDisconnectFromPeripheralObserver: NSObjectProtocol?
-    private weak var peripheralDidUpdateRssiObserver: NSObjectProtocol?
-    private weak var didDisconnectFromPeripheralObserver: NSObjectProtocol?
     
-    private func registerNotifications(enabled: Bool) {
-        let notificationCenter = NotificationCenter.default
-        
-        if enabled {
-            willConnectToPeripheralObserver = notificationCenter.addObserver(forName: .willConnectToPeripheral, object: nil, queue: .main, using: {[weak self] notification in self?.willConnectToPeripheral(notification: notification)})
-            willDisconnectFromPeripheralObserver = notificationCenter.addObserver(forName: .willDisconnectFromPeripheral, object: nil, queue: .main, using: {[weak self] notification in self?.willDisconnectFromPeripheral(notification: notification)})
-            peripheralDidUpdateRssiObserver = notificationCenter.addObserver(forName: .peripheralDidUpdateRssi, object: nil, queue: .main, using: {[weak self] notification in self?.peripheralDidUpdateRssi(notification: notification)})
-            didDisconnectFromPeripheralObserver = notificationCenter.addObserver(forName: .didDisconnectFromPeripheral, object: nil, queue: .main, using: {[weak self] notification in self?.didDisconnectFromPeripheral(notification: notification)})
-            
-        } else {
-            if let willConnectToPeripheralObserver = willConnectToPeripheralObserver {notificationCenter.removeObserver(willConnectToPeripheralObserver)}
-            if let willDisconnectFromPeripheralObserver = willDisconnectFromPeripheralObserver {notificationCenter.removeObserver(willDisconnectFromPeripheralObserver)}
-            if let peripheralDidUpdateRssiObserver = peripheralDidUpdateRssiObserver {notificationCenter.removeObserver(peripheralDidUpdateRssiObserver)}
-            if let didDisconnectFromPeripheralObserver = didDisconnectFromPeripheralObserver {notificationCenter.removeObserver(didDisconnectFromPeripheralObserver)}
-        }
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
     }
     
-    fileprivate func willConnectToPeripheral(notification: Notification) {
-        guard let identifier = notification.userInfo?[BleManager.NotificationUserInfoKey.uuid.rawValue] as? UUID, identifier == blePeripheral?.identifier else { return }
-        
-        if isInMultiUartMode() {
-        } else {
-            showEmpty(true)
-            setConnecting(true)
-        }
+    // MARK: - UART
+    override func isInMultiUartMode() -> Bool {
+        return blePeripheral == nil
     }
     
-    fileprivate func willDisconnectFromPeripheral(notification: Notification) {
-        guard let identifier = notification.userInfo?[BleManager.NotificationUserInfoKey.uuid.rawValue] as? UUID, identifier == blePeripheral?.identifier else { return }
+    override func setupUart() {
+        // Reset colors assigned to peripherals
+        let colors = UartStyle.defaultColors()
+        colorForPeripheral.removeAll()
         
-        DLog("detail: peripheral willDisconnect")
-        let isFullScreen = UIScreen.main.traitCollection.horizontalSizeClass == .compact
-        if isFullScreen {       // executed when bluetooth is stopped
-            
-            // Back to peripheral list
-            goBackToPeripheralList()
-        } else {
-            if connectionMode != .multiplePeripherals {
-                blePeripheral = nil
+        // Enable uart
+        let localizationManager = LocalizationManager.shared
+        if isInMultiUartMode() {            // Multiple peripheral mode
+            let blePeripherals = BleManager.shared.connectedPeripherals()
+            for (i, blePeripheral) in blePeripherals.enumerated() {
+                colorForPeripheral[blePeripheral.identifier] = colors[i % colors.count]
+                blePeripheral.uartEnable(uartRxHandler: uartData.rxPacketReceived) { [weak self] error in
+                    guard let context = self else { return }
+                    
+                    let peripheralName = blePeripheral.name ?? blePeripheral.identifier.uuidString
+                    DispatchQueue.main.async {
+                        guard error == nil else {
+                            DLog("Error initializing uart")
+                            context.dismiss(animated: true, completion: { [weak self] () -> Void in
+                                if let context = self {
+                                    showErrorAlert(from: context, title: localizationManager.localizedString("dialog_error"), message: String(format: localizationManager.localizedString("uart_error_multipleperiperipheralinit_format"), peripheralName))
+                                    
+                                    BleManager.shared.disconnect(from: blePeripheral)
+                                }
+                            })
+                            return
+                        }
+                        
+                        // Done
+                        DLog("Uart enabled for \(peripheralName)")
+                        
+                        if blePeripheral == blePeripherals.last {
+                            context.updateUartReadyUI(isReady: true)
+                        }
+                    }
+                }
             }
-            showEmpty(true)
-            setConnecting(false)
+        } else if let blePeripheral = blePeripheral {         //  Single peripheral mode
+            //  Designate a color for the peripheral
+            colorForPeripheral[blePeripheral.identifier] = colors.first
+            blePeripheral.uartEnable(uartRxHandler: uartData.rxPacketReceived) { [weak self] error in
+                guard let context = self else { return }
+                
+                DispatchQueue.main.async {
+                    guard error == nil else {
+                        DLog("Error initializing uart")
+                        context.dismiss(animated: true, completion: { [weak self] in
+                            if let context = self {
+                                showErrorAlert(from: context, title: localizationManager.localizedString("dialog_error"), message: localizationManager.localizedString("uart_error_peripheralinit"))
+                                
+                                if let blePeripheral = context.blePeripheral {
+                                    BleManager.shared.disconnect(from: blePeripheral)
+                                }
+                            }
+                        })
+                        return
+                    }
+                    
+                    // Done
+                    DLog("Uart enabled")
+                    print("UART enabled")
+                    context.updateUartReadyUI(isReady: true)
+                }
+            }
         }
     }
     
-    fileprivate func peripheralDidUpdateRssi(notification: Notification) {
-        guard let identifier = notification.userInfo?[BleManager.NotificationUserInfoKey.uuid.rawValue] as? UUID, identifier == blePeripheral?.identifier else { return }
+    override func send(message: String) {
+        guard let uartData = self.uartData as? UartPacketManager else { DLog("Error send with invalid uartData class"); return }
         
-        // Update section
-        baseTableView.reloadSections([TableSection.device.rawValue], with: .none)
+        print("Sending message: \(message)")
+        
+        //  Single peripheral mode
+        if let blePeripheral = blePeripheral {
+            uartData.send(blePeripheral: blePeripheral, text: message)
+        }
     }
     
-    private func didDisconnectFromPeripheral(notification: Notification) {
-        guard let identifier = notification.userInfo?[BleManager.NotificationUserInfoKey.uuid.rawValue] as? UUID, identifier == blePeripheral?.identifier else { return }
-        
-        // Disable Rssi timer
-        rssiRefreshTimer?.invalidate()
-        rssiRefreshTimer = nil
+    //  Mark: - Style
+    override func colorForPacket(packet: UartPacket) -> UIColor {
+        var color: UIColor?
+        if let peripheralId = packet.peripheralId {
+            color = colorForPeripheral[peripheralId]
+        }
+        return color ?? UIColor.black
     }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+    
 }
