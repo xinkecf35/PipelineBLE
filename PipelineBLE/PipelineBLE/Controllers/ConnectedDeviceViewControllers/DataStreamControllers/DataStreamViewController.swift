@@ -7,17 +7,37 @@
 //
 
 import UIKit
+import Charts
 
 class DataStreamViewController: UIViewController {
 
     private let pageTitle = "Data Stream"
-    
-    let deviceName: UILabel = {
+    var plot: LineChartView = {
+        let plot = LineChartView()
+        plot.translatesAutoresizingMaskIntoConstraints = false
+        return plot
+    }()
+    var sliderLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 18)
-        label.text = "Data Stream - This page is currently under development"
+        label.text = "Auto Scroll:"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
+    }()
+    var scrollLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Width:"
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    var autoScroll: UISwitch = {
+        let scroll = UISwitch()
+        scroll.translatesAutoresizingMaskIntoConstraints = false
+        return scroll
+    }()
+    var maxEntries: UISlider = {
+        let slider = UISlider()
+        slider.translatesAutoresizingMaskIntoConstraints = false
+        return slider
     }()
     
     weak var blePeripheral: BlePeripheral?
@@ -25,16 +45,60 @@ class DataStreamViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        //  Set up UI
+        configureUI()
+        
+    }
+    
+    //  MARK: - Set up the UI
+    func configureUI(){
         //  Set some initial parameters
         view.backgroundColor = .darkGray
         navigationItem.title = pageTitle
         
-        // Do any additional setup after loading the view.
-        view.addSubview(deviceName)
-        deviceName.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        deviceName.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        deviceName.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        deviceName.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+        //  Add items to the view
+        view.addSubview(plot)
+        view.addSubview(scrollLabel)
+        view.addSubview(sliderLabel)
+        view.addSubview(autoScroll)
+        view.addSubview(maxEntries)
+        
+        //  Add plotter view
+        var textViewConstraint = navigationController?.navigationBar.frame.height ?? 20
+        textViewConstraint += 30
+        plot.topAnchor.constraint(equalTo: view.topAnchor, constant: textViewConstraint).isActive = true
+        plot.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
+        plot.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
+        plot.bottomAnchor.constraint(equalTo: scrollLabel.topAnchor, constant: -5).isActive = true
+        
+        //  Add scroll label
+        genericConstraints(top: plot, middle: scrollLabel, bottom: view, width: true)
+        scrollLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
+        scrollLabel.trailingAnchor.constraint(equalTo: autoScroll.leadingAnchor, constant: -5).isActive = true
+        
+        //  Add auto scroll slider
+        genericConstraints(top: plot, middle: autoScroll, bottom: view, width: false)
+        autoScroll.leadingAnchor.constraint(equalTo: scrollLabel.trailingAnchor, constant: 5).isActive = true
+        autoScroll.trailingAnchor.constraint(equalTo: sliderLabel.leadingAnchor, constant: -5).isActive = true
+        
+        //  Add max entries slider label
+        genericConstraints(top: plot, middle: autoScroll, bottom: view, width: true)
+        autoScroll.leadingAnchor.constraint(equalTo: autoScroll.trailingAnchor, constant: 5).isActive = true
+        autoScroll.trailingAnchor.constraint(equalTo: maxEntries.leadingAnchor, constant: -5).isActive = true
+        
+        //  Add the slider for max entries
+        genericConstraints(top: plot, middle: maxEntries, bottom: view, width: false)
+        maxEntries.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
+        maxEntries.leadingAnchor.constraint(equalTo: autoScroll.trailingAnchor, constant: 5).isActive = true
+    }
+    
+    func genericConstraints(top: UIView, middle: UIView, bottom: UIView, width: Bool){
+        //  Automatically apply generic constraints
+        middle.topAnchor.constraint(equalTo: top.bottomAnchor, constant: 5).isActive = true
+        middle.bottomAnchor.constraint(equalTo: bottom.bottomAnchor, constant: -10).isActive = true
+        if width {
+            middle.widthAnchor.constraint(equalToConstant: middle.intrinsicContentSize.width + 5).isActive = true
+        }
         
     }
     

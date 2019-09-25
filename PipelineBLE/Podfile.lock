@@ -1,4 +1,7 @@
 PODS:
+  - Charts (3.3.0):
+    - Charts/Core (= 3.3.0)
+  - Charts/Core (3.3.0)
   - CocoaAsyncSocket (7.6.3)
   - CocoaMQTT (1.1.3):
     - CocoaAsyncSocket (~> 7.6.3)
@@ -13,6 +16,7 @@ PODS:
   - ZIPFoundation (0.9.9)
 
 DEPENDENCIES:
+  - Charts (~> 3.3.0)
   - CocoaMQTT (~> 1.1.2)
   - iOSDFULibrary (~> 4.4.2)
   - MSWeakTimer (~> 1.1.0)
@@ -21,6 +25,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
+    - Charts
     - CocoaAsyncSocket
     - CocoaMQTT
     - iOSDFULibrary
@@ -30,6 +35,7 @@ SPEC REPOS:
     - ZIPFoundation
 
 SPEC CHECKSUMS:
+  Charts: e0dd4cd8f257bccf98407b58183ddca8e8d5b578
   CocoaAsyncSocket: eafaa68a7e0ec99ead0a7b35015e0bf25d2c8987
   CocoaMQTT: b506d38ad3bbe1c55a4f8ee8c9fd02c35da1a7d8
   iOSDFULibrary: 7f25ff33edd65f7d23bf6ebe4827723509ac091b
@@ -38,6 +44,6 @@ SPEC CHECKSUMS:
   "UIColor+Hex": 9fee91bb8e19f17dd40a79ae1e98949a6a84489d
   ZIPFoundation: 89df685c971926b0323087952320bdfee9f0b6ef
 
-PODFILE CHECKSUM: 499052354789d15082fffcb04fbd109437c93006
+PODFILE CHECKSUM: d66187a64bff8a3b16d8c833b29036fc01e04f15
 
 COCOAPODS: 1.7.5

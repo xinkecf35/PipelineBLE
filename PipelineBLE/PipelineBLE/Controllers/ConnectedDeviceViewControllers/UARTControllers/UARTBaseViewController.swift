@@ -37,12 +37,12 @@ class UARTBaseViewController: UIViewController {
         button.configureVisual(text: "Clear")
         return button
     }()
-    /*
-    lazy var comControlsStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [inputTextField, sendButton, clearButton])
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        return stackView
-    }()*/
+    var saveBarButton: UIBarButtonItem = {
+        let button = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(onClickSave(_:)))
+        return button
+    }()
+    
+    
     var originalHeight: CGFloat?
     
     fileprivate static var dataRxFont = UIFont(name: "CourierNewPSMT", size: 18)!
@@ -75,10 +75,25 @@ class UARTBaseViewController: UIViewController {
         // UI
         reloadDataUI()
         
-        print("Going to set up UART")
+        //  Configure the Navigation control bar buttons
+        navigationItem.rightBarButtonItem = saveBarButton
         
         // Enable Uart
         setupUart()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        //  Cancel notifications
+        registerNotifications(enabled: false)
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        //  No need to reload the view
+        comTextView.enh_cancelPendingReload()
     }
     
     // MARK: - BLE Notifications
@@ -173,7 +188,7 @@ extension UARTBaseViewController {
         comTextView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
         comTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10).isActive = true
         comTextView.bottomAnchor.constraint(equalTo: inputTextField.topAnchor, constant: -5).isActive = true
-        comTextView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.7)
+        //comTextView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.7)
 
         //  Set up constraints for the input text field
         inputTextField.topAnchor.constraint(equalTo: comTextView.bottomAnchor, constant: 5).isActive = true
@@ -226,6 +241,11 @@ extension UARTBaseViewController {
     
     func onInputTextFieldEdidtingDidEndOnExit(_ sender: UITextField) {
         onClickSend(sender)
+    }
+    
+    @objc func onClickSave(_ sender: AnyObject){
+        //  Save the text that is in the textfield currently
+        
     }
     
 }

@@ -22,7 +22,6 @@ class UARTViewController: UARTBaseViewController {
         //  Need to add actions for the buttons
         sendButton.addTarget(self, action: #selector(onClickSend(_:)), for: .touchDown)
         clearButton.addTarget(self, action: #selector(onClickClear(_:)), for: .touchDown)
-        
     }
     
     override func viewWillDisappear(_ animated: Bool) {

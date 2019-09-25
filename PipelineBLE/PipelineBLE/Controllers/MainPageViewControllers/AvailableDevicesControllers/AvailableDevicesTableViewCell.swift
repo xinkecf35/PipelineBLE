@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SavedDevicesTableViewCell: UITableViewCell {
+class AvailableDevicesTableViewCell: UITableViewCell {
     
     //  Mark: UI components and peripheral data
     public let deviceName: UILabel = {
