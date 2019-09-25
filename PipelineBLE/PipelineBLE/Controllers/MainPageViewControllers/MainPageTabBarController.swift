@@ -14,8 +14,8 @@ class MainPageTabBarController: UITabBarController {
         super.viewDidLoad()
         
         //  Add all navigation controllers to the tab bar controller. Specify details about each
-        viewControllers = [createNavController(title: "Saved Devices", imageName: "Saved_Devices_Icon", rootView: SavedDevicesViewController()),
-                           createNavController(title: "Available Devices", imageName: "Available_Devices_Icon", rootView: AvailableDevicesViewController()),
+        viewControllers = [createNavController(title: "Available Devices", imageName: "Available_Devices_Icon", rootView: AvailableDevicesViewController()),
+                           createNavController(title: "Saved Devices", imageName: "Saved_Devices_Icon", rootView: SavedDevicesViewController()),
                            createNavController(title: "Past Data", imageName: "Past_Data_Icon", rootView: PastDataViewController())]
     }
     

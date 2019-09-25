@@ -15,7 +15,7 @@
 		B97BC49522FB3EEE00858CA9 /* SavedDevicesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97BC49422FB3EEE00858CA9 /* SavedDevicesViewController.swift */; };
 		B97BC49A22FB3EFF00858CA9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B97BC49922FB3EFF00858CA9 /* Assets.xcassets */; };
 		B97BC49D22FB3EFF00858CA9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B97BC49B22FB3EFF00858CA9 /* LaunchScreen.storyboard */; };
-		B97BC4AB22FB47C200858CA9 /* SavedDevicesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97BC4AA22FB47C200858CA9 /* SavedDevicesTableViewCell.swift */; };
+		B97BC4AB22FB47C200858CA9 /* AvailableDevicesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97BC4AA22FB47C200858CA9 /* AvailableDevicesTableViewCell.swift */; };
 		B97BC4AE22FB4C7100858CA9 /* UARTViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97BC4AD22FB4C7100858CA9 /* UARTViewController.swift */; };
 		B97BC4BD22FB5EE400858CA9 /* UartDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97BC4B522FB5EE200858CA9 /* UartDataManager.swift */; };
 		B97BC4BE22FB5EE400858CA9 /* BleManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97BC4B622FB5EE200858CA9 /* BleManager.swift */; };
@@ -58,6 +58,8 @@
 		B99E3C56232AA51D00C03948 /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B99E3C55232AA51D00C03948 /* CustomButton.swift */; };
 		B99E3C58232AA53A00C03948 /* UARTButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = B99E3C57232AA53A00C03948 /* UARTButtons.swift */; };
 		B99E3C7E232AF7CB00C03948 /* UARTTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B99E3C7D232AF7CB00C03948 /* UARTTextField.swift */; };
+		B9BEF6E923399B6100906B4C /* PersistentData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9BEF6E823399B6100906B4C /* PersistentData.swift */; };
+		B9BEF6EB2339C10D00906B4C /* SavedData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9BEF6EA2339C10D00906B4C /* SavedData.swift */; };
 		B9CA5044230C3725007E31D8 /* MSWeakTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = B9CA5043230C3725007E31D8 /* MSWeakTimer.m */; };
 		B9CA5049230C7435007E31D8 /* ReleasesParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9CA5046230C7435007E31D8 /* ReleasesParser.swift */; };
 		B9CA504A230C7435007E31D8 /* DfuUpdateProcess.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9CA5047230C7435007E31D8 /* DfuUpdateProcess.swift */; };
@@ -84,7 +86,7 @@
 		B97BC49922FB3EFF00858CA9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B97BC49C22FB3EFF00858CA9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B97BC49E22FB3EFF00858CA9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		B97BC4AA22FB47C200858CA9 /* SavedDevicesTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SavedDevicesTableViewCell.swift; sourceTree = "<group>"; };
+		B97BC4AA22FB47C200858CA9 /* AvailableDevicesTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AvailableDevicesTableViewCell.swift; sourceTree = "<group>"; };
 		B97BC4AD22FB4C7100858CA9 /* UARTViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UARTViewController.swift; sourceTree = "<group>"; };
 		B97BC4B522FB5EE200858CA9 /* UartDataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UartDataManager.swift; sourceTree = "<group>"; };
 		B97BC4B622FB5EE200858CA9 /* BleManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BleManager.swift; sourceTree = "<group>"; };
@@ -129,6 +131,8 @@
 		B99E3C55232AA51D00C03948 /* CustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
 		B99E3C57232AA53A00C03948 /* UARTButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UARTButtons.swift; sourceTree = "<group>"; };
 		B99E3C7D232AF7CB00C03948 /* UARTTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UARTTextField.swift; sourceTree = "<group>"; };
+		B9BEF6E823399B6100906B4C /* PersistentData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistentData.swift; sourceTree = "<group>"; };
+		B9BEF6EA2339C10D00906B4C /* SavedData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedData.swift; sourceTree = "<group>"; };
 		B9CA5041230C3725007E31D8 /* MSWeakTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSWeakTimer.h; sourceTree = "<group>"; };
 		B9CA5043230C3725007E31D8 /* MSWeakTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSWeakTimer.m; sourceTree = "<group>"; };
 		B9CA5046230C7435007E31D8 /* ReleasesParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReleasesParser.swift; sourceTree = "<group>"; };
@@ -254,7 +258,6 @@
 			isa = PBXGroup;
 			children = (
 				B97BC49422FB3EEE00858CA9 /* SavedDevicesViewController.swift */,
-				B97BC4AA22FB47C200858CA9 /* SavedDevicesTableViewCell.swift */,
 			);
 			path = SavedDevicesControllers;
 			sourceTree = "<group>";
@@ -263,6 +266,7 @@
 			isa = PBXGroup;
 			children = (
 				B97BC4F022FC90DE00858CA9 /* AvailableDevicesViewController.swift */,
+				B97BC4AA22FB47C200858CA9 /* AvailableDevicesTableViewCell.swift */,
 			);
 			path = AvailableDevicesControllers;
 			sourceTree = "<group>";
@@ -291,6 +295,7 @@
 				B99E3C432320007700C03948 /* CocoaCompatibility.swift */,
 				B99E3C45232000A100C03948 /* Color+DarkerLighter.swift */,
 				B94CD1E923071C040077F77E /* Preferences.swift */,
+				B9BEF6E7233999DB00906B4C /* PersistentData */,
 				B99E3C51232AA49900C03948 /* Style */,
 				B99E3C4823201DAD00C03948 /* Modules */,
 				B94CD1ED230735B30077F77E /* Watch */,
@@ -424,6 +429,15 @@
 				B99E3C7D232AF7CB00C03948 /* UARTTextField.swift */,
 			);
 			path = Style;
+			sourceTree = "<group>";
+		};
+		B9BEF6E7233999DB00906B4C /* PersistentData */ = {
+			isa = PBXGroup;
+			children = (
+				B9BEF6E823399B6100906B4C /* PersistentData.swift */,
+				B9BEF6EA2339C10D00906B4C /* SavedData.swift */,
+			);
+			path = PersistentData;
 			sourceTree = "<group>";
 		};
 		B9CA503F230C36FE007E31D8 /* EmbeddedFrameworks */ = {
@@ -640,7 +654,7 @@
 				B9CA5071230F4C71007E31D8 /* ConnectedDeviceViewController.swift in Sources */,
 				B97BC4CE22FB5EFF00858CA9 /* UartPeripheralModePacketManager.swift in Sources */,
 				B99E3C56232AA51D00C03948 /* CustomButton.swift in Sources */,
-				B97BC4AB22FB47C200858CA9 /* SavedDevicesTableViewCell.swift in Sources */,
+				B97BC4AB22FB47C200858CA9 /* AvailableDevicesTableViewCell.swift in Sources */,
 				B9CA505E230C953B007E31D8 /* RssiUI.swift in Sources */,
 				B97BC4DD22FB686B00858CA9 /* CommandQueue.swift in Sources */,
 				B99E3C4E23201DCB00C03948 /* UartDataExport.swift in Sources */,
@@ -654,6 +668,7 @@
 				B9CA506B230F3D38007E31D8 /* DataStreamViewController.swift in Sources */,
 				B97BC4F322FCA27900858CA9 /* PastDataViewController.swift in Sources */,
 				B99E3C58232AA53A00C03948 /* UARTButtons.swift in Sources */,
+				B9BEF6EB2339C10D00906B4C /* SavedData.swift in Sources */,
 				B97BC4C222FB5EE400858CA9 /* BlePeripheral+Uart.swift in Sources */,
 				B97BC4EC22FB6B5D00858CA9 /* MqttManager.swift in Sources */,
 				B97BC49322FB3EEE00858CA9 /* AppDelegate.swift in Sources */,
@@ -675,6 +690,7 @@
 				B97BC4E822FB6AFE00858CA9 /* KeyboardPositionNotifier.swift in Sources */,
 				B97BC4E622FB6AF600858CA9 /* DataDownloader.swift in Sources */,
 				B97BC4DF22FB6AC200858CA9 /* DataConversions.swift in Sources */,
+				B9BEF6E923399B6100906B4C /* PersistentData.swift in Sources */,
 				B97BC4EF22FC8FEF00858CA9 /* MainPageTabBarController.swift in Sources */,
 				B99E3C2B2314279700C03948 /* ConnectedDeviceTableViewCell.swift in Sources */,
 				B99E3C46232000A100C03948 /* Color+DarkerLighter.swift in Sources */,
