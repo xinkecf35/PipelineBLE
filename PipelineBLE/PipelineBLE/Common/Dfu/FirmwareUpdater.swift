@@ -87,12 +87,14 @@ class FirmwareUpdater {
 
     // MARK: - Peripheral Management
     func checkUpdatesForPeripheral(_ peripheral: BlePeripheral, delegate: FirmwareUpdaterDelegate, shouldDiscoverServices: Bool, shouldRecommendBetaReleases: Bool, versionToIgnore: String?) {
-
+        print("chedckUpdatesForPeripheral")
         if shouldDiscoverServices {
+            print("shouldDiscoverServices")
             peripheral.discover(serviceUuids: nil) { [weak self] error in
                 self?.servicesDiscovered(peripheral: peripheral, delegate: delegate, shouldRecommendBetaReleases: shouldRecommendBetaReleases, versionToIgnore: versionToIgnore)
             }
         } else {
+            print("not shouldDiscoverServices")
             servicesDiscovered(peripheral: peripheral, delegate: delegate, shouldRecommendBetaReleases: shouldRecommendBetaReleases, versionToIgnore: versionToIgnore)
         }
     }

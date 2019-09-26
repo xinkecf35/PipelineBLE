@@ -8,12 +8,22 @@
 
 import UIKit
 
-class SavedDevicesTableViewCell: UITableViewCell {
+class AvailableDevicesTableViewCell: UITableViewCell {
     
+    //  Mark: UI components and peripheral data
     public let deviceName: UILabel = {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 18)
-        label.text = "Hello World"
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    public let signalImage: UIImageView = {
+        let image = UIImageView()
+        image.translatesAutoresizingMaskIntoConstraints = false
+        return image
+    }()
+    public let subtitle: UILabel = {
+        let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
