@@ -217,7 +217,7 @@ extension UARTBaseViewController {
 }
 
 extension UARTBaseViewController {
-    //  Keep track of all actions
+    //  MARK: - Actions
     @objc func onClickSend(_ sender: AnyObject) {
         //guard let blePeripheral = blePeripheral else { return }
         
@@ -244,8 +244,22 @@ extension UARTBaseViewController {
     }
     
     @objc func onClickSave(_ sender: AnyObject){
-        //  Save the text that is in the textfield currently
-        
+        print("Trying to save data")
+        //  Need to get an identifier for this data
+        let alert = UIAlertController(title: "SaveData", message: "Please enter an identifier for this data:", preferredStyle: .alert)
+        alert.addTextField{ (textField) in
+            textField.placeholder = "identifier"
+        }
+        let action = UIAlertAction(title: "Save", style: .default){ (_) in
+            //  Save the text that is in the textfield currently
+            let data = UARTData(context: PersistenceService.context)
+            data.data = self.comTextView.text
+            let id = alert.textFields!.first!.text ?? " "
+            data.setup(id: id, peripheral: self.blePeripheral!)
+            PersistenceService.saveContext()
+        }
+        alert.addAction(action)
+        present(alert, animated: true, completion: nil)
     }
     
 }

@@ -97,7 +97,6 @@ extension ConnectedDeviceViewController: UITableViewDataSource {
     
     //  Have two sections: Device and Modules
     func numberOfSections(in tableView: UITableView) -> Int {
-        print("Sections: \(2)")
         return 2
     }
     
@@ -108,10 +107,8 @@ extension ConnectedDeviceViewController: UITableViewDataSource {
         
         switch TableSection(rawValue: section)! {
         case .device:
-            print("TitleForHeader: Device")
             localizationKey = "peripheralmodules_sectiontitle_device_single"
         case .modules:
-            print("TitleForHeader: Module")
             localizationKey = "peripheralmodules_sectiontitle_modules"
         }
         
@@ -119,32 +116,26 @@ extension ConnectedDeviceViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print("reached num rows in section")
         //  Find out how many modes depending on the section
         switch TableSection(rawValue: section)! {
         case .device:
             //  Only supporting one device
-            print("NumRowsSection: Device")
             return 1
         case .modules:
             //  Only have enough rows for the number of modules available
-            print("NumRowsSection: modules -- \(DefineModes().count)")
             return DefineModes().count
         }
         
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        print("reached cellfor row at")
         //  Need to choose the right cell to display depending on section
         var identifier: String
         switch TableSection(rawValue: indexPath.section)! {
         case .device:
             //  Need to display the device that is selected
-            print("CellForRowAt: Device")
             identifier = "ConnectedDevice"
         case .modules:
-            print("CellForRowAt: Module")
             identifier = "AvailableModule"
         }
         

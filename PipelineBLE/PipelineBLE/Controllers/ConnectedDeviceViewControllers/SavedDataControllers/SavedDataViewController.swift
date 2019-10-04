@@ -7,20 +7,22 @@
 //
 
 import UIKit
+import CoreData
 
 class SavedDataViewController: UIViewController {
 
-    private let pageTitle = "Saved Data"
-    
-    let deviceName: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 18)
-        label.text = "Saved Data - This page is currently under development"
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
     weak var blePeripheral: BlePeripheral?
+    var uartData = [SavedData]()
+    var plotData = [SavedData]()
+    
+    private let pageTitle = "Saved Data"
+    lazy var tableView: UITableView = {
+        let table = UITableView()
+        table.dataSource = self
+        table.delegate = self
+        table.translatesAutoresizingMaskIntoConstraints = false
+        return table
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,13 +31,49 @@ class SavedDataViewController: UIViewController {
         view.backgroundColor = .darkGray
         navigationItem.title = pageTitle
         
-        // Do any additional setup after loading the view.
-        view.addSubview(deviceName)
-        deviceName.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        deviceName.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        deviceName.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        deviceName.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+        //  Gather data from file
+        gatherData()
         
+        //  Set up the UI
+        setupUI()
+    }
+    
+    //  Gather data
+    func gatherData(){
+        let fetchUart = NSFetchRequest<UARTData>(entityName: "UARTData")
+        let fetchPlot = NSFetchRequest<PlotData>(entityName: "PlotData")
+        
+        do {
+            print("Trying to load data")
+            //  Get the saved data
+            let savedUartData = try PersistenceService.context.fetch(fetchUart)
+            let savedPlotData = try PersistenceService.context.fetch(fetchPlot)
+            
+            //  Add the data to the savedData data structure for UART and plot data
+            for data in savedUartData {
+                if data.deviceID == blePeripheral?.identifier {
+                    //  Data UUID matches ble peripheral that is connected
+                    uartData.append(data)
+                }
+            }
+            //  Add the data to the savedData data structure
+            for data in savedPlotData {
+                if data.deviceID == blePeripheral?.identifier {
+                    //  Data UUID matches ble peripheral that is connected
+                    plotData.append(data)
+                }
+            }
+        } catch {}
+    }
+    
+    //  MARK: - UI Setup
+    func setupUI(){
+        // Do any additional setup after loading the view.
+        view.addSubview(tableView)
+        tableView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        tableView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
+        tableView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
     }
     
 
@@ -49,4 +87,43 @@ class SavedDataViewController: UIViewController {
     }
     */
 
+}
+
+extension SavedDataViewController: UITableViewDataSource {
+    //  Know what section we're in
+    enum TableSection: Int {
+        case plot = 0
+        case uart = 1
+    }
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 2
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        switch TableSection(rawValue: section)! {
+        case .plot:
+            return plotData.count
+        case .uart:
+            return uartData.count
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        switch TableSection(rawValue: indexPath.section)! {
+        case .plot:
+            //  Need to launch a view with plot data
+            print("todo")
+        case .uart:
+            //  Need to launch the view with the uart data
+            print("todo - uart")
+        }
+        return tableView.dequeueReusableCell(withIdentifier: "temp", for: indexPath)
+    }
+    
+    
+    
+}
+
+extension SavedDataViewController: UITableViewDelegate {
+    
 }
