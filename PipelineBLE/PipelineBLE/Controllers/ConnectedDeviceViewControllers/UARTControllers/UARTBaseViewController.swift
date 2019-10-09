@@ -37,10 +37,7 @@ class UARTBaseViewController: UIViewController {
         button.configureVisual(text: "Clear")
         return button
     }()
-    var saveBarButton: UIBarButtonItem = {
-        let button = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(onClickSave(_:)))
-        return button
-    }()
+    var saveBarButton: UIBarButtonItem?
     
     
     var originalHeight: CGFloat?
@@ -60,7 +57,8 @@ class UARTBaseViewController: UIViewController {
         super.viewDidLoad()
 
         //  Set up the standard UI
-        configureUI()
+        saveBarButton = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(onClickSave(_:)))
+        //configureUI()
         
         //  Make self delegate to keyboard and textview
         keyboardPositionNotifier.delegate = self
@@ -71,6 +69,10 @@ class UARTBaseViewController: UIViewController {
         super.viewWillAppear(animated)
         
         registerNotifications(enabled: true)
+        
+        //Set up UI
+        originalHeight = view.frame.height
+        configureUI()
         
         // UI
         reloadDataUI()
@@ -173,7 +175,7 @@ extension UARTBaseViewController {
         //  Set up the standard UI
         view.backgroundColor = .darkGray
         navigationItem.title = pageTitle
-        originalHeight = view.frame.height
+        
 
         //  Add subviews to the main view
         view.addSubview(comTextView)
@@ -191,8 +193,8 @@ extension UARTBaseViewController {
         //comTextView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.7)
 
         //  Set up constraints for the input text field
-        inputTextField.topAnchor.constraint(equalTo: comTextView.bottomAnchor, constant: 5).isActive = true
-        inputTextField.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -10).isActive = true
+        //inputTextField.topAnchor.constraint(equalTo: comTextView.bottomAnchor, constant: 5).isActive = true
+        //inputTextField.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -10).isActive = true
         inputTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10).isActive = true
         inputTextField.trailingAnchor.constraint(equalTo: sendButton.leadingAnchor, constant: -5).isActive = true
         //inputTextField.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.7)
@@ -245,6 +247,7 @@ extension UARTBaseViewController {
     
     @objc func onClickSave(_ sender: AnyObject){
         print("Trying to save data")
+        inputTextField.resignFirstResponder()
         //  Need to get an identifier for this data
         let alert = UIAlertController(title: "SaveData", message: "Please enter an identifier for this data:", preferredStyle: .alert)
         alert.addTextField{ (textField) in
@@ -259,7 +262,13 @@ extension UARTBaseViewController {
             PersistenceService.saveContext()
         }
         alert.addAction(action)
-        present(alert, animated: true, completion: nil)
+        
+        self.present(alert, animated: true, completion: nil)
+        //alert.view.layoutIfNeeded()
+        //self.view.layoutIfNeeded()
+        
+        inputTextField.resignFirstResponder()
+        //view.frame.size = CGSize(width: view.frame.width, height: originalHeight!)
     }
     
 }
@@ -268,10 +277,12 @@ extension UARTBaseViewController: KeyboardPositionNotifierDelegate {
     
     func onKeyboardPositionChanged(keyboardFrame: CGRect, keyboardShown: Bool) {
         if keyboardShown{
+            print("Keyboard shown, changing")
             let spacerHeight = keyboardFrame.height
             view.frame.size = CGSize(width: view.frame.width, height: view.frame.height-spacerHeight)
         }
         else {
+            print("Keyboard closed, changing")
             view.frame.size = CGSize(width: view.frame.width, height: originalHeight!)
         }
     }

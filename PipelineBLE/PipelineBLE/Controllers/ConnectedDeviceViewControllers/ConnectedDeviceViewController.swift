@@ -244,6 +244,7 @@ extension ConnectedDeviceViewController: UITableViewDelegate{
                 //  Open saved data view controller
                 let savedDataViewController = SavedDataViewController()
                 savedDataViewController.hidesBottomBarWhenPushed = true
+                savedDataViewController.blePeripheral = selectedPeripheral
                 navigationController?.pushViewController(savedDataViewController, animated: true)
             case .info:
                 //  Open info view controller

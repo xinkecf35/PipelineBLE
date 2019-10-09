@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14903" systemVersion="18G103" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14903" systemVersion="19A583" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="PlotData" representedClassName="PlotData" parentEntity="SavedData" syncable="YES">
-        <attribute name="data" optional="YES" attributeType="Transformable"/>
+        <attribute name="data" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromData"/>
     </entity>
     <entity name="SavedData" representedClassName="SavedData" isAbstract="YES" syncable="YES">
         <attribute name="advertisedName" optional="YES" attributeType="String"/>
@@ -14,8 +14,8 @@
         <attribute name="data" optional="YES" attributeType="String"/>
     </entity>
     <elements>
-        <element name="UARTData" positionX="-54" positionY="-9" width="128" height="58"/>
         <element name="PlotData" positionX="-36" positionY="18" width="128" height="58"/>
         <element name="SavedData" positionX="-18" positionY="36" width="128" height="118"/>
+        <element name="UARTData" positionX="-54" positionY="-9" width="128" height="58"/>
     </elements>
 </model>

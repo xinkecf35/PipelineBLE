@@ -43,6 +43,7 @@ class DataStreamViewController: UIViewController {
         slider.translatesAutoresizingMaskIntoConstraints = false
         return slider
     }()
+    var saveButton: UIBarButtonItem?
     
     weak var blePeripheral: BlePeripheral?
     fileprivate var dataManager: UartDataManager!
@@ -88,6 +89,16 @@ class DataStreamViewController: UIViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+        removeOldDataOnMemoryWarning()
+    }
+    
+    fileprivate func removeOldDataOnMemoryWarning() {
+        DLog("removeOldDataOnMemoryWarning")
+        for (_, dataSets) in dataSetForPeripherals {
+            for dataSet in dataSets {
+                dataSet.removeAll(keepingCapacity: false)
+            }
+        }
     }
     
     func testCharts(){
@@ -122,6 +133,8 @@ class DataStreamViewController: UIViewController {
         view.addSubview(autoScroll)
         view.addSubview(sliderLabel)
         view.addSubview(maxEntries)
+        
+        //  Add the bar button item
         
         //  Add plotter view
         var textViewConstraint = navigationController?.navigationBar.frame.height ?? 20
@@ -214,20 +227,13 @@ class DataStreamViewController: UIViewController {
         let entry = ChartDataEntry(x: timestamp, y: value)
         
         // See if the data set exists. If it does add, otherwise create new dataset
-        var dataSetExists = false
-        if let dataSets = dataSetForPeripherals[peripheral]{
-            if index < dataSets.count{
-                //  We know that the current dataset exists, add the data
-                let dataSet = dataSets[index]
-                let _ = dataSet.append(entry)
-                
-                dataSetExists = true
-            }
+        if let dataSets = dataSetForPeripherals[peripheral], index < dataSets.count{
+            //  We know that the current dataset exists, add the data
+            let dataSet = dataSets[index]
+            let _ = dataSet.append(entry)
         }
-        
-        if !dataSetExists{
-            //  Add a dataset
-            addDataSet(peripheral: peripheral, index: index, entry: entry)
+        else{
+            self.addDataSet(peripheral: peripheral, index: index, entry: entry)
             
             //  Update the data for the graph
             let allData = dataSetForPeripherals.flatMap {$0.1}
@@ -235,6 +241,7 @@ class DataStreamViewController: UIViewController {
                 self.plot.data = LineChartData(dataSets: allData)
             }
         }
+
         
         guard let dataSets = dataSetForPeripherals[peripheral], index < dataSets.count else { return }
         
@@ -268,8 +275,7 @@ class DataStreamViewController: UIViewController {
     func notifyDataSetChanged(){
         //  Signal that the data and the data set changed
         plot.data?.notifyDataChanged()
-        
-        self.plot.notifyDataSetChanged()
+        plot.notifyDataSetChanged()
         
         
         //  Make sure the visible range is accurate
@@ -319,7 +325,7 @@ extension DataStreamViewController: UartDataManagerDelegate{
     //  What to do when data is received
     func onUartRx(data: Data, peripheralIdentifier: UUID) {
         //  Store the data in the byte buffer
-        guard let lastSeparatorRange = data.range(of: DataStreamViewController.kLineSeparator, options: .backwards, in: nil) else { return }
+        guard let lastSeparatorRange = data.range(of: DataStreamViewController.kLineSeparator, options: [.anchored,.backwards], in: nil) else { return }
         
 
         let subData = data.subdata(in: 0..<lastSeparatorRange.upperBound)
@@ -343,13 +349,20 @@ extension DataStreamViewController: UartDataManagerDelegate{
                     }
                 }
                 //  Need to update the graph
-                DispatchQueue.main.async {
-                    self.notifyDataSetChanged()
-                }
+                self.enh_throttledReloadData()
+                //DispatchQueue.main.async {
+                    //self.notifyDataSetChanged()
+                //}
             }
         }
         
         dataManager.removeRxCacheFirst(n: lastSeparatorRange.upperBound+1, peripheralIdentifier: peripheralIdentifier)
+    }
+    
+    @objc func reloadData(){
+        DispatchQueue.main.async {
+            self.notifyDataSetChanged()
+        }
     }
     
     

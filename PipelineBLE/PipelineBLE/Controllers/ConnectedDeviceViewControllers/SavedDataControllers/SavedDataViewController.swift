@@ -51,13 +51,17 @@ class SavedDataViewController: UIViewController {
             
             //  Add the data to the savedData data structure for UART and plot data
             for data in savedUartData {
+                print("Data uart: \(data.deviceID), \(String(describing: blePeripheral?.identifier))")
+                
                 if data.deviceID == blePeripheral?.identifier {
+                    print("added")
                     //  Data UUID matches ble peripheral that is connected
                     uartData.append(data)
                 }
             }
             //  Add the data to the savedData data structure
             for data in savedPlotData {
+                print("Data plot")
                 if data.deviceID == blePeripheral?.identifier {
                     //  Data UUID matches ble peripheral that is connected
                     plotData.append(data)
@@ -109,15 +113,23 @@ extension SavedDataViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        var text = ""
+        var subtext = ""
         switch TableSection(rawValue: indexPath.section)! {
         case .plot:
-            //  Need to launch a view with plot data
-            print("todo")
+            //  Need to grab data from plot data array
+            text = plotData[indexPath.row].id
+            subtext = plotData[indexPath.row].date
         case .uart:
-            //  Need to launch the view with the uart data
-            print("todo - uart")
+            //  Need to grab data from uart array
+            text = uartData[indexPath.row].id
+            subtext = uartData[indexPath.row].date
         }
-        return tableView.dequeueReusableCell(withIdentifier: "temp", for: indexPath)
+        //  Create a cell to display the data that has been saved for that device
+        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "SavedData")
+        cell.textLabel?.text = text
+        cell.detailTextLabel?.text = subtext
+        return cell
     }
     
     
@@ -125,5 +137,14 @@ extension SavedDataViewController: UITableViewDataSource {
 }
 
 extension SavedDataViewController: UITableViewDelegate {
-    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        switch TableSection(rawValue: indexPath.section)! {
+        case .plot:
+            //  Need to launch a view to display the plot data
+            print("Display plot data")
+        case .uart:
+            //  Need to launch a view to display uart data
+            print("Display uart data")
+        }
+    }
 }
