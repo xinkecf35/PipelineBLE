@@ -26,7 +26,7 @@ class SavedDevicesViewController: UITableViewController {
         
         //  Set some initial parameters
         print("Saved Devices")
-        view.backgroundColor = .darkGray
+        //view.backgroundColor = .darkGray
         navigationItem.title = pageTitle
         
         // Do any additional setup after loading the view.

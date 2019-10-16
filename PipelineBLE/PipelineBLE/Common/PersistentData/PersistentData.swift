@@ -30,7 +30,7 @@ class PersistentData: NSObject, NSCoding {
     public func saveData(id: String, data: String, peripheral: BlePeripheral){
         //  Add a new element to the saved data
         let newData = SavedData()
-        newData.initialize(id: id, data: data, peripheral: peripheral)
+        //newData.initialize(id: id, data: data, peripheral: peripheral)
         self.data?.append(newData)
         
         //  Save the new data array

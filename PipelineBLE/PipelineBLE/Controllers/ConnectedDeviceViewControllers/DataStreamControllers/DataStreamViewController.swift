@@ -43,6 +43,7 @@ class DataStreamViewController: UIViewController {
         slider.translatesAutoresizingMaskIntoConstraints = false
         return slider
     }()
+    var saveButton: UIBarButtonItem?
     
     weak var blePeripheral: BlePeripheral?
     fileprivate var dataManager: UartDataManager!
@@ -52,6 +53,8 @@ class DataStreamViewController: UIViewController {
     fileprivate var lastUpdatedData: LineChartDataSet?
     fileprivate var visibleInterval: TimeInterval = 30
     var isAutoScrollEnabled: Bool = true
+    var dataCounter = 0
+    var basicDataSet: [[Double]] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -88,6 +91,16 @@ class DataStreamViewController: UIViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+        removeOldDataOnMemoryWarning()
+    }
+    
+    fileprivate func removeOldDataOnMemoryWarning() {
+        DLog("removeOldDataOnMemoryWarning")
+        for (_, dataSets) in dataSetForPeripherals {
+            for dataSet in dataSets {
+                dataSet.removeAll(keepingCapacity: false)
+            }
+        }
     }
     
     func testCharts(){
@@ -122,6 +135,10 @@ class DataStreamViewController: UIViewController {
         view.addSubview(autoScroll)
         view.addSubview(sliderLabel)
         view.addSubview(maxEntries)
+        
+        //  Add the bar button item
+        saveButton = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(onClickSave(_:)))
+        navigationItem.rightBarButtonItem = saveButton
         
         //  Add plotter view
         var textViewConstraint = navigationController?.navigationBar.frame.height ?? 20
@@ -214,20 +231,13 @@ class DataStreamViewController: UIViewController {
         let entry = ChartDataEntry(x: timestamp, y: value)
         
         // See if the data set exists. If it does add, otherwise create new dataset
-        var dataSetExists = false
-        if let dataSets = dataSetForPeripherals[peripheral]{
-            if index < dataSets.count{
-                //  We know that the current dataset exists, add the data
-                let dataSet = dataSets[index]
-                let _ = dataSet.append(entry)
-                
-                dataSetExists = true
-            }
+        if let dataSets = dataSetForPeripherals[peripheral], index < dataSets.count{
+            //  We know that the current dataset exists, add the data
+            let dataSet = dataSets[index]
+            let _ = dataSet.append(entry)
         }
-        
-        if !dataSetExists{
-            //  Add a dataset
-            addDataSet(peripheral: peripheral, index: index, entry: entry)
+        else{
+            self.addDataSet(peripheral: peripheral, index: index, entry: entry)
             
             //  Update the data for the graph
             let allData = dataSetForPeripherals.flatMap {$0.1}
@@ -235,6 +245,7 @@ class DataStreamViewController: UIViewController {
                 self.plot.data = LineChartData(dataSets: allData)
             }
         }
+
         
         guard let dataSets = dataSetForPeripherals[peripheral], index < dataSets.count else { return }
         
@@ -268,8 +279,7 @@ class DataStreamViewController: UIViewController {
     func notifyDataSetChanged(){
         //  Signal that the data and the data set changed
         plot.data?.notifyDataChanged()
-        
-        self.plot.notifyDataSetChanged()
+        plot.notifyDataSetChanged()
         
         
         //  Make sure the visible range is accurate
@@ -298,6 +308,33 @@ class DataStreamViewController: UIViewController {
         notifyDataSetChanged()
     }
     
+    @objc func onClickSave(_ send: UIBarButtonItem){
+        //  Create alert and text to display
+        let alert = UIAlertController(title: "SaveData", message: "Please enter an identifier for the data:", preferredStyle: .alert)
+        alert.addTextField{ (textField) in
+            textField.placeholder = "identifier"
+        }
+        
+        //  Create action for when the button is saved
+        let action = UIAlertAction(title: "Save", style: .default){ (_) in
+            //  Saving the basic data set
+            let dataSet = self.basicDataSet
+            
+            //  Populate data with the dataSet
+            let data = PlotData(context: PersistenceService.context)
+            
+            data.data = dataSet as NSObject
+            let id = alert.textFields!.first!.text ?? ""
+            data.setup(id: id, peripheral: self.blePeripheral!)
+            PersistenceService.saveContext()
+        }
+        alert.addAction(action)
+        
+        //  Present the view controller
+        self.present(alert, animated: true, completion: nil)
+        
+    }
+    
 
     /*
     // MARK: - Navigation
@@ -319,7 +356,7 @@ extension DataStreamViewController: UartDataManagerDelegate{
     //  What to do when data is received
     func onUartRx(data: Data, peripheralIdentifier: UUID) {
         //  Store the data in the byte buffer
-        guard let lastSeparatorRange = data.range(of: DataStreamViewController.kLineSeparator, options: .backwards, in: nil) else { return }
+        guard let lastSeparatorRange = data.range(of: DataStreamViewController.kLineSeparator, options: [.anchored,.backwards], in: nil) else { return }
         
 
         let subData = data.subdata(in: 0..<lastSeparatorRange.upperBound)
@@ -327,7 +364,9 @@ extension DataStreamViewController: UartDataManagerDelegate{
             //  Now need to clean the data of the extra characters
             let strings = dataString.replacingOccurrences(of: "\r", with: "").components(separatedBy: "\n") // ["100,100,100"],["10,10,10"]...
             
-            let currentTime = CFAbsoluteTimeGetCurrent() - startTime
+            //  Here we are making current time equal to data counter so all data pts are evenly spread out
+            //let currentTime = CFAbsoluteTimeGetCurrent() - startTime
+            
             
             //  Need to look through each line of strings
             for line in strings {
@@ -338,18 +377,32 @@ extension DataStreamViewController: UartDataManagerDelegate{
                 for pt in dataPoints{
                     //  Need to create the new data point and add to set
                     if let val = Double(pt){
-                        addEntry(peripheral: peripheralIdentifier, index: i, value: val, timestamp: currentTime)
+                        //  Make sure data is even spread
+                        let currentTime = dataCounter
+                        
+                        addEntry(peripheral: peripheralIdentifier, index: i, value: val, timestamp: Double(currentTime))
+                        
+                        //  Also add this value to the basic data set [x,y]
+                        self.basicDataSet.append([Double(currentTime), val])
+                        dataCounter += 1
                         i = i + 1
                     }
                 }
                 //  Need to update the graph
-                DispatchQueue.main.async {
-                    self.notifyDataSetChanged()
-                }
+                self.enh_throttledReloadData()
+                //DispatchQueue.main.async {
+                    //self.notifyDataSetChanged()
+                //}
             }
         }
         
         dataManager.removeRxCacheFirst(n: lastSeparatorRange.upperBound+1, peripheralIdentifier: peripheralIdentifier)
+    }
+    
+    @objc func reloadData(){
+        DispatchQueue.main.async {
+            self.notifyDataSetChanged()
+        }
     }
     
     

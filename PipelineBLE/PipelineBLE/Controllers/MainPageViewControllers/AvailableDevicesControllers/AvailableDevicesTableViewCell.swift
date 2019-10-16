@@ -14,6 +14,7 @@ class AvailableDevicesTableViewCell: UITableViewCell {
     public let deviceName: UILabel = {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 18)
+        label.textColor = .systemBlue
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -30,7 +31,7 @@ class AvailableDevicesTableViewCell: UITableViewCell {
     
     override var isHighlighted: Bool {
         didSet{
-            backgroundColor = isHighlighted ? UIColor.darkGray : UIColor.white
+            backgroundColor = isHighlighted ? UIColor.darkGray : super.backgroundColor
         }
     }
     
