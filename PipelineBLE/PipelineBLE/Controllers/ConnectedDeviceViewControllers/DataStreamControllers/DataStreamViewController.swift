@@ -53,6 +53,8 @@ class DataStreamViewController: UIViewController {
     fileprivate var lastUpdatedData: LineChartDataSet?
     fileprivate var visibleInterval: TimeInterval = 30
     var isAutoScrollEnabled: Bool = true
+    var dataCounter = 0
+    var basicDataSet: [[Double]] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -135,6 +137,8 @@ class DataStreamViewController: UIViewController {
         view.addSubview(maxEntries)
         
         //  Add the bar button item
+        saveButton = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(onClickSave(_:)))
+        navigationItem.rightBarButtonItem = saveButton
         
         //  Add plotter view
         var textViewConstraint = navigationController?.navigationBar.frame.height ?? 20
@@ -304,6 +308,33 @@ class DataStreamViewController: UIViewController {
         notifyDataSetChanged()
     }
     
+    @objc func onClickSave(_ send: UIBarButtonItem){
+        //  Create alert and text to display
+        let alert = UIAlertController(title: "SaveData", message: "Please enter an identifier for the data:", preferredStyle: .alert)
+        alert.addTextField{ (textField) in
+            textField.placeholder = "identifier"
+        }
+        
+        //  Create action for when the button is saved
+        let action = UIAlertAction(title: "Save", style: .default){ (_) in
+            //  Saving the basic data set
+            let dataSet = self.basicDataSet
+            
+            //  Populate data with the dataSet
+            let data = PlotData(context: PersistenceService.context)
+            
+            data.data = dataSet as NSObject
+            let id = alert.textFields!.first!.text ?? ""
+            data.setup(id: id, peripheral: self.blePeripheral!)
+            PersistenceService.saveContext()
+        }
+        alert.addAction(action)
+        
+        //  Present the view controller
+        self.present(alert, animated: true, completion: nil)
+        
+    }
+    
 
     /*
     // MARK: - Navigation
@@ -333,7 +364,9 @@ extension DataStreamViewController: UartDataManagerDelegate{
             //  Now need to clean the data of the extra characters
             let strings = dataString.replacingOccurrences(of: "\r", with: "").components(separatedBy: "\n") // ["100,100,100"],["10,10,10"]...
             
-            let currentTime = CFAbsoluteTimeGetCurrent() - startTime
+            //  Here we are making current time equal to data counter so all data pts are evenly spread out
+            //let currentTime = CFAbsoluteTimeGetCurrent() - startTime
+            
             
             //  Need to look through each line of strings
             for line in strings {
@@ -344,7 +377,14 @@ extension DataStreamViewController: UartDataManagerDelegate{
                 for pt in dataPoints{
                     //  Need to create the new data point and add to set
                     if let val = Double(pt){
-                        addEntry(peripheral: peripheralIdentifier, index: i, value: val, timestamp: currentTime)
+                        //  Make sure data is even spread
+                        let currentTime = dataCounter
+                        
+                        addEntry(peripheral: peripheralIdentifier, index: i, value: val, timestamp: Double(currentTime))
+                        
+                        //  Also add this value to the basic data set [x,y]
+                        self.basicDataSet.append([Double(currentTime), val])
+                        dataCounter += 1
                         i = i + 1
                     }
                 }

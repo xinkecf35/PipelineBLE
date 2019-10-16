@@ -31,7 +31,7 @@ class AvailableDevicesTableViewCell: UITableViewCell {
     
     override var isHighlighted: Bool {
         didSet{
-            backgroundColor = isHighlighted ? UIColor.darkGray : UIColor.white
+            backgroundColor = isHighlighted ? UIColor.darkGray : super.backgroundColor
         }
     }
     

@@ -23,6 +23,7 @@ class SavedDataViewController: UIViewController {
         table.translatesAutoresizingMaskIntoConstraints = false
         return table
     }()
+    var deviceUUID: UUID?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,6 +31,9 @@ class SavedDataViewController: UIViewController {
         //  Set some initial parameters
         view.backgroundColor = .darkGray
         navigationItem.title = pageTitle
+        
+        //  If it wasnt set, set it here
+        deviceUUID = deviceUUID ?? blePeripheral!.identifier
         
         //  Gather data from file
         gatherData()
@@ -51,9 +55,9 @@ class SavedDataViewController: UIViewController {
             
             //  Add the data to the savedData data structure for UART and plot data
             for data in savedUartData {
-                print("Data uart: \(data.deviceID), \(String(describing: blePeripheral?.identifier))")
+                print("Data uart: \(data.deviceID), \(String(describing: deviceUUID))")
                 
-                if data.deviceID == blePeripheral?.identifier {
+                if data.deviceID == deviceUUID {
                     print("added")
                     //  Data UUID matches ble peripheral that is connected
                     uartData.append(data)
@@ -62,7 +66,7 @@ class SavedDataViewController: UIViewController {
             //  Add the data to the savedData data structure
             for data in savedPlotData {
                 print("Data plot")
-                if data.deviceID == blePeripheral?.identifier {
+                if data.deviceID == deviceUUID {
                     //  Data UUID matches ble peripheral that is connected
                     plotData.append(data)
                 }
@@ -103,6 +107,16 @@ extension SavedDataViewController: UITableViewDataSource {
         return 2
     }
     
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        //  Add section headers
+        switch TableSection(rawValue: section)! {
+        case .plot:
+            return "Plot Data"
+        case .uart:
+            return "UART Data"
+        }
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch TableSection(rawValue: section)! {
         case .plot:
@@ -138,13 +152,37 @@ extension SavedDataViewController: UITableViewDataSource {
 
 extension SavedDataViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        //  Instanstiate the view controller
+        let displayDataController = DisplayDataViewController()
+        self.storyboard?.instantiateViewController(withIdentifier: "DisplayDataViewController")
+        displayDataController.hidesBottomBarWhenPushed = true
+        
         switch TableSection(rawValue: indexPath.section)! {
         case .plot:
-            //  Need to launch a view to display the plot data
-            print("Display plot data")
+            //  Give it the data it needs
+            let dataInstance = plotData[indexPath.row] as! PlotData
+            displayDataController.pageTitle = dataInstance.id
+            displayDataController.data = PlotData.dataToString(data: dataInstance.data as! [[Double]])
         case .uart:
-            //  Need to launch a view to display uart data
-            print("Display uart data")
+            //  Give it the data it needs
+            let dataInstance = uartData[indexPath.row] as! UARTData
+            displayDataController.pageTitle = dataInstance.id
+            displayDataController.data = dataInstance.data
         }
+        
+        //  Finally push the view
+        navigationController?.pushViewController(displayDataController, animated: true)
     }
+    
+    /*
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if (editingStyle == .delete){
+            //  Need to delete from saved objects and from the view
+        }
+    }*/
 }

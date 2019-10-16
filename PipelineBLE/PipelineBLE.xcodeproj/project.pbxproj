@@ -66,6 +66,7 @@
 		B99E3C56232AA51D00C03948 /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B99E3C55232AA51D00C03948 /* CustomButton.swift */; };
 		B99E3C58232AA53A00C03948 /* UARTButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = B99E3C57232AA53A00C03948 /* UARTButtons.swift */; };
 		B99E3C7E232AF7CB00C03948 /* UARTTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B99E3C7D232AF7CB00C03948 /* UARTTextField.swift */; };
+		B9BB539823575A17006DBDF9 /* DisplayDataViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9BB539723575A17006DBDF9 /* DisplayDataViewController.swift */; };
 		B9BEF6E923399B6100906B4C /* PersistentData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9BEF6E823399B6100906B4C /* PersistentData.swift */; };
 		B9CA5044230C3725007E31D8 /* MSWeakTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = B9CA5043230C3725007E31D8 /* MSWeakTimer.m */; };
 		B9CA5049230C7435007E31D8 /* ReleasesParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9CA5046230C7435007E31D8 /* ReleasesParser.swift */; };
@@ -146,6 +147,7 @@
 		B99E3C55232AA51D00C03948 /* CustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
 		B99E3C57232AA53A00C03948 /* UARTButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UARTButtons.swift; sourceTree = "<group>"; };
 		B99E3C7D232AF7CB00C03948 /* UARTTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UARTTextField.swift; sourceTree = "<group>"; };
+		B9BB539723575A17006DBDF9 /* DisplayDataViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayDataViewController.swift; sourceTree = "<group>"; };
 		B9BEF6E823399B6100906B4C /* PersistentData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistentData.swift; sourceTree = "<group>"; };
 		B9CA5041230C3725007E31D8 /* MSWeakTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSWeakTimer.h; sourceTree = "<group>"; };
 		B9CA5043230C3725007E31D8 /* MSWeakTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSWeakTimer.m; sourceTree = "<group>"; };
@@ -527,6 +529,7 @@
 			isa = PBXGroup;
 			children = (
 				B9CA506C230F3D83007E31D8 /* SavedDataViewController.swift */,
+				B9BB539723575A17006DBDF9 /* DisplayDataViewController.swift */,
 			);
 			path = SavedDataControllers;
 			sourceTree = "<group>";
@@ -715,6 +718,7 @@
 				B94CD1EA23071C050077F77E /* Preferences.swift in Sources */,
 				B97BC4E822FB6AFE00858CA9 /* KeyboardPositionNotifier.swift in Sources */,
 				B97BC4E622FB6AF600858CA9 /* DataDownloader.swift in Sources */,
+				B9BB539823575A17006DBDF9 /* DisplayDataViewController.swift in Sources */,
 				B97BC4DF22FB6AC200858CA9 /* DataConversions.swift in Sources */,
 				B9BEF6E923399B6100906B4C /* PersistentData.swift in Sources */,
 				B97BC4EF22FC8FEF00858CA9 /* MainPageTabBarController.swift in Sources */,

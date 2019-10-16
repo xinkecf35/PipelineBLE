@@ -17,7 +17,6 @@ class PersistenceService {
         return persistentContainer.viewContext
     }
     
-    
     // MARK: - Core Data stack
     static var persistentContainer: NSPersistentContainer = {
         /*
