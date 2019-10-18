@@ -35,8 +35,12 @@ class AvailableDevicesViewController: UITableViewController {
     //  Data for when a peripheral has been selected
     weak var selectedPeripheral: BlePeripheral?
     var savedDevices: [UUID: SavedPeripheral] = [:]
+    var dirtyData: Bool = true
     
     override func viewDidLoad() {
+        //  Get saved peripherals
+        getSavedPeripherals()
+        
         super.viewDidLoad()
         
         //  View just appeared, configure the layout
@@ -56,9 +60,6 @@ class AvailableDevicesViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        //  Get saved peripherals
-        getSavedPeripherals()
         
         // Flush any pending state notifications
         didUpdateBleState()
@@ -98,6 +99,9 @@ class AvailableDevicesViewController: UITableViewController {
         // Clear peripherals
         peripheralList.clear()
         isRowDetailOpenForPeripheral.removeAll()
+        
+        print("TRUE")
+        dirtyData = true
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -119,11 +123,10 @@ class AvailableDevicesViewController: UITableViewController {
         let localizationManager = LocalizationManager.shared
         
         //  Now need to check if the peripheral has been saved
-        let saved = savedDevices[peripheral.identifier] != nil
+        let saved = savedDevices[peripheral.identifier] != nil && savedDevices[peripheral.identifier]?.name != nil
         
         //  If it is saved, change the text and set subtitle accordingly
         if saved {
-            //  Set the device name to what was saved
             cell.deviceName.text = savedDevices[peripheral.identifier]?.name!
         }
         else{
@@ -156,9 +159,12 @@ class AvailableDevicesViewController: UITableViewController {
             print("true")
             savePeripheralPrompt(peripheral: peripheral)
         }
+        else{
+            //  Connect to the peripheral
+            connect(peripheral: peripheral)
+        }
         
-        //  Connect to the peripheral
-        connect(peripheral: peripheral)
+        
         
         //        let connectToDevice = UARTViewController()
         //        connectToDevice.deviceName.text = peripheral.name ?? "No name available"
@@ -168,6 +174,7 @@ class AvailableDevicesViewController: UITableViewController {
     //  Get saved peripherals
     func getSavedPeripherals(){
         print("Trying to get peripherals")
+        savedDevices.removeAll()
         
         //  Get ready to get the saved peripherals
         let fetchSavedPeripheral = NSFetchRequest<SavedPeripheral>(entityName: "SavedPeripheral")
@@ -182,6 +189,8 @@ class AvailableDevicesViewController: UITableViewController {
                 savedDevices[device.uuid!] = device
             }
         }catch {}
+        
+        self.dirtyData = false
     }
     
     @objc func onTableRefresh(_ sender: AnyObject) {
@@ -212,6 +221,11 @@ class AvailableDevicesViewController: UITableViewController {
         
         //  Get the filtered peripherals (no actual filtering)
         _ = peripheralList.filteredPeripherals(forceUpdate: true)
+        
+        if self.dirtyData {
+            getSavedPeripherals()
+        }
+        
         tableView.reloadData()
         
         //        print("Filtered: \(peripheralList.filteredPeripherals(forceUpdate: false).count)")
@@ -234,6 +248,7 @@ class AvailableDevicesViewController: UITableViewController {
         
         //  Hide the tab bar when pushed and then push the view
         connectToDevice.hidesBottomBarWhenPushed = true
+        connectToDevice.deviceName = savedDevices[selectedPeripheral!.identifier]!.name!
         navigationController?.pushViewController(connectToDevice, animated: true)
         
         //        // Watch
@@ -532,14 +547,11 @@ extension AvailableDevicesViewController {
         //  For right now, the new name will be the current name unless changed
         let newNameAction = UIAlertAction(title: "Yes", style: .default) { (_) in
             //  Got the name, now set up to save
-            let newPeripheral = SavedPeripheral(context: PersistenceService.context)
-            newPeripheral.name = alert.textFields!.first!.text ?? " "
-            newPeripheral.uuid = peripheral.identifier
+            self.saveAndConnect(peripheral: peripheral, name: alert.textFields!.first!.text ?? " ")
         }
         let sameNameAction = UIAlertAction(title: "No", style: .default){ (_) in
-            let newPeripheral = SavedPeripheral(context: PersistenceService.context)
-            newPeripheral.name = peripheral.name ?? localizationManager.localizedString("scanner_unnamed")
-            newPeripheral.uuid = peripheral.identifier
+            //  Now save and connect
+            self.saveAndConnect(peripheral: peripheral, name: peripheral.name ?? localizationManager.localizedString("scanner_unnamed"))
         }
         
         //  Add the actions to the alert
@@ -548,9 +560,24 @@ extension AvailableDevicesViewController {
         
         //  Present to the user
         self.present(alert, animated: true, completion: nil)
+    }
+    
+    func saveAndConnect(peripheral: BlePeripheral, name: String){
+        let newPeripheral = SavedPeripheral(context: PersistenceService.context)
+        newPeripheral.name = name
+        newPeripheral.uuid = peripheral.identifier
+        
+        //  Add to the list of peripherals
+        savedDevices[newPeripheral.uuid!] = newPeripheral
         
         //  All data is set, save the context
         PersistenceService.saveContext()
+        
+        //  Make sure to know if data needs to be reloaded
+        dirtyData = true
+        
+        //  Now, connect to the peripheral
+        self.connect(peripheral: peripheral)
     }
     
     

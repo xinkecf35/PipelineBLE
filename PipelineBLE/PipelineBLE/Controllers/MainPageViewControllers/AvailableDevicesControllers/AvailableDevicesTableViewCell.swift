@@ -13,7 +13,7 @@ class AvailableDevicesTableViewCell: UITableViewCell {
     //  Mark: UI components and peripheral data
     public let deviceName: UILabel = {
         let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 18)
+        label.font = UIFont.boldSystemFont(ofSize: 22)
         label.textColor = .systemBlue
         label.translatesAutoresizingMaskIntoConstraints = false
         return label

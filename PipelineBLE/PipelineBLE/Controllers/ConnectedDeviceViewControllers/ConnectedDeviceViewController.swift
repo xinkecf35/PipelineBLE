@@ -12,6 +12,7 @@ class ConnectedDeviceViewController: UIViewController {
     
     //  Data about the device
     weak var selectedPeripheral: BlePeripheral?
+    var deviceName: String?
     var hasUart = false
     var hasDfu = false
     
@@ -160,7 +161,9 @@ extension ConnectedDeviceViewController: UITableViewDelegate{
             guard let deviceCell = cell as? ConnectedDeviceTableViewCell else { return }
             
             //  Will now need to send info about the device so it can be displayed
-            deviceCell.deviceName.text = selectedPeripheral!.name ?? localizationManager.localizedString("scanner_unnamed")
+            deviceCell.deviceName.text = self.deviceName ?? selectedPeripheral!.name ?? localizationManager.localizedString("scanner_unnamed")
+            //deviceCell.deviceName.text = selectedPeripheral!.name ?? localizationManager.localizedString("scanner_unnamed")
+            
             deviceCell.subtitle.text = selectedPeripheral!.isUartAdvertised() ? localizationManager.localizedString("scanner_uartavailable") : "UART Unavailable"
             deviceCell.signalImage.image = RssiUI.signalImage(for: selectedPeripheral?.rssi)
             
