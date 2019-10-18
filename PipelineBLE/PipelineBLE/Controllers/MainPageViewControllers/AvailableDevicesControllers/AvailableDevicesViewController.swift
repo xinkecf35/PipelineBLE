@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 class AvailableDevicesViewController: UITableViewController {
     
@@ -33,6 +34,7 @@ class AvailableDevicesViewController: UITableViewController {
     
     //  Data for when a peripheral has been selected
     weak var selectedPeripheral: BlePeripheral?
+    var savedDevices: [UUID: SavedPeripheral] = [:]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -54,6 +56,9 @@ class AvailableDevicesViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        //  Get saved peripherals
+        getSavedPeripherals()
         
         // Flush any pending state notifications
         didUpdateBleState()
@@ -113,19 +118,23 @@ class AvailableDevicesViewController: UITableViewController {
         let peripheral = peripheralList.filteredPeripherals(forceUpdate: false)[indexPath.row]
         let localizationManager = LocalizationManager.shared
         
-        //  Send information to the cell about the peripheral
-        cell.deviceName.text = peripheral.name ?? localizationManager.localizedString("scanner_unnamed")
-        cell.signalImage.image = RssiUI.signalImage(for: peripheral.rssi)
+        //  Now need to check if the peripheral has been saved
+        let saved = savedDevices[peripheral.identifier] != nil
         
-        //  Check to see if it is connectable and if UART is enabled. Pass as the subtitle
-        var subtitle: String? = nil
-        if peripheral.advertisement.isConnectable == false {
-            subtitle = localizationManager.localizedString("scanner_notconnectable")
+        //  If it is saved, change the text and set subtitle accordingly
+        if saved {
+            //  Set the device name to what was saved
+            cell.deviceName.text = savedDevices[peripheral.identifier]?.name!
         }
-        else if peripheral.isUartAdvertised() == true {
-            subtitle = localizationManager.localizedString("scanner_uartavailable")
+        else{
+            //  Set the device name
+            cell.deviceName.text = peripheral.name ?? localizationManager.localizedString("scanner_unnamed")
         }
-        cell.subtitle.text = subtitle
+        
+        //  Send the cell what the subtitle should be and the image
+        cell.signalImage.image = RssiUI.signalImage(for: peripheral.rssi)
+        cell.setSubtitle(text: peripheral.name ?? localizationManager.localizedString("scanner_unnamed"), saved: saved)
+        
         
         //  ***DEBUG
         //print(peripheral.name ?? localizationManager.localizedString("scanner_unnamed"))
@@ -141,12 +150,38 @@ class AvailableDevicesViewController: UITableViewController {
         //  Display what peripheral was selected
         print("Selected \(peripheral.name ?? "No name available")")
         
+        //  Save the peripheral if necessary
+        if savedDevices[peripheral.identifier] == nil {
+            //  Not currently saved
+            print("true")
+            savePeripheralPrompt(peripheral: peripheral)
+        }
+        
         //  Connect to the peripheral
         connect(peripheral: peripheral)
         
         //        let connectToDevice = UARTViewController()
         //        connectToDevice.deviceName.text = peripheral.name ?? "No name available"
         //        navigationController?.pushViewController(connectToDevice, animated: true)
+    }
+    
+    //  Get saved peripherals
+    func getSavedPeripherals(){
+        print("Trying to get peripherals")
+        
+        //  Get ready to get the saved peripherals
+        let fetchSavedPeripheral = NSFetchRequest<SavedPeripheral>(entityName: "SavedPeripheral")
+        
+        do{
+            //  Get the saved devices
+            let devices = try PersistenceService.context.fetch(fetchSavedPeripheral)
+            
+            //  Add the uuids to the array
+            for device in devices {
+                print(device.name ?? "No name")
+                savedDevices[device.uuid!] = device
+            }
+        }catch {}
     }
     
     @objc func onTableRefresh(_ sender: AnyObject) {
@@ -284,7 +319,7 @@ class AvailableDevicesViewController: UITableViewController {
     
 }
 
-//  Mark: UIScrollViewDelegate
+//  MARK: UIScrollViewDelegate
 extension AvailableDevicesViewController {
     override func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         isBaseTableScrolling = true
@@ -481,51 +516,44 @@ extension AvailableDevicesViewController: FirmwareUpdaterDelegate {
         }
     }
 }
-    
-    
-    
-    
-    
-    
-    
-    
-    /*
-    private let pageTitle = "Available Devices"
 
-    let deviceName: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 18)
-        label.text = "This page is under development"
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
+//  MARK: - Saving Peripherals
+extension AvailableDevicesViewController {
+    func savePeripheralPrompt(peripheral: BlePeripheral){
+        //  Create localization manager
+        let localizationManager = LocalizationManager.shared
         
-        //  Set some initial parameters
-        print("Available Devices")
-        view.backgroundColor = .darkGray
-        navigationItem.title = pageTitle
+        //  Create an alert for the user
+        let alert = UIAlertController(title: "Save Device", message: "Would you like to save the device under a different name? If yes, please enter the name below.", preferredStyle: .alert)
+        alert.addTextField{ (textfield) in
+            textfield.placeholder = peripheral.name ?? localizationManager.localizedString("scanner_unnamed")
+        }
         
-        // Do any additional setup after loading the view.
-        view.addSubview(deviceName)
-        deviceName.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        deviceName.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        deviceName.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
-        deviceName.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+        //  For right now, the new name will be the current name unless changed
+        let newNameAction = UIAlertAction(title: "Yes", style: .default) { (_) in
+            //  Got the name, now set up to save
+            let newPeripheral = SavedPeripheral(context: PersistenceService.context)
+            newPeripheral.name = alert.textFields!.first!.text ?? " "
+            newPeripheral.uuid = peripheral.identifier
+        }
+        let sameNameAction = UIAlertAction(title: "No", style: .default){ (_) in
+            let newPeripheral = SavedPeripheral(context: PersistenceService.context)
+            newPeripheral.name = peripheral.name ?? localizationManager.localizedString("scanner_unnamed")
+            newPeripheral.uuid = peripheral.identifier
+        }
         
+        //  Add the actions to the alert
+        alert.addAction(newNameAction)
+        alert.addAction(sameNameAction)
+        
+        //  Present to the user
+        self.present(alert, animated: true, completion: nil)
+        
+        //  All data is set, save the context
+        PersistenceService.saveContext()
     }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
-
+    
+    
+    
+    
+}
