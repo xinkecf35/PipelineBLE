@@ -12,6 +12,9 @@ import CoreData
 class PastDataViewController: UIViewController {
 
     var uuids = [UUID]()
+    var savedDevices: [UUID : SavedPeripheral] = [:]
+    var dirtyDataUUIDs: Bool = true
+    var dirtyDataDevices: Bool = true
         
     private let pageTitle = "Past Data"
     lazy var tableView: UITableView = {
@@ -31,13 +34,36 @@ class PastDataViewController: UIViewController {
             
         //  Gather data from file
         gatherData()
+        
+        //  Gather devices from file
+        getSavedPeripherals()
             
         //  Set up the UI
         setupUI()
     }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        self.dirtyDataDevices = true
+        self.dirtyDataUUIDs = true
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        //  Reload data if necessary
+        if self.dirtyDataUUIDs || self.dirtyDataDevices {
+            self.gatherData()
+            self.getSavedPeripherals()
+        }
+    }
         
     //  Gather data
     func gatherData(){
+        //  Reset data
+        uuids.removeAll()
+        
         let fetchUart = NSFetchRequest<UARTData>(entityName: "UARTData")
         let fetchPlot = NSFetchRequest<PlotData>(entityName: "PlotData")
             
@@ -64,6 +90,30 @@ class PastDataViewController: UIViewController {
                 }
             }
         } catch {}
+        self.dirtyDataUUIDs = false
+    }
+    
+    //  Get saved peripherals
+    func getSavedPeripherals(){
+        print("Trying to get peripherals")
+        //  Make sure to reset the devices we have
+        savedDevices.removeAll()
+        
+        //  Get ready to get the saved peripherals
+        let fetchSavedPeripheral = NSFetchRequest<SavedPeripheral>(entityName: "SavedPeripheral")
+        
+        do{
+            //  Get the saved devices
+            let devices = try PersistenceService.context.fetch(fetchSavedPeripheral)
+            
+            //  Add the uuids to the array
+            for device in devices {
+                print("device")
+                savedDevices[device.uuid!] = device
+            }
+        }catch {}
+        self.dirtyDataDevices = false
+        tableView.reloadData()
     }
         
     //  MARK: - UI Setup
@@ -75,34 +125,35 @@ class PastDataViewController: UIViewController {
         tableView.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = true
         tableView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
     }
-        
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
 
 extension PastDataViewController: UITableViewDataSource {
         
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return uuids.count
+        if self.dirtyDataUUIDs || self.dirtyDataDevices {
+            self.gatherData()
+            self.getSavedPeripherals()
+        }
+        
+        return uuids.count == 0 ? 1 : uuids.count
     }
         
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let text = String(describing: uuids[indexPath.row])
-        
-        //  TODO: Will need to check the UUID against the names we have stored for them
-        //  rn just use the UUID
-        
         //  Create a cell to display the data that has been saved for that device
         let cell = UITableViewCell(style: .default, reuseIdentifier: "SavedData")
+        
+        var text = "-- No Data Saved --"
+        if uuids.count != 0 {
+            let uuid = uuids[indexPath.row]
+            
+            //  Get the name of the device
+            text = String(describing: uuid)
+            if savedDevices[uuid] != nil && savedDevices[uuid]!.name != nil {
+                text = savedDevices[uuid]!.name!
+            }
+        }
+        
+        //  Set the text and return the cell
         cell.textLabel?.text = text
         return cell
     }

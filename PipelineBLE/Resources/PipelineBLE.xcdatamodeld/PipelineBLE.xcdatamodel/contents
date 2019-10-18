@@ -10,6 +10,11 @@
         <attribute name="id" optional="YES" attributeType="String"/>
         <attribute name="peripheral" optional="YES" attributeType="String"/>
     </entity>
+    <entity name="SavedPeripheral" representedClassName="SavedPeripheral" syncable="YES">
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="notes" optional="YES" attributeType="String"/>
+        <attribute name="uuid" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+    </entity>
     <entity name="UARTData" representedClassName="UARTData" parentEntity="SavedData" syncable="YES">
         <attribute name="data" optional="YES" attributeType="String"/>
     </entity>
@@ -17,5 +22,6 @@
         <element name="PlotData" positionX="-36" positionY="18" width="128" height="58"/>
         <element name="SavedData" positionX="-18" positionY="36" width="128" height="118"/>
         <element name="UARTData" positionX="-54" positionY="-9" width="128" height="58"/>
+        <element name="SavedPeripheral" positionX="-36" positionY="54" width="128" height="88"/>
     </elements>
 </model>

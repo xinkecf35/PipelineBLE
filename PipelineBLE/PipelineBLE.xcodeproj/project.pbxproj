@@ -67,6 +67,8 @@
 		B99E3C58232AA53A00C03948 /* UARTButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = B99E3C57232AA53A00C03948 /* UARTButtons.swift */; };
 		B99E3C7E232AF7CB00C03948 /* UARTTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B99E3C7D232AF7CB00C03948 /* UARTTextField.swift */; };
 		B9BB539823575A17006DBDF9 /* DisplayDataViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9BB539723575A17006DBDF9 /* DisplayDataViewController.swift */; };
+		B9BB539B2358B0EE006DBDF9 /* SavedPeripheral+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9BB53992358B0ED006DBDF9 /* SavedPeripheral+CoreDataClass.swift */; };
+		B9BB539C2358B0EE006DBDF9 /* SavedPeripheral+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9BB539A2358B0EE006DBDF9 /* SavedPeripheral+CoreDataProperties.swift */; };
 		B9BEF6E923399B6100906B4C /* PersistentData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9BEF6E823399B6100906B4C /* PersistentData.swift */; };
 		B9CA5044230C3725007E31D8 /* MSWeakTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = B9CA5043230C3725007E31D8 /* MSWeakTimer.m */; };
 		B9CA5049230C7435007E31D8 /* ReleasesParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9CA5046230C7435007E31D8 /* ReleasesParser.swift */; };
@@ -148,6 +150,8 @@
 		B99E3C57232AA53A00C03948 /* UARTButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UARTButtons.swift; sourceTree = "<group>"; };
 		B99E3C7D232AF7CB00C03948 /* UARTTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UARTTextField.swift; sourceTree = "<group>"; };
 		B9BB539723575A17006DBDF9 /* DisplayDataViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayDataViewController.swift; sourceTree = "<group>"; };
+		B9BB53992358B0ED006DBDF9 /* SavedPeripheral+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "SavedPeripheral+CoreDataClass.swift"; path = "/Users/samuelpeterson/Desktop/PipelineBLE/PipelineBLE/PipelineBLE/Common/PersistentData/SavedPeripheral+CoreDataClass.swift"; sourceTree = "<absolute>"; };
+		B9BB539A2358B0EE006DBDF9 /* SavedPeripheral+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "SavedPeripheral+CoreDataProperties.swift"; path = "/Users/samuelpeterson/Desktop/PipelineBLE/PipelineBLE/PipelineBLE/Common/PersistentData/SavedPeripheral+CoreDataProperties.swift"; sourceTree = "<absolute>"; };
 		B9BEF6E823399B6100906B4C /* PersistentData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistentData.swift; sourceTree = "<group>"; };
 		B9CA5041230C3725007E31D8 /* MSWeakTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSWeakTimer.h; sourceTree = "<group>"; };
 		B9CA5043230C3725007E31D8 /* MSWeakTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSWeakTimer.m; sourceTree = "<group>"; };
@@ -450,6 +454,8 @@
 		B9BEF6E7233999DB00906B4C /* PersistentData */ = {
 			isa = PBXGroup;
 			children = (
+				B9BB53992358B0ED006DBDF9 /* SavedPeripheral+CoreDataClass.swift */,
+				B9BB539A2358B0EE006DBDF9 /* SavedPeripheral+CoreDataProperties.swift */,
 				B901471A2347DE5D0001E90C /* SavedData+CoreDataClass.swift */,
 				B90147192347DE5D0001E90C /* SavedData+CoreDataProperties.swift */,
 				B901471D2347DEC80001E90C /* PlotData+CoreDataClass.swift */,
@@ -682,6 +688,7 @@
 				B9CA505E230C953B007E31D8 /* RssiUI.swift in Sources */,
 				B97BC4DD22FB686B00858CA9 /* CommandQueue.swift in Sources */,
 				B99E3C4E23201DCB00C03948 /* UartDataExport.swift in Sources */,
+				B9BB539C2358B0EE006DBDF9 /* SavedPeripheral+CoreDataProperties.swift in Sources */,
 				B97BC4C322FB5EE400858CA9 /* UartPacketManager.swift in Sources */,
 				B99E3C41231FFEFA00C03948 /* NSObject+ENHThrottledReloading.m in Sources */,
 				B97BC4CD22FB5EFF00858CA9 /* GattServer.swift in Sources */,
@@ -727,6 +734,7 @@
 				B99E3C7E232AF7CB00C03948 /* UARTTextField.swift in Sources */,
 				B97BC4D122FB5F0900858CA9 /* UartPacketManagerBase.swift in Sources */,
 				B99E3C302314BB5300C03948 /* DeviceInfoViewController.swift in Sources */,
+				B9BB539B2358B0EE006DBDF9 /* SavedPeripheral+CoreDataClass.swift in Sources */,
 				B901471C2347DE5E0001E90C /* SavedData+CoreDataClass.swift in Sources */,
 				B99E3C442320007700C03948 /* CocoaCompatibility.swift in Sources */,
 				B9CA505F230C953B007E31D8 /* PeripheralList.swift in Sources */,

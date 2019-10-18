@@ -175,7 +175,6 @@ extension SavedDataViewController: UITableViewDelegate {
         navigationController?.pushViewController(displayDataController, animated: true)
     }
     
-    /*
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }
@@ -183,6 +182,22 @@ extension SavedDataViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if (editingStyle == .delete){
             //  Need to delete from saved objects and from the view
+            var data: SavedData
+            
+            switch TableSection(rawValue: indexPath.section)! {
+            case .plot:
+                //  Delete from Plot data
+                data = plotData[indexPath.row] as! PlotData
+                PersistenceService.context.delete(data)
+                plotData.remove(at: indexPath.row)
+            case .uart:
+                //  Delete from UART data
+                data = uartData[indexPath.row] as! UARTData
+                PersistenceService.context.delete(data)
+                uartData.remove(at: indexPath.row)
+            }
+            tableView.deleteRows(at: [indexPath], with: .fade)
+            PersistenceService.saveContext()
         }
-    }*/
+    }
 }

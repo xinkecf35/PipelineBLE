@@ -13,7 +13,7 @@ class AvailableDevicesTableViewCell: UITableViewCell {
     //  Mark: UI components and peripheral data
     public let deviceName: UILabel = {
         let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 18)
+        label.font = UIFont.boldSystemFont(ofSize: 22)
         label.textColor = .systemBlue
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -25,6 +25,8 @@ class AvailableDevicesTableViewCell: UITableViewCell {
     }()
     public let subtitle: UILabel = {
         let label = UILabel()
+        label.font.withSize(10)
+        label.textColor = .systemOrange
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -49,14 +51,23 @@ class AvailableDevicesTableViewCell: UITableViewCell {
     func SetUpConstraints(){
         //  Add the label to the cell
         addSubview(deviceName)
+        addSubview(subtitle)
         
         //  Add constraints to the label
-        deviceName.topAnchor.constraint(equalTo: topAnchor, constant: 10).isActive = true
-        deviceName.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10).isActive = true
-        deviceName.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10).isActive = true
-        deviceName.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10).isActive = true
- 
+        deviceName.topAnchor.constraint(equalTo: topAnchor, constant: 5).isActive = true
+        deviceName.bottomAnchor.constraint(equalTo: subtitle.topAnchor, constant: -5).isActive = true
+        deviceName.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -5).isActive = true
+        deviceName.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 5).isActive = true
         
+        //  Add constraints to the subtitle
+        subtitle.topAnchor.constraint(equalTo: deviceName.bottomAnchor, constant: 5).isActive = true
+        subtitle.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -5).isActive = true
+        subtitle.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -5).isActive = true
+        subtitle.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 5).isActive = true
+    }
+    
+    func setSubtitle(text: String, saved: Bool){
+        subtitle.text = saved ? "Saved Device (\(text))" : "Not Saved"
     }
     
     
