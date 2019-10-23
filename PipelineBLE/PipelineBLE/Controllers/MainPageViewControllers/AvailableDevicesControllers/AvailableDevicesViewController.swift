@@ -245,6 +245,7 @@ class AvailableDevicesViewController: UITableViewController {
         
         //  Send some initial data
         connectToDevice.selectedPeripheral = selectedPeripheral
+        connectToDevice.savedPeripheral = savedDevices[selectedPeripheral!.identifier]
         
         //  Hide the tab bar when pushed and then push the view
         connectToDevice.hidesBottomBarWhenPushed = true

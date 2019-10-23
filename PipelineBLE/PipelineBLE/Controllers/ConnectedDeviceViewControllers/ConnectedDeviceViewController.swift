@@ -12,6 +12,7 @@ class ConnectedDeviceViewController: UIViewController {
     
     //  Data about the device
     weak var selectedPeripheral: BlePeripheral?
+    var savedPeripheral: SavedPeripheral?
     var deviceName: String?
     var hasUart = false
     var hasDfu = false
@@ -48,6 +49,13 @@ class ConnectedDeviceViewController: UIViewController {
         //  Register cells for their identifier
         tableView.register(AvailableModulesTableViewCell.self, forCellReuseIdentifier: "AvailableModule")
         tableView.register(ConnectedDeviceTableViewCell.self, forCellReuseIdentifier: "ConnectedDevice")
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        //  Assign device name
+        deviceName = savedPeripheral?.name ?? ""
     }
     
     func UISettings(){
@@ -236,6 +244,8 @@ extension ConnectedDeviceViewController: UITableViewDelegate{
                 //  Need to open the buttons view controller
                 let buttonsViewController = ButtonsViewController()
                 buttonsViewController.hidesBottomBarWhenPushed = true
+                buttonsViewController.savedPeripheral = savedPeripheral
+                buttonsViewController.blePeripheral = selectedPeripheral
                 navigationController?.pushViewController(buttonsViewController, animated: true)
             case .datastream:
                 //  Open data stream view controller

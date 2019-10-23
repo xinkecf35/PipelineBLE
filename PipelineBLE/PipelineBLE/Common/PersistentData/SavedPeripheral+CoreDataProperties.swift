@@ -19,5 +19,6 @@ extension SavedPeripheral {
     @NSManaged public var name: String?
     @NSManaged public var uuid: UUID?
     @NSManaged public var notes: String?
+    @NSManaged public var commands: NSObject?
 
 }
