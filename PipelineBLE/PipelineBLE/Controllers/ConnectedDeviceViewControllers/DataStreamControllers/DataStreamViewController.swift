@@ -43,7 +43,8 @@ class DataStreamViewController: UIViewController {
         slider.translatesAutoresizingMaskIntoConstraints = false
         return slider
     }()
-    var saveButton: UIBarButtonItem?
+    var saveButton: UIBarButtonItem!
+    var sendCommandButton: UIBarButtonItem!
     
     weak var blePeripheral: BlePeripheral?
     fileprivate var dataManager: UartDataManager!
@@ -138,7 +139,8 @@ class DataStreamViewController: UIViewController {
         
         //  Add the bar button item
         saveButton = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(onClickSave(_:)))
-        navigationItem.rightBarButtonItem = saveButton
+        sendCommandButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(onClickSend(_:)))
+        navigationItem.setRightBarButtonItems([sendCommandButton,saveButton], animated: true)
         
         //  Add plotter view
         var textViewConstraint = navigationController?.navigationBar.frame.height ?? 20
@@ -308,7 +310,7 @@ class DataStreamViewController: UIViewController {
         notifyDataSetChanged()
     }
     
-    @objc func onClickSave(_ send: UIBarButtonItem){
+    @objc func onClickSave(_ save: UIBarButtonItem){
         //  Create alert and text to display
         let alert = UIAlertController(title: "SaveData", message: "Please enter an identifier for the data:", preferredStyle: .alert)
         alert.addTextField{ (textField) in
@@ -335,6 +337,29 @@ class DataStreamViewController: UIViewController {
         
     }
     
+    @objc func onClickSend(_ send: UIBarButtonItem){
+        //  Send a given command to the device
+        let alert = UIAlertController(title: "Send Command", message: "Please enter the command you would like to send to the device: ", preferredStyle: .alert)
+        alert.addTextField{(textfield) in
+            textfield.placeholder = "message"
+        }
+        
+        //  Add the action to the alert and present to user
+        let action = UIAlertAction(title: "Send Command", style: .default){ (_) in
+            let command = alert.textFields?.first!.text ?? ""
+            
+            if command != "" {
+                //  Need to send the given command
+                self.send(message: command)
+            }
+        }
+        
+        alert.addAction(action)
+        
+        //  Present to user
+        self.present(alert,animated: true, completion: nil)
+        
+    }
 
     /*
     // MARK: - Navigation
@@ -402,6 +427,19 @@ extension DataStreamViewController: UartDataManagerDelegate{
     @objc func reloadData(){
         DispatchQueue.main.async {
             self.notifyDataSetChanged()
+        }
+    }
+    
+    func send(message: String) {
+        guard let dataManager = self.dataManager else { DLog("Error send with invalid uartData class"); return }
+        
+        print("Sending message: \(message)")
+        
+        //  Single peripheral mode
+        if let blePeripheral = blePeripheral {
+            if let data = message.data(using: .utf8) {
+                dataManager.send(blePeripheral: blePeripheral, data: data)
+            }
         }
     }
     
