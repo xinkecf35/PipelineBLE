@@ -22,7 +22,7 @@ class DisplayDataViewController: UIViewController {
         return textView
     }()
     var data: String = ""
-    
+    var exportButton: UIBarButtonItem!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,6 +36,10 @@ class DisplayDataViewController: UIViewController {
         //  Set background and title
         view.backgroundColor = .darkGray
         navigationItem.title = pageTitle
+        
+        //  Create export button
+        exportButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(onClickExport(_:)))
+        navigationItem.rightBarButtonItem = exportButton
         
         //  Add items to screen
         view.addSubview(comTextView)
@@ -52,15 +56,10 @@ class DisplayDataViewController: UIViewController {
         comTextView.font = comTextView.font?.withSize(20)
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    //  MARK: - Actions
+    @objc func onClickExport(_ export: UIBarButtonItem){
+        //  Export button was pressed, call the export button class
+        ExportData.exportData(view: self, button: exportButton, data: self.comTextView.text as NSObject)
     }
-    */
 
 }

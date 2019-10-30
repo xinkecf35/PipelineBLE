@@ -44,7 +44,9 @@ class DataStreamViewController: UIViewController {
         return slider
     }()
     var saveButton: UIBarButtonItem!
-    var sendCommandButton: UIBarButtonItem!
+    var startCommandButton: UIBarButtonItem!
+    var stopCommandButton: UIBarButtonItem!
+    var exportButton: UIBarButtonItem!
     
     weak var blePeripheral: BlePeripheral?
     fileprivate var dataManager: UartDataManager!
@@ -139,8 +141,10 @@ class DataStreamViewController: UIViewController {
         
         //  Add the bar button item
         saveButton = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(onClickSave(_:)))
-        sendCommandButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(onClickSend(_:)))
-        navigationItem.setRightBarButtonItems([sendCommandButton,saveButton], animated: true)
+        startCommandButton = UIBarButtonItem(barButtonSystemItem: .play, target: self, action: #selector(onClickStart(_:)))
+        stopCommandButton = UIBarButtonItem(barButtonSystemItem: .pause, target: self, action: #selector(onClickStop(_:)))
+        exportButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(onClickExport(_:)))
+        barButtons(running: false)
         
         //  Add plotter view
         var textViewConstraint = navigationController?.navigationBar.frame.height ?? 20
@@ -177,6 +181,16 @@ class DataStreamViewController: UIViewController {
         middle.bottomAnchor.constraint(equalTo: bottom.bottomAnchor, constant: -10).isActive = true
         if width {
             middle.widthAnchor.constraint(equalToConstant: middle.intrinsicContentSize.width).isActive = true
+        }
+    }
+    
+    func barButtons(running: Bool){
+        //  Change the bar buttons according to whether or not we are running
+        if running {
+            navigationItem.setRightBarButtonItems([stopCommandButton,saveButton,exportButton], animated: true)
+        }
+        else{
+            navigationItem.setRightBarButtonItems([startCommandButton,saveButton,exportButton], animated: true)
         }
     }
     
@@ -312,7 +326,7 @@ class DataStreamViewController: UIViewController {
     
     @objc func onClickSave(_ save: UIBarButtonItem){
         //  Create alert and text to display
-        let alert = UIAlertController(title: "SaveData", message: "Please enter an identifier for the data:", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Save Data Stream", message: "Please enter an identifier for the data:", preferredStyle: .alert)
         alert.addTextField{ (textField) in
             textField.placeholder = "identifier"
         }
@@ -330,6 +344,10 @@ class DataStreamViewController: UIViewController {
             data.setup(id: id, peripheral: self.blePeripheral!)
             PersistenceService.saveContext()
         }
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        
+        //  Add the two actions
+        alert.addAction(cancelAction)
         alert.addAction(action)
         
         //  Present the view controller
@@ -337,39 +355,80 @@ class DataStreamViewController: UIViewController {
         
     }
     
-    @objc func onClickSend(_ send: UIBarButtonItem){
+    @objc func onClickStart(_ send: UIBarButtonItem){
         //  Send a given command to the device
-        let alert = UIAlertController(title: "Send Command", message: "Please enter the command you would like to send to the device: ", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Start Data Stream", message: "Please enter the necessary information to start the data stream: ", preferredStyle: .alert)
         alert.addTextField{(textfield) in
-            textfield.placeholder = "message"
+            textfield.placeholder = "Number of runs"
         }
+        alert.addTextField{ (textfield) in
+            textfield.placeholder = "Number of samples (default 500)"
+        }
+        /*
+        alert.addTextField{ (textfield) in
+            textfield.placeholder = "Filename (w/o extension)"
+        }*/
         
         //  Add the action to the alert and present to user
-        let action = UIAlertAction(title: "Send Command", style: .default){ (_) in
-            let command = alert.textFields?.first!.text ?? ""
+        let action = UIAlertAction(title: "Start", style: .default){ (_) in
+            let runsText = alert.textFields?.first!.text ?? ""
+            let lengthText = alert.textFields?.last!.text ?? "500" //500 by default
             
-            if command != "" {
-                //  Need to send the given command
-                self.send(message: command)
+            //  Try to get values as an int
+            guard let runs = Int(runsText) else {
+                self.invalidInput(message: "Invalid value entered for the number of runs. Please try again.")
+                return
             }
+            guard let samples = Int(lengthText) else {
+                self.invalidInput(message: "Invalid value entered for the number of samples. Please try again.")
+                return
+            }
+            
+            //  Will be sending the number of samples first, then run x times
+            self.send(message: "r"+String(runs))
+            self.send(message: "t"+String(samples))
+            
+            //  Now let's change the button that is present on the top right
+            self.barButtons(running: true)
         }
         
+        //  Create action that will do nothing if it is selected
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        
+        alert.addAction(cancelAction)
         alert.addAction(action)
         
         //  Present to user
         self.present(alert,animated: true, completion: nil)
         
     }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    
+    func invalidInput(message: String){
+        //  Just alert the user that the input is invalid and they will need to retry
+        let alert = UIAlertController(title: "Invalid input", message: message, preferredStyle: .alert)
+        let action = UIAlertAction(title: "Dismiss", style: .default, handler: nil)
+        alert.addAction(action)
+        self.present(alert, animated: true, completion: nil)
     }
-    */
+    
+    @objc func onClickStop(_ stop: UIBarButtonItem){
+        //  To warn the user that they are about to stop
+        let alert = UIAlertController(title: "Stop Data Stream", message: "Are you sure you want to tell the device to stop sending data?", preferredStyle: .alert)
+        let action = UIAlertAction(title: "Yes", style: .default){ (_) in
+            //  Need to send the device the message to stop
+            self.send(message: "s")
+            self.barButtons(running: false)
+        }
+        let actionCancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        alert.addAction(action)
+        alert.addAction(actionCancel)
+        self.present(alert, animated: true, completion: nil)
+    }
+
+    @objc func onClickExport(_ export: UIBarButtonItem){
+        //  Export button was pressed, call the export button class
+        ExportData.exportData(view: self, button: exportButton, data: basicDataSet as NSObject)
+    }
 
 }
 
@@ -382,7 +441,6 @@ extension DataStreamViewController: UartDataManagerDelegate{
     func onUartRx(data: Data, peripheralIdentifier: UUID) {
         //  Store the data in the byte buffer
         guard let lastSeparatorRange = data.range(of: DataStreamViewController.kLineSeparator, options: [.anchored,.backwards], in: nil) else { return }
-        
 
         let subData = data.subdata(in: 0..<lastSeparatorRange.upperBound)
         if let dataString = String(data: subData, encoding: .utf8) {
