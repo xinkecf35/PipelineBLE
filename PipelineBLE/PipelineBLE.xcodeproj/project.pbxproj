@@ -20,7 +20,8 @@
 		B94CD1F0230735C80077F77E /* WatchSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B94CD1EE230735C80077F77E /* WatchSessionManager.swift */; };
 		B94CD1F1230735C80077F77E /* HandoffManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B94CD1EF230735C80077F77E /* HandoffManager.swift */; };
 		B9677DA02367B2860015E6EA /* ExportData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9677D9F2367B2860015E6EA /* ExportData.swift */; };
-		B9677DA4236914E20015E6EA /* PlotPagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9677DA3236914E20015E6EA /* PlotPagesViewController.swift */; };
+		B9677DA4236914E20015E6EA /* PlotPagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9677DA3236914E20015E6EA /* PlotPagesView.swift */; };
+		B9677DAA236CBCD60015E6EA /* DataStreamContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9677DA9236CBCD60015E6EA /* DataStreamContainerViewController.swift */; };
 		B97BC49322FB3EEE00858CA9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97BC49222FB3EEE00858CA9 /* AppDelegate.swift */; };
 		B97BC49522FB3EEE00858CA9 /* SavedDevicesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97BC49422FB3EEE00858CA9 /* SavedDevicesViewController.swift */; };
 		B97BC49A22FB3EFF00858CA9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B97BC49922FB3EFF00858CA9 /* Assets.xcassets */; };
@@ -101,7 +102,8 @@
 		B94CD1EE230735C80077F77E /* WatchSessionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WatchSessionManager.swift; sourceTree = "<group>"; };
 		B94CD1EF230735C80077F77E /* HandoffManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HandoffManager.swift; sourceTree = "<group>"; };
 		B9677D9F2367B2860015E6EA /* ExportData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExportData.swift; sourceTree = "<group>"; };
-		B9677DA3236914E20015E6EA /* PlotPagesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlotPagesViewController.swift; sourceTree = "<group>"; };
+		B9677DA3236914E20015E6EA /* PlotPagesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlotPagesView.swift; sourceTree = "<group>"; };
+		B9677DA9236CBCD60015E6EA /* DataStreamContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStreamContainerViewController.swift; sourceTree = "<group>"; };
 		B97BC48F22FB3EEE00858CA9 /* PipelineBLE.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PipelineBLE.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B97BC49222FB3EEE00858CA9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B97BC49422FB3EEE00858CA9 /* SavedDevicesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedDevicesViewController.swift; sourceTree = "<group>"; };
@@ -532,7 +534,8 @@
 			isa = PBXGroup;
 			children = (
 				B9CA506A230F3D38007E31D8 /* DataStreamViewController.swift */,
-				B9677DA3236914E20015E6EA /* PlotPagesViewController.swift */,
+				B9677DA9236CBCD60015E6EA /* DataStreamContainerViewController.swift */,
+				B9677DA3236914E20015E6EA /* PlotPagesView.swift */,
 			);
 			path = DataStreamControllers;
 			sourceTree = "<group>";
@@ -707,7 +710,7 @@
 				B90147222347DF240001E90C /* UARTData+CoreDataClass.swift in Sources */,
 				B97BC4F322FCA27900858CA9 /* PastDataViewController.swift in Sources */,
 				B99E3C58232AA53A00C03948 /* UARTButtons.swift in Sources */,
-				B9677DA4236914E20015E6EA /* PlotPagesViewController.swift in Sources */,
+				B9677DA4236914E20015E6EA /* PlotPagesView.swift in Sources */,
 				B97BC4C222FB5EE400858CA9 /* BlePeripheral+Uart.swift in Sources */,
 				B9014712234794D10001E90C /* PipelineBLE.xcdatamodeld in Sources */,
 				B97BC4EC22FB6B5D00858CA9 /* MqttManager.swift in Sources */,
@@ -736,6 +739,7 @@
 				B9BB539823575A17006DBDF9 /* DisplayDataViewController.swift in Sources */,
 				B97BC4DF22FB6AC200858CA9 /* DataConversions.swift in Sources */,
 				B9BEF6E923399B6100906B4C /* PersistentData.swift in Sources */,
+				B9677DAA236CBCD60015E6EA /* DataStreamContainerViewController.swift in Sources */,
 				B97BC4EF22FC8FEF00858CA9 /* MainPageTabBarController.swift in Sources */,
 				B99E3C2B2314279700C03948 /* ConnectedDeviceTableViewCell.swift in Sources */,
 				B99E3C46232000A100C03948 /* Color+DarkerLighter.swift in Sources */,

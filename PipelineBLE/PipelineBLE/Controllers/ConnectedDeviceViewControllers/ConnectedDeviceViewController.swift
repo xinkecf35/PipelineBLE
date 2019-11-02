@@ -249,7 +249,11 @@ extension ConnectedDeviceViewController: UITableViewDelegate{
                 navigationController?.pushViewController(buttonsViewController, animated: true)
             case .datastream:
                 //  Open data stream view controller
-                let dataStreamViewController = DataStreamViewController()
+                //let dataStreamViewController = DataStreamViewController()
+                
+                let dataStreamViewController = DataStreamContainerViewController()
+                
+                
                 dataStreamViewController.hidesBottomBarWhenPushed = true
                 dataStreamViewController.blePeripheral = selectedPeripheral
                 navigationController?.pushViewController(dataStreamViewController, animated: true)
