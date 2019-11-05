@@ -57,7 +57,10 @@ class DataStreamContainerViewController: UIViewController {
     fileprivate var visibleInterval: TimeInterval = 30
     var isAutoScrollEnabled: Bool = true
     var dataCounter = 0
-    var basicDataSet: [[Double]] = []
+    var basicDataSet: [[[Double]]] = [[]]
+    var dataSetForPeripheral = [LineChartDataSet]()
+    var currentPlot = 0
+    var startReading = false
     var plots: PlotPagesView!
     
     override func viewDidLoad() {
@@ -81,6 +84,7 @@ class DataStreamContainerViewController: UIViewController {
         
         // UI
         autoScroll.isOn = isAutoScrollEnabled
+        plots.isAutoScrollEnabled = isAutoScrollEnabled
         plot.dragEnabled = !isAutoScrollEnabled
         maxEntries.value = Float(visibleInterval)
     }
@@ -105,8 +109,10 @@ class DataStreamContainerViewController: UIViewController {
                 dataSet.removeAll(keepingCapacity: false)
             }
         }
+        
+        //dataSetForPeripheral.removeAll()
     }
-    
+    /*
     func testCharts(){
         let data:[[Double]] = [[1,1],[2,3],[4,5]]
         var entries: [ChartDataEntry] = []
@@ -125,7 +131,7 @@ class DataStreamContainerViewController: UIViewController {
         plot.data = endData
         plot.data?.notifyDataChanged()
         plot.notifyDataSetChanged()
-    }
+    }*/
     
     //  MARK: - Set up the UI
     func configureUI(){
@@ -180,9 +186,9 @@ class DataStreamContainerViewController: UIViewController {
         maxEntries.leadingAnchor.constraint(equalTo: sliderLabel.trailingAnchor, constant: 5).isActive = true
         
         //  Initialize plots and layout so the constraints are immadiately avaialable
-        plots.setNeedsLayout()
-        plots.layoutIfNeeded()
-        plots.initialize()
+        //plots.setNeedsLayout()
+        //plots.layoutIfNeeded()
+        //plots.initialize()
     }
     
     func genericConstraints(top: UIView, middle: UIView, bottom: UIView, width: Bool){
@@ -252,6 +258,57 @@ class DataStreamContainerViewController: UIViewController {
         }
     }
     
+    func addEntry(peripheral: UUID, x: Double, y: Double){
+        //  Create a new data entry
+        let entry = ChartDataEntry(x: x, y: y)
+        
+        //  Make sure that the data set exists
+        if dataSetForPeripheral.count > currentPlot{
+            let dataSet = dataSetForPeripheral[currentPlot]
+            dataSet.append(entry)
+        }
+        else{
+            //  Data set doesnt exist yet, need to create a new one
+            addDataSet(peripheral: peripheral, entry: entry)
+            
+            //  Send the new data to the plot controller to update
+            print("Going to add the data set")
+            let allData = dataSetForPeripheral[currentPlot]
+            DispatchQueue.main.async {
+                print("Adding the dataset to the plot")
+                print(allData)
+                self.plots.addDataSet(plotNum: self.currentPlot, allData: [allData])
+                print("Done")
+            }
+        }
+        
+        guard dataSetForPeripheral.count > currentPlot else { return }
+        let dataSet = dataSetForPeripheral[currentPlot]
+        
+        lastUpdatedData = dataSet
+        plots.lastUpdatedData = lastUpdatedData
+    }
+    
+    func addDataSet(peripheral: UUID, entry: ChartDataEntry){
+        //  Create a new data set
+        let newDataSet = LineChartDataSet(entries: [entry], label: "Values for \(currentPlot) plot]")
+        let _ = newDataSet.append(entry)
+        
+        //  Add some preferences
+        newDataSet.drawCirclesEnabled = false
+        newDataSet.drawValuesEnabled = false
+        newDataSet.lineWidth = 2
+        let colors = UartStyle.defaultColors()
+        let color = colors[currentPlot % colors.count]
+        newDataSet.setColor(color)
+        newDataSet.lineDashLengths = lineDashForPeripheral[peripheral]!
+        DLog("color: \(color.hexString()!)")
+        
+        //  Add the new data set to current data set
+        print("Added new dataset")
+        dataSetForPeripheral.append(newDataSet)
+    }
+    
     func addEntry(peripheral: UUID, index: Int, value: Double, timestamp: CFAbsoluteTime){
         //  Create initial entry
         let entry = ChartDataEntry(x: timestamp, y: value)
@@ -268,6 +325,8 @@ class DataStreamContainerViewController: UIViewController {
             //  Update the data for the graph
             let allData = dataSetForPeripherals.flatMap {$0.1}
             DispatchQueue.main.async {
+                print("Printing Data:")
+                print(allData)
                 self.plot.data = LineChartData(dataSets: allData)
             }
         }
@@ -303,6 +362,8 @@ class DataStreamContainerViewController: UIViewController {
     }
     
     func notifyDataSetChanged(){
+        plots.notifyDataSetChanged()
+        /*
         //  Signal that the data and the data set changed
         plot.data?.notifyDataChanged()
         plot.notifyDataSetChanged()
@@ -319,19 +380,29 @@ class DataStreamContainerViewController: UIViewController {
             //let xOffset = Double(dataSet.entryCount) - (context.numEntriesVisible-1)
             let xOffset = (dataSet.entries.last?.x ?? 0) - (visibleInterval-1)
             plot.moveViewToX(xOffset)
-        }
+        }*/
     }
     
     //  MARK: - UI Actions
     @objc func onXScaleValueChanged(_ sender: UISlider) {
+        //  Update our track of the intervale and sent to the plots
         visibleInterval = TimeInterval(sender.value)
-        notifyDataSetChanged()
+        plots.updateSlider(slider: visibleInterval)
+        
+        DispatchQueue.main.async {
+            self.notifyDataSetChanged()
+        }
     }
     
     @objc func onAutoScrollChanged(_ sender: Any) {
+        //  Update the autoscroll and send to plots
         isAutoScrollEnabled = !isAutoScrollEnabled
         plot.dragEnabled = !isAutoScrollEnabled
-        notifyDataSetChanged()
+        plots.updateAutoScroll()
+        
+        DispatchQueue.main.async {
+            self.notifyDataSetChanged()
+        }
     }
     
     @objc func onClickSave(_ save: UIBarButtonItem){
@@ -394,6 +465,12 @@ class DataStreamContainerViewController: UIViewController {
                 return
             }
             
+            //  Now we we have the number of runs, so set up the graphs
+            self.plots.initialize(count: runs)
+            
+            //  Now we can start reading data in
+            self.startReading = true
+            
             //  Will be sending the number of samples first, then run x times
             self.send(message: "r"+String(runs))
             self.send(message: "t"+String(samples))
@@ -451,6 +528,12 @@ extension DataStreamContainerViewController: UartDataManagerDelegate{
     func onUartRx(data: Data, peripheralIdentifier: UUID) {
         //  Store the data in the byte buffer
         guard let lastSeparatorRange = data.range(of: DataStreamContainerViewController.kLineSeparator, options: [.anchored,.backwards], in: nil) else { return }
+        
+        //  Make sure that we can start reading in data
+        if !startReading {
+            dataManager.removeRxCacheFirst(n: lastSeparatorRange.upperBound+1, peripheralIdentifier: peripheralIdentifier)
+            return
+        }
 
         let subData = data.subdata(in: 0..<lastSeparatorRange.upperBound)
         if let dataString = String(data: subData, encoding: .utf8) {
@@ -459,7 +542,6 @@ extension DataStreamContainerViewController: UartDataManagerDelegate{
             
             //  Here we are making current time equal to data counter so all data pts are evenly spread out
             //let currentTime = CFAbsoluteTimeGetCurrent() - startTime
-            
             
             //  Need to look through each line of strings
             for line in strings {
@@ -470,15 +552,39 @@ extension DataStreamContainerViewController: UartDataManagerDelegate{
                 for pt in dataPoints{
                     //  Need to create the new data point and add to set
                     if let val = Double(pt){
-                        //  Make sure data is even spread
-                        let currentTime = dataCounter
-                        
-                        addEntry(peripheral: peripheralIdentifier, index: i, value: val, timestamp: Double(currentTime))
-                        
-                        //  Also add this value to the basic data set [x,y]
-                        self.basicDataSet.append([Double(currentTime), val])
-                        dataCounter += 1
-                        i = i + 1
+                        //  Check to see if the point is 0, then we know it is a new plot and increase
+                        if currentPlot >= plots.maxPlots{
+                            //  Done reading data in, ignore the rest
+                            return
+                        }
+                        else if val != 0{
+                            //  Make sure data is even spread
+                            let currentTime = dataCounter
+                            
+                            //addEntry(peripheral: peripheralIdentifier, index: i, value: val, timestamp: Double(currentTime))
+                            addEntry(peripheral: peripheralIdentifier, x: Double(currentTime), y: val)
+                            
+                            //  Check to see if this is a new dataset we need to add
+                            if basicDataSet.count == currentPlot, currentPlot != 0{
+                                //  Add the new data to the new plot
+                                self.basicDataSet.append([])
+                                self.basicDataSet[currentPlot].append([Double(currentTime), val])
+                            }
+                            else{
+                                //  Just add data regularly
+                                self.basicDataSet[currentPlot].append([Double(currentTime), val])
+                            }
+                            
+                            dataCounter += 1
+                            i = i + 1
+                        }
+                        else {
+                            //  Okay, new data set for the new graph
+                            currentPlot += 1
+                            DispatchQueue.main.async {
+                                self.plots.changePage(toPage: self.currentPlot)
+                            }
+                        }
                     }
                 }
                 //  Need to update the graph

@@ -554,10 +554,12 @@ extension AvailableDevicesViewController {
             //  Now save and connect
             self.saveAndConnect(peripheral: peripheral, name: peripheral.name ?? localizationManager.localizedString("scanner_unnamed"))
         }
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         
         //  Add the actions to the alert
         alert.addAction(newNameAction)
         alert.addAction(sameNameAction)
+        alert.addAction(cancelAction)
         
         //  Present to the user
         self.present(alert, animated: true, completion: nil)

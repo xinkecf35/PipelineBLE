@@ -65,7 +65,7 @@ class ExportData {
     
     fileprivate static func parseData(data: NSObject, type: String) -> String?{
         //  First, find what type of data we are dealing with
-        if let data = data as? [[Double]] {
+        if let data = data as? [[[Double]]] {
             //  We have Plot data, so will have to convert and return
             if type == "txt"{
                 return PlotData.dataToString(data: data)

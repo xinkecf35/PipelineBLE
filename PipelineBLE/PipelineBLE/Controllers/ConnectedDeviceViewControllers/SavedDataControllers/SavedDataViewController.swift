@@ -163,7 +163,7 @@ extension SavedDataViewController: UITableViewDelegate {
             //  Give it the data it needs
             let dataInstance = plotData[indexPath.row] as! PlotData
             displayDataController.pageTitle = dataInstance.id
-            displayDataController.data = PlotData.dataToString(data: dataInstance.data as! [[Double]])
+            displayDataController.data = PlotData.dataToString(data: dataInstance.data as! [[[Double]]])
         case .uart:
             //  Give it the data it needs
             let dataInstance = uartData[indexPath.row] as! UARTData

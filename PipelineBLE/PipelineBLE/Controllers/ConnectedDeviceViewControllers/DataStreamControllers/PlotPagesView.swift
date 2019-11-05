@@ -24,24 +24,57 @@ class PlotPagesView: UIView {
         page.translatesAutoresizingMaskIntoConstraints = false
         return page
     }()
+    var emptyPageLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Data Stream Not Started"
+        return label
+    }()
     var plots: [LineChartView]! = []
     var isAutoScrollEnabled: Bool = true
     var visibleInterval: TimeInterval = 30
     var lastUpdatedData: LineChartDataSet?
+    var currentPageDisplayed: Int = 0
+    var maxPlots: Int = 0
     
-    func initialize(){
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        //  Also add UIButton and constraints
+        self.addSubview(emptyPageLabel)
+        emptyPageLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+        emptyPageLabel.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func initialize(count: Int){
+        //  Need to clean everything from the view
+        clean()
+        
         //  Let's set up the scroll view and a single chart
-        setupUI()
+        maxPlots = count
+        setupUI(plotCount: count)
     }
     
     func initialize(data: [[[Double]]]){
         //  Use this function to initialize with data
     }
     
-    func setupUI(){
+    func clean(){
+        // Remove everything
+        self.willRemoveSubview(emptyPageLabel)
+        emptyPageLabel.isHidden = true
+        for plot in plots{
+            self.willRemoveSubview(plot)
+        }
+        plots.removeAll()
+    }
+    
+    func setupUI(plotCount: Int){
         //  Adjust the UI
-        self.layer.borderWidth = 2
-        self.layer.borderColor = UIColor.black.cgColor
         scrollView.delegate = self
         
         //  Set up the scroll view
@@ -50,8 +83,6 @@ class PlotPagesView: UIView {
         scrollView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -20).isActive = true
         scrollView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
         scrollView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
-        scrollView.layer.borderWidth = 6
-        scrollView.layer.borderColor = UIColor.green.cgColor
         
         //  Set up page control
         self.addSubview(pageControl)
@@ -59,19 +90,18 @@ class PlotPagesView: UIView {
         pageControl.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
         pageControl.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
         pageControl.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
-        pageControl.layer.borderWidth = 5
-        pageControl.layer.borderColor = UIColor.red.cgColor
         
         //  Set the layout subviews
         self.layoutSubviews()
         self.layoutIfNeeded()
         
         //  Now lets add plots
-        addPlots(count: 5)
+        addPlots(count: plotCount)
         
         // Init the page control w/handler for when it's scrolled
         self.pageControl.numberOfPages = plots.count
         self.pageControl.currentPage = 0
+        currentPageDisplayed = 0
         pageControl.addTarget(self, action: #selector(self.changePage(_:)), for: UIControl.Event.valueChanged)
     }
     
@@ -87,6 +117,7 @@ class PlotPagesView: UIView {
             //  Create the generic plot
             let plot = formattedPlot()
             plot.translatesAutoresizingMaskIntoConstraints = false
+            plot.dragEnabled = !isAutoScrollEnabled
             
             //  Add the plot to list of plots and add to subview
             plots.append(plot)
@@ -114,9 +145,9 @@ class PlotPagesView: UIView {
                 plot.leadingAnchor.constraint(equalTo: plots[i-1].trailingAnchor).isActive = true
                 plots[i-1].trailingAnchor.constraint(equalTo: plot.leadingAnchor).isActive = true
             }
-            self.scrollView.layoutSubviews()
-            self.scrollView.layoutIfNeeded()
-            print(plot.frame)
+            //self.scrollView.layoutSubviews()
+            //self.scrollView.layoutIfNeeded()
+            //print(plot.frame)
             
         }
         
@@ -138,8 +169,6 @@ class PlotPagesView: UIView {
         plot.leftAxis.drawZeroLineEnabled = true
         plot.legend.enabled = false
         plot.noDataText = "No data received"
-        plot.layer.borderColor = UIColor.blue.cgColor
-        plot.layer.borderWidth = 4
         
         return plot
     }
@@ -150,22 +179,15 @@ class PlotPagesView: UIView {
         scrollView.setContentOffset(CGPoint(x:x, y:0), animated: true)
     }
     
-    func notifyDataSetChanged(index: Int, all: Bool){
-        if all {
-            //  Want to update all
-            for i in 0...plots.count-1{
-                notifyDataSetChanged(index: i, all: false)
-            }
-            return
-        }
-        
+    func notifyDataSetChanged(){
+        let cur = currentPageDisplayed
         //  Notify that the data for this plot has changed
-        plots[index].data?.notifyDataChanged()
-        plots[index].notifyDataSetChanged()
+        plots[cur].data?.notifyDataChanged()
+        plots[cur].notifyDataSetChanged()
         
         //  Make sure the visible range is accurate
-        plots[index].setVisibleXRangeMaximum(visibleInterval)
-        plots[index].setVisibleXRangeMinimum(visibleInterval)
+        plots[cur].setVisibleXRangeMaximum(visibleInterval)
+        plots[cur].setVisibleXRangeMinimum(visibleInterval)
         
         guard let dataSet = lastUpdatedData else { return }
 
@@ -173,11 +195,29 @@ class PlotPagesView: UIView {
         if isAutoScrollEnabled {
             //let xOffset = Double(dataSet.entryCount) - (context.numEntriesVisible-1)
             let xOffset = (dataSet.entries.last?.x ?? 0) - (visibleInterval-1)
-            plots[index].moveViewToX(xOffset)
+            plots[cur].moveViewToX(xOffset)
         }
     }
     
-
+    func addDataSet(plotNum: Int, allData: [LineChartDataSet]){
+        //  Add data to the new plot
+        self.plots[plotNum].data = LineChartData(dataSets: allData)
+    }
+    
+    func updateSlider(slider: TimeInterval){
+        visibleInterval = slider
+    }
+    
+    func updateAutoScroll(){
+        isAutoScrollEnabled = !isAutoScrollEnabled
+        plots[currentPageDisplayed].dragEnabled = !isAutoScrollEnabled
+    }
+    
+    @objc func reloadData(){
+        DispatchQueue.main.async {
+            self.notifyDataSetChanged()
+        }
+    }
 }
 
 //  MARK: - Scroll View Delegate
@@ -186,6 +226,27 @@ extension PlotPagesView: UIScrollViewDelegate {
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         let pageNumber = round(scrollView.contentOffset.x / scrollView.frame.size.width)
         pageControl.currentPage = Int(pageNumber)
+        currentPageDisplayed = Int(pageNumber)
+    }
+    
+    func changePage(){
+        //  Just go to the next page if possible
+        if pageControl.currentPage != pageControl.numberOfPages {
+            pageControl.currentPage = Int(pageControl.currentPage + 1)
+            currentPageDisplayed = pageControl.currentPage
+            self.changePage(self)
+            self.notifyDataSetChanged()
+        }
+    }
+    
+    func changePage(toPage: Int){
+        //  Go to the indicated page
+        if toPage < pageControl.numberOfPages, toPage >= 0 {
+            pageControl.currentPage = Int(toPage)
+            currentPageDisplayed = pageControl.currentPage
+            self.changePage(self)
+            self.notifyDataSetChanged()
+        }
     }
 }
 
