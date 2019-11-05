@@ -33,6 +33,7 @@ class DataStreamContainerViewController: UIViewController {
     }()
     var autoScroll: UISwitch = {
         let scroll = UISwitch()
+        scroll.isEnabled = false
         scroll.translatesAutoresizingMaskIntoConstraints = false
         return scroll
     }()
@@ -73,7 +74,7 @@ class DataStreamContainerViewController: UIViewController {
         dataManager = UartDataManager(delegate: self, isRxCacheEnabled: true)
         
         //  Configure the chart
-        setUpChart()
+        //setUpChart()
         
         //  Get initial start time
         startTime = CFAbsoluteTimeGetCurrent()
@@ -272,13 +273,9 @@ class DataStreamContainerViewController: UIViewController {
             addDataSet(peripheral: peripheral, entry: entry)
             
             //  Send the new data to the plot controller to update
-            print("Going to add the data set")
             let allData = dataSetForPeripheral[currentPlot]
             DispatchQueue.main.async {
-                print("Adding the dataset to the plot")
-                print(allData)
                 self.plots.addDataSet(plotNum: self.currentPlot, allData: [allData])
-                print("Done")
             }
         }
         
@@ -305,7 +302,7 @@ class DataStreamContainerViewController: UIViewController {
         DLog("color: \(color.hexString()!)")
         
         //  Add the new data set to current data set
-        print("Added new dataset")
+        DLog("Added new dataset for new graph")
         dataSetForPeripheral.append(newDataSet)
     }
     
@@ -325,8 +322,6 @@ class DataStreamContainerViewController: UIViewController {
             //  Update the data for the graph
             let allData = dataSetForPeripherals.flatMap {$0.1}
             DispatchQueue.main.async {
-                print("Printing Data:")
-                print(allData)
                 self.plot.data = LineChartData(dataSets: allData)
             }
         }
@@ -388,6 +383,9 @@ class DataStreamContainerViewController: UIViewController {
         //  Update our track of the intervale and sent to the plots
         visibleInterval = TimeInterval(sender.value)
         plots.updateSlider(slider: visibleInterval)
+        
+        //  Make sure we have started reading data before trying to update
+        if !startReading {return}
         
         DispatchQueue.main.async {
             self.notifyDataSetChanged()
@@ -464,6 +462,9 @@ class DataStreamContainerViewController: UIViewController {
                 self.invalidInput(message: "Invalid value entered for the number of samples. Please try again.")
                 return
             }
+            
+            //  Unlock autoscroll
+            self.autoScroll.isEnabled = true
             
             //  Now we we have the number of runs, so set up the graphs
             self.plots.initialize(count: runs)

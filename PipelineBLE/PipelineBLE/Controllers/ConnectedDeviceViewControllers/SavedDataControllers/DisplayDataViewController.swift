@@ -21,8 +21,10 @@ class DisplayDataViewController: UIViewController {
         textView.translatesAutoresizingMaskIntoConstraints = false
         return textView
     }()
-    var data: String = ""
+    var dataAsString: String = ""
     var exportButton: UIBarButtonItem!
+    var plot: Bool = false
+    var plotData: [[[Double]]]?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,25 +43,58 @@ class DisplayDataViewController: UIViewController {
         exportButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(onClickExport(_:)))
         navigationItem.rightBarButtonItem = exportButton
         
-        //  Add items to screen
-        view.addSubview(comTextView)
-        
-        //  Set the layout of the screen
+        //  Init offset
         var textViewConstraint = navigationController?.navigationBar.frame.height ?? 20
         textViewConstraint += 35
-        comTextView.topAnchor.constraint(equalTo: view.topAnchor, constant: textViewConstraint).isActive = true
-        comTextView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -15).isActive = true
-        comTextView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15).isActive = true
-        comTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15).isActive = true
         
-        comTextView.text = data
-        comTextView.font = comTextView.font?.withSize(20)
+        //  Decide how to set up depending on what we're working with
+        if plot{
+            //  Create the plot pages
+            let plotPages = PlotPagesView()
+            plotPages.translatesAutoresizingMaskIntoConstraints = false
+            
+            //  Add constraints to the plots
+            genericConstraints(subView: plotPages, topOffset: textViewConstraint)
+            
+            //  Initialize the plots
+            plotPages.initialize(data: plotData!)
+        }
+        else{
+            /*
+            //  Add items to screen
+            view.addSubview(comTextView)
+            
+            //  Set the layout of the screen
+            comTextView.topAnchor.constraint(equalTo: view.topAnchor, constant: textViewConstraint).isActive = true
+            comTextView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -15).isActive = true
+            comTextView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15).isActive = true
+            comTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15).isActive = true
+            */
+            //  Add the generic constraints
+            genericConstraints(subView: comTextView, topOffset: textViewConstraint)
+            
+            comTextView.text = dataAsString
+            comTextView.font = comTextView.font?.withSize(20)
+        }
+        
+        
+    }
+    
+    func genericConstraints(subView: UIView, topOffset: CGFloat){
+        //  Apply generic constraints
+        view.addSubview(subView)
+        
+        //  Set the layout of the screen
+        subView.topAnchor.constraint(equalTo: view.topAnchor, constant: topOffset).isActive = true
+        subView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -15).isActive = true
+        subView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15).isActive = true
+        subView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15).isActive = true
     }
     
     //  MARK: - Actions
     @objc func onClickExport(_ export: UIBarButtonItem){
         //  Export button was pressed, call the export button class
-        ExportData.exportData(view: self, button: exportButton, data: self.comTextView.text as NSObject)
+        ExportData.exportData(view: self, button: exportButton, data: dataAsString as NSObject)
     }
 
 }

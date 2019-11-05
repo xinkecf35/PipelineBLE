@@ -15,7 +15,7 @@ class PlotPagesView: UIView {
         let scroll = UIScrollView()
         scroll.translatesAutoresizingMaskIntoConstraints = false
         scroll.isPagingEnabled = true
-        scroll.showsHorizontalScrollIndicator = true
+        scroll.showsHorizontalScrollIndicator = false
         return scroll
     }()
     var pageControl: UIPageControl = {
@@ -56,11 +56,16 @@ class PlotPagesView: UIView {
         
         //  Let's set up the scroll view and a single chart
         maxPlots = count
-        setupUI(plotCount: count)
+        setupUI(plotCount: count, data: nil)
     }
     
     func initialize(data: [[[Double]]]){
         //  Use this function to initialize with data
+        clean()
+        
+        //  Let's set up the plots
+        maxPlots = data.count
+        setupUI(plotCount: data.count, data: data)
     }
     
     func clean(){
@@ -73,7 +78,7 @@ class PlotPagesView: UIView {
         plots.removeAll()
     }
     
-    func setupUI(plotCount: Int){
+    func setupUI(plotCount: Int, data: [[[Double]]]?){
         //  Adjust the UI
         scrollView.delegate = self
         
@@ -96,7 +101,14 @@ class PlotPagesView: UIView {
         self.layoutIfNeeded()
         
         //  Now lets add plots
-        addPlots(count: plotCount)
+        if let data = data{
+            // We have data to use, so pass it through
+            addPlots(count: data.count, data: data)
+        }
+        else{
+            //  No data to be used to start with
+            addPlots(count: plotCount, data: nil)
+        }
         
         // Init the page control w/handler for when it's scrolled
         self.pageControl.numberOfPages = plots.count
@@ -105,15 +117,9 @@ class PlotPagesView: UIView {
         pageControl.addTarget(self, action: #selector(self.changePage(_:)), for: UIControl.Event.valueChanged)
     }
     
-    func addPlots(count: Int){
-        //  Get size constraints of the graph
-        print("Adding the graphs...")
-        print(self.scrollView.frame.size)
-        print(self.frame.origin.y)
-        
+    func addPlots(count: Int, data: [[[Double]]]?){
+        //  Add the given number of plots
         for i in 0...count-1{
-            print("Plot: \(i+1)")
-            
             //  Create the generic plot
             let plot = formattedPlot()
             plot.translatesAutoresizingMaskIntoConstraints = false
@@ -122,7 +128,6 @@ class PlotPagesView: UIView {
             //  Add the plot to list of plots and add to subview
             plots.append(plot)
             self.scrollView.addSubview(plot)
-            print(scrollView.frame)
             
             
             //  Start adding constraints
@@ -145,10 +150,11 @@ class PlotPagesView: UIView {
                 plot.leadingAnchor.constraint(equalTo: plots[i-1].trailingAnchor).isActive = true
                 plots[i-1].trailingAnchor.constraint(equalTo: plot.leadingAnchor).isActive = true
             }
-            //self.scrollView.layoutSubviews()
-            //self.scrollView.layoutIfNeeded()
-            //print(plot.frame)
             
+            //  Now just add the data to the plot if necessary
+            if let data = data{
+                createPlotDataSet(data: data[i], index: i, plot: plot)
+            }
         }
         
         //  Adjust the scrollview content size
@@ -171,6 +177,31 @@ class PlotPagesView: UIView {
         plot.noDataText = "No data received"
         
         return plot
+    }
+    
+    func createPlotDataSet(data: [[Double]], index: Int, plot: LineChartView){
+        //  Create the dataset to be used for the plot
+        var entries: [ChartDataEntry] = []
+        for d in data{
+            entries.append(ChartDataEntry(x: d[0], y: d[1]))
+        }
+        let dataSet = LineChartDataSet(entries: entries, label: "Data for static plot \(index)")
+        
+        //  Add some settings to the graph
+        dataSet.drawCirclesEnabled = false
+        dataSet.drawValuesEnabled = false
+        dataSet.lineWidth = 2
+        
+        //  Get a new color for the data set
+        let colors = UartStyle.defaultColors()
+        let color = colors[index % colors.count]
+        dataSet.setColor(color)
+            
+        //  Add the data to the plot and refresh the plot
+        let endData = LineChartData(dataSet: dataSet)
+        plot.data = endData
+        plot.data?.notifyDataChanged()
+        plot.notifyDataSetChanged()
     }
 
     //  MARK: - Changing Page

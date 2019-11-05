@@ -110,7 +110,6 @@ extension ConnectedDeviceViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        print("reached title for header in section")
         //  Grab the necessary section header
         var localizationKey: String!
         
@@ -204,7 +203,6 @@ extension ConnectedDeviceViewController: UITableViewDelegate{
             }
             
             //  Now pass the data to the cell
-            print("**Name: \(moduleName ?? "Unknown")")
             moduleCell.moduleName.text = moduleName
             moduleCell.moduleImage.image = moduleIcon != nil ? UIImage(named: moduleIcon!) : nil
         }
@@ -223,17 +221,6 @@ extension ConnectedDeviceViewController: UITableViewDelegate{
             switch modes[indexPath.row]{
             case .uart:
                 //  Selected UART, need to open the view controller
-                print("Selecting Row")
-                /*
-                if let uartViewController = self.storyboard?.instantiateViewController(withIdentifier: "UARTViewController") as? UARTViewController {
-                    print("success")
-                    uartViewController.blePeripheral = selectedPeripheral
-                    uartViewController.hidesBottomBarWhenPushed = true
-                    show(uartViewController, sender: self)
-                }
-                */
-                
-                
                 let uartViewController = UARTViewController()
                 self.storyboard?.instantiateViewController(withIdentifier: "UARTViewController")
                 uartViewController.hidesBottomBarWhenPushed = true

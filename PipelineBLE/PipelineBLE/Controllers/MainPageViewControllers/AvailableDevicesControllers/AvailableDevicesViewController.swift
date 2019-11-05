@@ -100,7 +100,6 @@ class AvailableDevicesViewController: UITableViewController {
         peripheralList.clear()
         isRowDetailOpenForPeripheral.removeAll()
         
-        print("TRUE")
         dirtyData = true
     }
     
@@ -156,7 +155,6 @@ class AvailableDevicesViewController: UITableViewController {
         //  Save the peripheral if necessary
         if savedDevices[peripheral.identifier] == nil {
             //  Not currently saved
-            print("true")
             savePeripheralPrompt(peripheral: peripheral)
         }
         else{
@@ -173,7 +171,6 @@ class AvailableDevicesViewController: UITableViewController {
     
     //  Get saved peripherals
     func getSavedPeripherals(){
-        print("Trying to get peripherals")
         savedDevices.removeAll()
         
         //  Get ready to get the saved peripherals
@@ -185,7 +182,6 @@ class AvailableDevicesViewController: UITableViewController {
             
             //  Add the uuids to the array
             for device in devices {
-                print(device.name ?? "No name")
                 savedDevices[device.uuid!] = device
             }
         }catch {}
