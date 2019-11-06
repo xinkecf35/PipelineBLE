@@ -154,6 +154,9 @@ class PlotPagesView: UIView {
             //  Now just add the data to the plot if necessary
             if let data = data{
                 createPlotDataSet(data: data[i], index: i, plot: plot)
+                
+                //  Let's also enable dragging
+                plot.dragEnabled = true
             }
         }
         
@@ -283,5 +286,5 @@ extension PlotPagesView: UIScrollViewDelegate {
 
 //  MARK: - Chart View Delegate
 extension PlotPagesView: ChartViewDelegate{
-    
+
 }
