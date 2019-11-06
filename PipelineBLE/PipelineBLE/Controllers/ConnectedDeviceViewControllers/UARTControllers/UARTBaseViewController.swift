@@ -37,8 +37,8 @@ class UARTBaseViewController: UIViewController {
         button.configureVisual(text: "Clear")
         return button
     }()
-    var saveBarButton: UIBarButtonItem?
-    
+    var saveBarButton: UIBarButtonItem!
+    var exportButton: UIBarButtonItem!
     
     var originalHeight: CGFloat?
     
@@ -55,10 +55,6 @@ class UARTBaseViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        //  Set up the standard UI
-        saveBarButton = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(onClickSave(_:)))
-        //configureUI()
         
         //  Make self delegate to keyboard and textview
         keyboardPositionNotifier.delegate = self
@@ -76,9 +72,6 @@ class UARTBaseViewController: UIViewController {
         
         // UI
         reloadDataUI()
-        
-        //  Configure the Navigation control bar buttons
-        navigationItem.rightBarButtonItem = saveBarButton
         
         // Enable Uart
         setupUart()
@@ -176,6 +169,12 @@ extension UARTBaseViewController {
         view.backgroundColor = .darkGray
         navigationItem.title = pageTitle
         
+        //  Set up the standard UI
+        saveBarButton = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(onClickSave(_:)))
+        exportButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(onClickExport(_:)))
+        
+        //  Configure the Navigation control bar buttons
+        navigationItem.rightBarButtonItems = [exportButton, saveBarButton]
 
         //  Add subviews to the main view
         view.addSubview(comTextView)
@@ -249,7 +248,7 @@ extension UARTBaseViewController {
         print("Trying to save data")
         inputTextField.resignFirstResponder()
         //  Need to get an identifier for this data
-        let alert = UIAlertController(title: "SaveData", message: "Please enter an identifier for this data:", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Save UART Data", message: "Please enter an identifier for this data:", preferredStyle: .alert)
         alert.addTextField{ (textField) in
             textField.placeholder = "identifier"
         }
@@ -261,7 +260,12 @@ extension UARTBaseViewController {
             data.setup(id: id, peripheral: self.blePeripheral!)
             PersistenceService.saveContext()
         }
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        
+        //  Add the two actions
+        alert.addAction(cancelAction)
         alert.addAction(action)
+        
         
         self.present(alert, animated: true, completion: nil)
         //alert.view.layoutIfNeeded()
@@ -269,6 +273,11 @@ extension UARTBaseViewController {
         
         inputTextField.resignFirstResponder()
         //view.frame.size = CGSize(width: view.frame.width, height: originalHeight!)
+    }
+    
+    @objc func onClickExport(_ export: UIBarButtonItem){
+        //  Export button was pressed, call the export button class
+        ExportData.exportData(view: self, button: exportButton, data: self.comTextView.text as NSObject)
     }
     
 }

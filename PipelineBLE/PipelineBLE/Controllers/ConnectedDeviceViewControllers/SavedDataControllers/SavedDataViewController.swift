@@ -48,24 +48,20 @@ class SavedDataViewController: UIViewController {
         let fetchPlot = NSFetchRequest<PlotData>(entityName: "PlotData")
         
         do {
-            print("Trying to load data")
             //  Get the saved data
             let savedUartData = try PersistenceService.context.fetch(fetchUart)
             let savedPlotData = try PersistenceService.context.fetch(fetchPlot)
             
             //  Add the data to the savedData data structure for UART and plot data
             for data in savedUartData {
-                print("Data uart: \(data.deviceID), \(String(describing: deviceUUID))")
                 
                 if data.deviceID == deviceUUID {
-                    print("added")
                     //  Data UUID matches ble peripheral that is connected
                     uartData.append(data)
                 }
             }
             //  Add the data to the savedData data structure
             for data in savedPlotData {
-                print("Data plot")
                 if data.deviceID == deviceUUID {
                     //  Data UUID matches ble peripheral that is connected
                     plotData.append(data)
@@ -163,12 +159,14 @@ extension SavedDataViewController: UITableViewDelegate {
             //  Give it the data it needs
             let dataInstance = plotData[indexPath.row] as! PlotData
             displayDataController.pageTitle = dataInstance.id
-            displayDataController.data = PlotData.dataToString(data: dataInstance.data as! [[Double]])
+            displayDataController.plot = true
+            displayDataController.plotData = (dataInstance.data as! [[[Double]]])
+            displayDataController.dataAsString = PlotData.dataToString(data: dataInstance.data as! [[[Double]]])
         case .uart:
             //  Give it the data it needs
             let dataInstance = uartData[indexPath.row] as! UARTData
             displayDataController.pageTitle = dataInstance.id
-            displayDataController.data = dataInstance.data
+            displayDataController.dataAsString = dataInstance.data
         }
         
         //  Finally push the view

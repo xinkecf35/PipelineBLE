@@ -21,7 +21,6 @@ class SavedDevicesViewController: UITableViewController {
         super.viewDidLoad()
         
         //  Set some initial parameters
-        print("Saved Devices")
         //view.backgroundColor = .darkGray
         navigationItem.title = pageTitle
         
@@ -44,7 +43,6 @@ class SavedDevicesViewController: UITableViewController {
     
     //  Get saved peripherals
     func getSavedPeripherals(){
-        print("Trying to get peripherals")
         //  Make sure to reset the devices we have
         savedDevices.removeAll()
         
@@ -57,7 +55,6 @@ class SavedDevicesViewController: UITableViewController {
             
             //  Add the uuids to the array
             for device in devices {
-                print("device")
                 savedDevices.append(device)
             }
         }catch {}

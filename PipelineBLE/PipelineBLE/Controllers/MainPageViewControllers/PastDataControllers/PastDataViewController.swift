@@ -68,7 +68,6 @@ class PastDataViewController: UIViewController {
         let fetchPlot = NSFetchRequest<PlotData>(entityName: "PlotData")
             
         do {
-            print("Trying to load data")
             //  Get the saved data
             let savedUartData = try PersistenceService.context.fetch(fetchUart)
             let savedPlotData = try PersistenceService.context.fetch(fetchPlot)
@@ -76,7 +75,6 @@ class PastDataViewController: UIViewController {
             //  Add the uuid to the list
             for data in savedUartData {
                 if !uuids.contains(data.deviceID) {
-                    print("added")
                     //  Don't have the uuid, so add it
                     uuids.append(data.deviceID)
                 }
@@ -84,7 +82,6 @@ class PastDataViewController: UIViewController {
             //  Add the data to the savedData data structure
             for data in savedPlotData {
                 if !uuids.contains(data.deviceID) {
-                    print("added")
                     //  Don't have the uuid, so add it
                     uuids.append(data.deviceID)
                 }
@@ -95,7 +92,6 @@ class PastDataViewController: UIViewController {
     
     //  Get saved peripherals
     func getSavedPeripherals(){
-        print("Trying to get peripherals")
         //  Make sure to reset the devices we have
         savedDevices.removeAll()
         
@@ -108,7 +104,6 @@ class PastDataViewController: UIViewController {
             
             //  Add the uuids to the array
             for device in devices {
-                print("device")
                 savedDevices[device.uuid!] = device
             }
         }catch {}
