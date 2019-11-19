@@ -56,6 +56,7 @@ class ConnectedDeviceViewController: UIViewController {
         
         //  Assign device name
         deviceName = savedPeripheral?.name ?? ""
+        tableView.reloadData()
     }
     
     func UISettings(){
@@ -254,6 +255,8 @@ extension ConnectedDeviceViewController: UITableViewDelegate{
                 //  Open info view controller
                 let infoViewController = DeviceInfoViewController()
                 infoViewController.hidesBottomBarWhenPushed = true
+                infoViewController.blePeripheral = selectedPeripheral
+                infoViewController.savedPeripheral = savedPeripheral
                 navigationController?.pushViewController(infoViewController, animated: true)
             }
         }

@@ -562,8 +562,13 @@ extension AvailableDevicesViewController {
     }
     
     func saveAndConnect(peripheral: BlePeripheral, name: String){
+        //  Want to save information about the device
+        let localizationManager = LocalizationManager.shared
+        
+        //  Original data to save for the device
         let newPeripheral = SavedPeripheral(context: PersistenceService.context)
         newPeripheral.name = name
+        newPeripheral.originalName = peripheral.name ?? localizationManager.localizedString("scanner_unnamed")
         newPeripheral.uuid = peripheral.identifier
         
         //  Add to the list of peripherals

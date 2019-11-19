@@ -17,7 +17,7 @@ class DisplayDataViewController: UIViewController {
         textView.returnKeyType = .done
         textView.isScrollEnabled = true
         textView.isEditable = false
-        textView.backgroundColor = UIColor(white: 1, alpha: 0.5)
+        textView.backgroundColor = UIColor(white: 1, alpha: 0.2)
         textView.translatesAutoresizingMaskIntoConstraints = false
         return textView
     }()
