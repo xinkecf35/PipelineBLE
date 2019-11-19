@@ -19,7 +19,7 @@ class UARTBaseViewController: UIViewController {
         textView.returnKeyType = .done
         textView.isScrollEnabled = true
         textView.isEditable = false
-        textView.backgroundColor = UIColor(white: 1, alpha: 0.5)
+        textView.backgroundColor = UIColor(white: 1, alpha: 0.2)
         textView.translatesAutoresizingMaskIntoConstraints = false
         return textView
     }()
@@ -286,12 +286,12 @@ extension UARTBaseViewController: KeyboardPositionNotifierDelegate {
     
     func onKeyboardPositionChanged(keyboardFrame: CGRect, keyboardShown: Bool) {
         if keyboardShown{
-            print("Keyboard shown, changing")
+            //print("Keyboard shown, changing")
             let spacerHeight = keyboardFrame.height
             view.frame.size = CGSize(width: view.frame.width, height: view.frame.height-spacerHeight)
         }
         else {
-            print("Keyboard closed, changing")
+            //print("Keyboard closed, changing")
             view.frame.size = CGSize(width: view.frame.width, height: originalHeight!)
         }
     }

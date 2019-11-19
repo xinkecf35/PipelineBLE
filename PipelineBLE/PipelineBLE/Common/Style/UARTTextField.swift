@@ -29,7 +29,7 @@ class UARTTextField: UITextField {
     }
     
     func configureStyle(){
-        self.backgroundColor = UIColor(white: 1, alpha: 0.75)
+        self.backgroundColor = UIColor(white: 1, alpha: 0.2)
         self.borderStyle = .roundedRect
         self.translatesAutoresizingMaskIntoConstraints = false
     }

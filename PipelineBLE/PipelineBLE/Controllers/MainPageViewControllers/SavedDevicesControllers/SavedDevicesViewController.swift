@@ -105,4 +105,15 @@ extension SavedDevicesViewController {
         }
     }
     
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        //  Need to display the info for the given peripheral
+        let savedPeripheral = savedDevices[indexPath.row]
+        
+        //  Open info view controller
+        let infoViewController = DeviceInfoViewController()
+        infoViewController.hidesBottomBarWhenPushed = true
+        infoViewController.savedPeripheral = savedPeripheral
+        navigationController?.pushViewController(infoViewController, animated: true)
+    }
+    
 }
