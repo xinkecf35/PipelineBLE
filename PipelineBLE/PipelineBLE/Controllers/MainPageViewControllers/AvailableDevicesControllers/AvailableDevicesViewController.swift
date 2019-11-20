@@ -290,25 +290,6 @@ class AvailableDevicesViewController: UITableViewController {
     
     
     // MARK: - Navigation
-    //    func loadDetailRootController() {
-    //        detailRootController = self.storyboard?.instantiateViewController(withIdentifier: "PeripheralModulesNavigationController")
-    //    }
-    //
-    fileprivate func showPeripheralDetails() {
-        /*
-        //  Create the view to push now that a device has been connected
-        let connectToDevice = ConnectedDeviceViewController()
-        
-        //  Send some initial data
-        connectToDevice.selectedPeripheral = selectedPeripheral
-        connectToDevice.savedPeripheral = savedDevices[selectedPeripheral!.identifier]
-        
-        //  Hide the tab bar when pushed and then push the view
-        connectToDevice.hidesBottomBarWhenPushed = true
-        connectToDevice.deviceName = savedDevices[selectedPeripheral!.identifier]!.name!
-        navigationController?.pushViewController(connectToDevice, animated: true)*/
-    }
-    
     @objc func nextPage(_ next: UIBarButtonItem?){
         if BleManager.shared.connectedPeripherals().isEmpty {
             //  Not connected to any devices, so don't proceed
@@ -354,37 +335,11 @@ class AvailableDevicesViewController: UITableViewController {
         let alert = UIAlertController(title: localizationManager.localizedString("autoupdate_title"),
                                       message: String(format: localizationManager.localizedString("autoupdate_description_format"), latestRelease.version),
                                       preferredStyle: UIAlertController.Style.alert)
-        /*
-         alert.addAction(UIAlertAction(title: localizationManager.localizedString("autoupdate_update"), style: UIAlertAction.Style.default, handler: { [unowned self] _ in
-         self.showPeripheralUpdate()
-         }))
-         alert.addAction(UIAlertAction(title: localizationManager.localizedString("autoupdate_later"), style: UIAlertAction.Style.default, handler: { [unowned self] _ in
-         self.showPeripheralDetails()
-         }))*/
-        alert.addAction(UIAlertAction(title: localizationManager.localizedString("autoupdate_ignore"), style: UIAlertAction.Style.cancel, handler: { [unowned self] _ in
+        alert.addAction(UIAlertAction(title: localizationManager.localizedString("autoupdate_ignore"), style: UIAlertAction.Style.cancel, handler: { _ in
             Preferences.softwareUpdateIgnoredVersion = latestRelease.version
-            self.showPeripheralDetails()
         }))
         self.present(alert, animated: true, completion: nil)
     }
-    
-    //    fileprivate func showPeripheralUpdate() {
-    //        // Watch
-    //        if !isMultiConnectEnabled {
-    //            WatchSessionManager.shared.updateApplicationContext(mode: .connected)
-    //        }
-    //
-    //        detailRootController = self.storyboard?.instantiateViewController(withIdentifier: "PeripheralModulesNavigationController")
-    //        if let peripheralModulesNavigationController = detailRootController as? UINavigationController, let peripheralModulesViewController = peripheralModulesNavigationController.topViewController as? PeripheralModulesViewController {
-    //            peripheralModulesViewController.blePeripheral = selectedPeripheral
-    //
-    //            if let dfuViewController = self.storyboard!.instantiateViewController(withIdentifier: "DfuModeViewController") as? DfuModeViewController {
-    //                dfuViewController.blePeripheral = selectedPeripheral
-    //                peripheralModulesNavigationController.viewControllers = [peripheralModulesViewController, dfuViewController]
-    //            }
-    //            showDetailViewController(peripheralModulesNavigationController, sender: self)
-    //        }
-    //    }
     
     fileprivate func presentInfoDialog(title: String, peripheral: BlePeripheral) {
         if infoAlertController != nil {
@@ -398,9 +353,6 @@ class AvailableDevicesViewController: UITableViewController {
         }))
         present(infoAlertController!, animated: true, completion:nil)
     }
-    
-    
-    
 }
 
 //  MARK: UIScrollViewDelegate
@@ -608,8 +560,6 @@ extension AvailableDevicesViewController: FirmwareUpdaterDelegate {
             self.dismissInfoDialog {
                 if isUpdateAvailable, let latestRelease = latestRelease {
                     self.showUpdateAvailableForRelease(latestRelease)
-                } else {
-                    self.showPeripheralDetails()
                 }
             }
         }

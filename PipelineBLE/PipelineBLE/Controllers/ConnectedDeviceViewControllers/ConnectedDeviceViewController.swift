@@ -286,18 +286,45 @@ extension ConnectedDeviceViewController: UITableViewDelegate{
 //                dataStreamViewController.blePeripheral = selectedPeripheral
                 navigationController?.pushViewController(dataStreamViewController, animated: true)
             case .savedData:
-                //  Open saved data view controller
-                let savedDataViewController = SavedDataViewController()
-                savedDataViewController.hidesBottomBarWhenPushed = true
-//                savedDataViewController.blePeripheral = selectedPeripheral
-                navigationController?.pushViewController(savedDataViewController, animated: true)
+                //  Open a certain controller depending on wether we are in multiple mode or not
+                if multiplePeripherals {
+                    //  Connected to multiple peripherals, so need to select only one of them
+                    let savedDataViewController = PeripheralInfoSelectorViewController()
+                    savedDataViewController.hidesBottomBarWhenPushed = true
+                    savedDataViewController.infoMode = false
+                    savedDataViewController.connectedPeripherals = BleManager.shared.connectedPeripherals()
+                    savedDataViewController.savedPeripherals = savedPeripherals
+                    navigationController?.pushViewController(savedDataViewController, animated: true)
+                }
+                else{
+                    //  Only connected to one, so send data for the single device
+                    let peripheral = BleManager.shared.connectedPeripherals().first
+                    let savedDataViewController = SavedDataViewController()
+                    savedDataViewController.hidesBottomBarWhenPushed = true
+                    savedDataViewController.blePeripheral = peripheral
+                    navigationController?.pushViewController(savedDataViewController, animated: true)
+                }
+                
             case .info:
-                //  Open info view controller
-                let infoViewController = DeviceInfoViewController()
-                infoViewController.hidesBottomBarWhenPushed = true
-//                infoViewController.blePeripheral = selectedPeripheral
-//                infoViewController.savedPeripheral = savedPeripheral
-                navigationController?.pushViewController(infoViewController, animated: true)
+                //  Open a certain controller depending on wether we are in multiple mode or not
+                if multiplePeripherals {
+                    //  Connected to multiple peripherals, so need to select only one of them
+                    let infoViewController = PeripheralInfoSelectorViewController()
+                    infoViewController.infoMode = true
+                    infoViewController.hidesBottomBarWhenPushed = true
+                    infoViewController.connectedPeripherals = BleManager.shared.connectedPeripherals()
+                    infoViewController.savedPeripherals = savedPeripherals
+                    navigationController?.pushViewController(infoViewController, animated: true)
+                }
+                else{
+                    //  Only connected to one, so send data for the single device
+                    let peripheral = BleManager.shared.connectedPeripherals().first
+                    let infoViewController = DeviceInfoViewController()
+                    infoViewController.hidesBottomBarWhenPushed = true
+                    infoViewController.blePeripheral = peripheral
+                    infoViewController.savedPeripheral = savedPeripherals[peripheral!.identifier]
+                    navigationController?.pushViewController(infoViewController, animated: true)
+                } 
             }
         }
         tableView.deselectRow(at: indexPath, animated: indexPath.section == 0)

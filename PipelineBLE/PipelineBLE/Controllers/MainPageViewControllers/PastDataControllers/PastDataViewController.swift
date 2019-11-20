@@ -167,6 +167,9 @@ extension PastDataViewController: UITableViewDelegate {
         //  Give the view the data it needs
         savedDataController.deviceUUID = uuids[indexPath.row]
         
+        //  Deselect the selected row
+        tableView.deselectRow(at: indexPath, animated: true)
+        
         //  Finally push the view
         navigationController?.pushViewController(savedDataController, animated: true)
     }

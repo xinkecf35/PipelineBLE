@@ -16,6 +16,7 @@
 		B90147202347DEC80001E90C /* PlotData+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = B901471E2347DEC80001E90C /* PlotData+CoreDataProperties.swift */; };
 		B90147222347DF240001E90C /* UARTData+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90147212347DF240001E90C /* UARTData+CoreDataClass.swift */; };
 		B90147242347DF270001E90C /* UARTData+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90147232347DF270001E90C /* UARTData+CoreDataProperties.swift */; };
+		B924C5432385F2960013B0AB /* PeripheralInfoSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B924C5422385F2960013B0AB /* PeripheralInfoSelectorViewController.swift */; };
 		B94CD1EA23071C050077F77E /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = B94CD1E923071C040077F77E /* Preferences.swift */; };
 		B94CD1F0230735C80077F77E /* WatchSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B94CD1EE230735C80077F77E /* WatchSessionManager.swift */; };
 		B94CD1F1230735C80077F77E /* HandoffManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B94CD1EF230735C80077F77E /* HandoffManager.swift */; };
@@ -98,6 +99,7 @@
 		B901471E2347DEC80001E90C /* PlotData+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "PlotData+CoreDataProperties.swift"; path = "/Users/samuelpeterson/Desktop/PipelineBLE/PipelineBLE/PipelineBLE/Common/PersistentData/PlotData+CoreDataProperties.swift"; sourceTree = "<absolute>"; };
 		B90147212347DF240001E90C /* UARTData+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "UARTData+CoreDataClass.swift"; path = "/Users/samuelpeterson/Desktop/PipelineBLE/PipelineBLE/PipelineBLE/Common/PersistentData/UARTData+CoreDataClass.swift"; sourceTree = "<absolute>"; };
 		B90147232347DF270001E90C /* UARTData+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "UARTData+CoreDataProperties.swift"; path = "/Users/samuelpeterson/Desktop/PipelineBLE/PipelineBLE/PipelineBLE/Common/PersistentData/UARTData+CoreDataProperties.swift"; sourceTree = "<absolute>"; };
+		B924C5422385F2960013B0AB /* PeripheralInfoSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeripheralInfoSelectorViewController.swift; sourceTree = "<group>"; };
 		B94CD1E923071C040077F77E /* Preferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		B94CD1EE230735C80077F77E /* WatchSessionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WatchSessionManager.swift; sourceTree = "<group>"; };
 		B94CD1EF230735C80077F77E /* HandoffManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HandoffManager.swift; sourceTree = "<group>"; };
@@ -408,6 +410,7 @@
 		B99E3C2E2314BB2A00C03948 /* DeviceInfoController */ = {
 			isa = PBXGroup;
 			children = (
+				B924C5422385F2960013B0AB /* PeripheralInfoSelectorViewController.swift */,
 				B99E3C2F2314BB5300C03948 /* DeviceInfoViewController.swift */,
 			);
 			path = DeviceInfoController;
@@ -719,6 +722,7 @@
 				B901471B2347DE5E0001E90C /* SavedData+CoreDataProperties.swift in Sources */,
 				B97BC4DB22FB683400858CA9 /* LogHelper.swift in Sources */,
 				B9CA5049230C7435007E31D8 /* ReleasesParser.swift in Sources */,
+				B924C5432385F2960013B0AB /* PeripheralInfoSelectorViewController.swift in Sources */,
 				B9014714234795BF0001E90C /* PersistenceService.swift in Sources */,
 				B94CD1F1230735C80077F77E /* HandoffManager.swift in Sources */,
 				B97BC4E222FB6AE400858CA9 /* AlertHelper.swift in Sources */,
