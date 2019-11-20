@@ -128,7 +128,7 @@ extension ConnectedDeviceViewController: UITableViewDataSource {
         //  Find out how many modes depending on the section
         switch TableSection(rawValue: section)! {
         case .device:
-            //  Only supporting one device
+            //  Display multiple devices
             return 1
         case .modules:
             //  Only have enough rows for the number of modules available

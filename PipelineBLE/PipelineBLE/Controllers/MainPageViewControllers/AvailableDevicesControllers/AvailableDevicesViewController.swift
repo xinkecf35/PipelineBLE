@@ -32,10 +32,19 @@ class AvailableDevicesViewController: UITableViewController {
     private weak var didDisconnectFromPeripheralObserver: NSObjectProtocol?
     private weak var peripheralDidUpdateNameObserver: NSObjectProtocol?
     
+    //  Bar button to go to connected devices page
+    var nextPageButton: UIBarButtonItem!
+    
     //  Data for when a peripheral has been selected
     weak var selectedPeripheral: BlePeripheral?
     var savedDevices: [UUID: SavedPeripheral] = [:]
     var dirtyData: Bool = true
+    
+    //  Section off the pages
+    enum TableSection: Int {
+        case connectedDevices = 0
+        case availableDevices = 1
+    }
     
     override func viewDidLoad() {
         //  Get saved peripherals
@@ -54,6 +63,11 @@ class AvailableDevicesViewController: UITableViewController {
         tableView.addSubview(refreshController)
         tableView.sendSubviewToBack(refreshController)
         
+        //  Add a bar button to progress to the next page when connected to a device
+        nextPageButton = UIBarButtonItem(title: "Next", style: .plain, target: self, action: #selector(nextPage(_:)))
+        nextPageButton.isEnabled = false
+        navigationItem.rightBarButtonItem = nextPageButton
+        
         //  The cells will be taken from the available devices table view cell
         tableView.register(AvailableDevicesTableViewCell.self, forCellReuseIdentifier: "AvailableDevice")
     }
@@ -68,17 +82,11 @@ class AvailableDevicesViewController: UITableViewController {
         registerNotifications(enabled: true)
         DLog("Scanner: Register notifications")
         
-        let isFullScreen = UIScreen.main.traitCollection.horizontalSizeClass == .compact
-        
-        if isFullScreen {
-            print("isFullScreen")
-            // If only connected to 1 peripheral and coming back to this
-            let connectedPeripherals = BleManager.shared.connectedPeripherals()
-            if connectedPeripherals.count == 1, let peripheral = connectedPeripherals.first {
-                DLog("Disconnect from previously connected peripheral")
-                // Disconnect from peripheral
-                BleManager.shared.disconnect(from: peripheral)
-            }
+        //  Disconnect from all devices
+        if BleManager.shared.connectedPeripherals().count != 0 {
+            DLog("Disconnecting from previously connected peripherals")
+            disconnectAll()
+            nextPageButton.isEnabled = false
         }
         
         //  Scan for peripherals
@@ -103,22 +111,57 @@ class AvailableDevicesViewController: UITableViewController {
         dirtyData = true
     }
     
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        //  Calculate the number of cells
-        if selectedPeripheral == nil {      // Dont update while a peripheral has been selected
-            WatchSessionManager.shared.updateApplicationContext(mode: .scan)
+    //  MARK: - Table View Editing
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        //  Want sections for available/connected devices
+        return 2
+    }
+    
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        //  Will want to display headers for connected and available devices
+        switch TableSection(rawValue: section)! {
+        case .connectedDevices:
+            return "Connected Devices"
+        case .availableDevices:
+            return "Available Devices"
         }
-        
-        //print("Count: \(peripheralList.filteredPeripherals(forceUpdate: false).count)")
-        return peripheralList.filteredPeripherals(forceUpdate: false).count
+    }
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        //  Calculate the number of cells depending on the section
+        switch TableSection(rawValue: section)! {
+        case .connectedDevices:
+            //  Need to show however many devices are currently connected
+            return BleManager.shared.connectedPeripherals().count
+        case .availableDevices:
+            //  Do as we normally did and return however many peripherals are detected
+            if selectedPeripheral == nil {      // Dont update while a peripheral has been selected
+                WatchSessionManager.shared.updateApplicationContext(mode: .scan)
+            }
+            
+            //  Get the list of peripherals that are not connected or connecting
+            let filteredPeripheralList = peripheralList.filteredPeripherals(forceUpdate: false).filter {$0.state == .disconnected || $0.state == .disconnecting}
+            return filteredPeripheralList.count
+        }
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         //  Create a cell of type AvailableDevicesTableViewCell
         let cell = tableView.dequeueReusableCell(withIdentifier: "AvailableDevice", for: indexPath) as! AvailableDevicesTableViewCell
         
-        //  Get the actual peripheral object
-        let peripheral = peripheralList.filteredPeripherals(forceUpdate: false)[indexPath.row]
+        //  Generate cells for connected devices and available devices
+        var peripheral: BlePeripheral
+        switch TableSection(rawValue: indexPath.section)! {
+        case .connectedDevices:
+            //  Need to show connected devices
+            peripheral = BleManager.shared.connectedPeripherals()[indexPath.row]
+        case .availableDevices:
+            //  Need to show devices that are available
+            let filteredPeripheralList = peripheralList.filteredPeripherals(forceUpdate: false).filter {$0.state == .disconnected || $0.state == .disconnecting}
+            peripheral = filteredPeripheralList[indexPath.row]
+        }
+        
+        //  Initialize the localization manager
         let localizationManager = LocalizationManager.shared
         
         //  Now need to check if the peripheral has been saved
@@ -137,36 +180,53 @@ class AvailableDevicesViewController: UITableViewController {
         cell.signalImage.image = RssiUI.signalImage(for: peripheral.rssi)
         cell.setSubtitle(text: peripheral.name ?? localizationManager.localizedString("scanner_unnamed"), saved: saved)
         
-        
-        //  ***DEBUG
-        //print(peripheral.name ?? localizationManager.localizedString("scanner_unnamed"))
-        //print(subtitle ?? "subtitle undefined")
-        
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        //  Grab the peripheral that was selected
-        let peripheral = peripheralList.filteredPeripherals(forceUpdate: false)[indexPath.row]
-        
-        //  Display what peripheral was selected
-        print("Selected \(peripheral.name ?? "No name available")")
-        
-        //  Save the peripheral if necessary
-        if savedDevices[peripheral.identifier] == nil {
-            //  Not currently saved
-            savePeripheralPrompt(peripheral: peripheral)
+        //  Connected to the device if available, do nothing if already connected
+        switch TableSection(rawValue: indexPath.section)! {
+        case .connectedDevices:
+            //  Don't do anything
+            return
+        case .availableDevices:
+            //  Grab the peripheral that was selected
+            let filteredPeripheralList = peripheralList.filteredPeripherals(forceUpdate: false).filter {$0.state == .disconnected || $0.state == .disconnecting}
+            let peripheral = filteredPeripheralList[indexPath.row]
+            
+            //  Display what peripheral was selected
+            print("Selected \(peripheral.name ?? "No name available")")
+            
+            //  Save the peripheral if necessary
+            if savedDevices[peripheral.identifier] == nil {
+                //  Not currently saved
+                savePeripheralPrompt(peripheral: peripheral)
+            }
+            else{
+                //  Connect to the peripheral
+                connect(peripheral: peripheral)
+            }
         }
-        else{
-            //  Connect to the peripheral
-            connect(peripheral: peripheral)
+    }
+    
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        //  Allow devices to be deleted from connected devices to disconnect
+        switch TableSection(rawValue: indexPath.section)! {
+        case .connectedDevices:
+            // Allow devices to be disconnected
+            return true
+        case .availableDevices:
+            //  Don't allow editing of available devices
+            return false
         }
-        
-        
-        
-        //        let connectToDevice = UARTViewController()
-        //        connectToDevice.deviceName.text = peripheral.name ?? "No name available"
-        //        navigationController?.pushViewController(connectToDevice, animated: true)
+    }
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if (editingStyle == .delete){
+            //  Want to disconnect from the device
+            let peripheral = BleManager.shared.connectedPeripherals()[indexPath.row]
+            self.disconnect(peripheral: peripheral)
+        }
     }
     
     //  Get saved peripherals
@@ -235,7 +295,7 @@ class AvailableDevicesViewController: UITableViewController {
     //    }
     //
     fileprivate func showPeripheralDetails() {
-        
+        /*
         //  Create the view to push now that a device has been connected
         let connectToDevice = ConnectedDeviceViewController()
         
@@ -246,18 +306,27 @@ class AvailableDevicesViewController: UITableViewController {
         //  Hide the tab bar when pushed and then push the view
         connectToDevice.hidesBottomBarWhenPushed = true
         connectToDevice.deviceName = savedDevices[selectedPeripheral!.identifier]!.name!
-        navigationController?.pushViewController(connectToDevice, animated: true)
+        navigationController?.pushViewController(connectToDevice, animated: true)*/
+    }
+    
+    @objc func nextPage(_ next: UIBarButtonItem){
+        if BleManager.shared.connectedPeripherals().isEmpty {
+            //  Not connected to any devices, so don't proceed
+            return
+        }
         
-        //        // Watch
-        //        if !isMultiConnectEnabled {
-        //            WatchSessionManager.shared.updateApplicationContext(mode: .connected)
-        //        }
-        //
-        //        detailRootController = self.storyboard?.instantiateViewController(withIdentifier: "PeripheralModulesNavigationController")
-        //        if let peripheralModulesNavigationController = detailRootController as? UINavigationController, let peripheralModulesViewController = peripheralModulesNavigationController.topViewController as? PeripheralModulesViewController {
-        //            peripheralModulesViewController.blePeripheral = selectedPeripheral
-        //            showDetailViewController(peripheralModulesNavigationController, sender: self)
-        //        }
+        //  Need to move to the next page
+        let connectToDevice = ConnectedDeviceViewController()
+        
+        //  Send some initial data
+        connectToDevice.selectedPeripheral = selectedPeripheral
+        //connectToDevice.selectedPeripherals = BleManager.shared.connectedPeripherals()
+        connectToDevice.savedPeripheral = savedDevices[selectedPeripheral!.identifier]
+        
+        //  Hide the tab bar when pushed and then push the view
+        connectToDevice.hidesBottomBarWhenPushed = true
+        connectToDevice.deviceName = savedDevices[selectedPeripheral!.identifier]!.name!
+        navigationController?.pushViewController(connectToDevice, animated: true)
     }
     
     fileprivate func dismissInfoDialog(completion: (() -> Void)? = nil) {
@@ -447,23 +516,38 @@ extension AvailableDevicesViewController{
         presentInfoDialog(title: LocalizationManager.shared.localizedString("peripheraldetails_connecting"), peripheral: peripheral)
     }
     
-    func ConnectToDevice(){
-        //  Use this function to segue from current view controller to UART
-        let connectToDevice = UARTViewController()
-        navigationController?.pushViewController(connectToDevice, animated: true)
-    }
-    
     fileprivate func connect(peripheral: BlePeripheral) {
-        // Connect to selected peripheral
+        //  Connecting to a device, so enable the next button
+        nextPageButton.isEnabled = true
+        
+        //  When we connect, will update the list of connected devices via blemanager
         selectedPeripheral = peripheral
         BleManager.shared.connect(to: peripheral)
         reloadBaseTable()
     }
     
-    fileprivate func disconnect(peripheral: BlePeripheral) {
+    fileprivate func disconnectAll() {
+        //  Disable button
+        nextPageButton.isEnabled = false
+        
+        //  Disconnect from all peripherals
+        for peripheral in BleManager.shared.connectedPeripherals(){
+            BleManager.shared.disconnect(from: peripheral)
+        }
+        selectedPeripheral = nil
+        reloadBaseTable()
+    }
+    
+    fileprivate func disconnect(peripheral: BlePeripheral){
+        //  Disconnect from a single device
         selectedPeripheral = nil
         BleManager.shared.disconnect(from: peripheral)
         reloadBaseTable()
+        
+        //  Check if next needs to be disabled
+        if BleManager.shared.connectedPeripherals().count == 0 {
+            nextPageButton.isEnabled = false
+        }
     }
     
     private func didConnectToPeripheral(notification: Notification) {
