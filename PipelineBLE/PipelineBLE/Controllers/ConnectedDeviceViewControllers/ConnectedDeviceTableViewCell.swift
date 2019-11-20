@@ -65,9 +65,6 @@ class ConnectedDeviceTableViewCell: UITableViewCell {
         signalImage.leadingAnchor.constraint(equalTo: subtitle.trailingAnchor, constant: 5).isActive = true
         signalImage.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         
-        //  Make sure the height is
-        heightAnchor.constraint(equalToConstant: 60).isActive = true
-        
         //  Change color
         backgroundView?.tintColor = .darkGray
     }

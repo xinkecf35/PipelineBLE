@@ -309,23 +309,26 @@ class AvailableDevicesViewController: UITableViewController {
         navigationController?.pushViewController(connectToDevice, animated: true)*/
     }
     
-    @objc func nextPage(_ next: UIBarButtonItem){
+    @objc func nextPage(_ next: UIBarButtonItem?){
         if BleManager.shared.connectedPeripherals().isEmpty {
             //  Not connected to any devices, so don't proceed
             return
+        }
+        
+        //  Need to collect all the saved devices
+        var savedPeripherals: [UUID:SavedPeripheral] = [:]
+        for device in BleManager.shared.connectedPeripherals() {
+            savedPeripherals[device.identifier] = savedDevices[device.identifier]!
         }
         
         //  Need to move to the next page
         let connectToDevice = ConnectedDeviceViewController()
         
         //  Send some initial data
-        connectToDevice.selectedPeripheral = selectedPeripheral
-        //connectToDevice.selectedPeripherals = BleManager.shared.connectedPeripherals()
-        connectToDevice.savedPeripheral = savedDevices[selectedPeripheral!.identifier]
+        connectToDevice.savedPeripherals = savedPeripherals
         
         //  Hide the tab bar when pushed and then push the view
         connectToDevice.hidesBottomBarWhenPushed = true
-        connectToDevice.deviceName = savedDevices[selectedPeripheral!.identifier]!.name!
         navigationController?.pushViewController(connectToDevice, animated: true)
     }
     
