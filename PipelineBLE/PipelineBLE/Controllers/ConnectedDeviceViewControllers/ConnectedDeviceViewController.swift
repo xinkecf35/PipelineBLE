@@ -265,9 +265,16 @@ extension ConnectedDeviceViewController: UITableViewDelegate{
             case .uart:
                 //  Selected UART, need to open the view controller
                 let uartViewController = UARTViewController()
-                self.storyboard?.instantiateViewController(withIdentifier: "UARTViewController")
+                
+                //  Send data depending on multi peripherals
+                if multiplePeripherals{
+                    self.storyboard?.instantiateViewController(withIdentifier: "UARTViewController")
+                }
+                else{
+                    let peripheral = BleManager.shared.connectedPeripherals().first
+                    uartViewController.blePeripheral = peripheral
+                }
                 uartViewController.hidesBottomBarWhenPushed = true
-//                uartViewController.blePeripheral = selectedPeripheral
                 navigationController?.pushViewController(uartViewController, animated: true)
                 
             case .buttons:

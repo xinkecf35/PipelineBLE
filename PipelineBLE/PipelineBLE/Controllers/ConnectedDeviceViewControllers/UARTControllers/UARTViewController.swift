@@ -38,7 +38,7 @@ class UARTViewController: UARTBaseViewController {
     
     // MARK: - UART
     override func isInMultiUartMode() -> Bool {
-        return blePeripheral == nil
+        return BleManager.shared.connectedPeripherals().count > 1
     }
     
     override func setupUart() {
@@ -51,29 +51,34 @@ class UARTViewController: UARTBaseViewController {
         if isInMultiUartMode() {            // Multiple peripheral mode
             let blePeripherals = BleManager.shared.connectedPeripherals()
             for (i, blePeripheral) in blePeripherals.enumerated() {
-                colorForPeripheral[blePeripheral.identifier] = colors[i % colors.count]
-                blePeripheral.uartEnable(uartRxHandler: uartData.rxPacketReceived) { [weak self] error in
-                    guard let context = self else { return }
-                    
-                    let peripheralName = blePeripheral.name ?? blePeripheral.identifier.uuidString
-                    DispatchQueue.main.async {
-                        guard error == nil else {
-                            DLog("Error initializing uart")
-                            context.dismiss(animated: true, completion: { [weak self] () -> Void in
-                                if let context = self {
-                                    showErrorAlert(from: context, title: localizationManager.localizedString("dialog_error"), message: String(format: localizationManager.localizedString("uart_error_multipleperiperipheralinit_format"), peripheralName))
-                                    
-                                    BleManager.shared.disconnect(from: blePeripheral)
-                                }
-                            })
-                            return
-                        }
+                //  Only want to try to set up uart for devices that have UART available
+                print(blePeripheral.name!)
+                if blePeripheral.hasUart(){
+                    print("Setting up uart for: \(blePeripheral.name!)")
+                    colorForPeripheral[blePeripheral.identifier] = colors[i % colors.count]
+                    blePeripheral.uartEnable(uartRxHandler: uartData.rxPacketReceived) { [weak self] error in
+                        guard let context = self else { return }
                         
-                        // Done
-                        DLog("Uart enabled for \(peripheralName)")
-                        
-                        if blePeripheral == blePeripherals.last {
-                            context.updateUartReadyUI(isReady: true)
+                        let peripheralName = blePeripheral.name ?? blePeripheral.identifier.uuidString
+                        DispatchQueue.main.async {
+                            guard error == nil else {
+                                DLog("Error initializing uart")
+                                context.dismiss(animated: true, completion: { [weak self] () -> Void in
+                                    if let context = self {
+                                        showErrorAlert(from: context, title: localizationManager.localizedString("dialog_error"), message: String(format: localizationManager.localizedString("uart_error_multipleperiperipheralinit_format"), peripheralName))
+                                        
+                                        BleManager.shared.disconnect(from: blePeripheral)
+                                    }
+                                })
+                                return
+                            }
+                            
+                            // Done
+                            DLog("Uart enabled for \(peripheralName)")
+                            
+                            if blePeripheral == blePeripherals.last {
+                                context.updateUartReadyUI(isReady: true)
+                            }
                         }
                     }
                 }
@@ -113,9 +118,20 @@ class UARTViewController: UARTBaseViewController {
         
         print("Sending message: \(message)")
         
-        //  Single peripheral mode
-        if let blePeripheral = blePeripheral {
-            uartData.send(blePeripheral: blePeripheral, text: message)
+        //  Check if in multiPeripheralMode
+        if isInMultiUartMode(){
+            sendCountToPeripherals = 0
+            //  Need to send data to the multiple peripherals
+            for peripheral in BleManager.shared.connectedPeripherals(){
+                if peripheral.isUartEnabled(){
+                    uartData.send(blePeripheral: peripheral, text: message)
+                }
+            }
+        }
+        else{
+            //  Single peripheral mode, send data
+            let peripheral = BleManager.shared.connectedPeripherals().first!
+            uartData.send(blePeripheral: peripheral, text: message)
         }
     }
     
