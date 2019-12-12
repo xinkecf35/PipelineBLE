@@ -117,9 +117,17 @@ class ConnectedDeviceViewController: UIViewController {
         }
     }
     
+    func isInMultiUartMode() -> Bool {
+        return BleManager.shared.connectedPeripherals().count > 1
+    }
+    
     fileprivate func DefineModes() -> [Modes]{
         if hasUart {
-            return [.uart, .buttons, .datastream, .savedData, .info]
+            if isInMultiUartMode(){
+                return [.uart, .datastream, .savedData, .info]
+            } else {
+                return [.uart, .buttons, .datastream, .savedData, .info]
+            }
         }
         else{
             //  Does not conform to the requirements... Decide to maybe display some
@@ -281,8 +289,9 @@ extension ConnectedDeviceViewController: UITableViewDelegate{
                 //  Need to open the buttons view controller
                 let buttonsViewController = ButtonsViewController()
                 buttonsViewController.hidesBottomBarWhenPushed = true
-//                buttonsViewController.savedPeripheral = savedPeripheral
-//                buttonsViewController.blePeripheral = selectedPeripheral
+                let peripheral = BleManager.shared.connectedPeripherals().first
+                buttonsViewController.blePeripheral = peripheral
+                buttonsViewController.savedPeripheral = savedPeripherals[peripheral!.identifier]
                 navigationController?.pushViewController(buttonsViewController, animated: true)
             case .datastream:
                 //  Open data stream view controller

@@ -44,7 +44,6 @@ class ButtonsViewController: UIViewController {
             self.commands = command as! [[String]]
         }
         
-        
         //  Set up the UI
         setupUI()
         
@@ -91,11 +90,45 @@ class ButtonsViewController: UIViewController {
     }
     
     //  MARK: - UART Setup
+    func isInMultiUartMode() -> Bool {
+        return BleManager.shared.connectedPeripherals().count > 1
+    }
+    
     func setupUART(){
         //  Localization manager init
         let localizationManager = LocalizationManager.shared
         
-        if let blePeripheral = blePeripheral {
+         if isInMultiUartMode() {            // Multiple peripheral mode
+             let blePeripherals = BleManager.shared.connectedPeripherals()
+             for (_, blePeripheral) in blePeripherals.enumerated() {
+                 //  Only want to try to set up uart for devices that have UART available
+                 print(blePeripheral.name!)
+                 if blePeripheral.hasUart(){
+                     print("Setting up uart for: \(blePeripheral.name!)")
+                     blePeripheral.uartEnable(uartRxHandler: uartData.rxPacketReceived) { [weak self] error in
+                         guard let context = self else { return }
+                         
+                         let peripheralName = blePeripheral.name ?? blePeripheral.identifier.uuidString
+                         DispatchQueue.main.async {
+                             guard error == nil else {
+                                 DLog("Error initializing uart")
+                                 context.dismiss(animated: true, completion: { [weak self] () -> Void in
+                                     if let context = self {
+                                         showErrorAlert(from: context, title: localizationManager.localizedString("dialog_error"), message: String(format: localizationManager.localizedString("uart_error_multipleperiperipheralinit_format"), peripheralName))
+                                         
+                                         BleManager.shared.disconnect(from: blePeripheral)
+                                     }
+                                 })
+                                 return
+                             }
+                             
+                             // Done
+                             DLog("Uart enabled for \(peripheralName)")
+                         }
+                     }
+                 }
+             }
+        } else if let blePeripheral = blePeripheral {
         blePeripheral.uartEnable(uartRxHandler: uartData.rxPacketReceived) { [weak self] error in
             guard let context = self else { return }
             
@@ -125,12 +158,13 @@ class ButtonsViewController: UIViewController {
     func send(message: String) {
         guard let uartData = self.uartData as? UartPacketManager else { DLog("Error send with invalid uartData class"); return }
         
-        print("Sending message: \(message)")
+        print("Sending message(to all): \(message)")
         
-        //  Single peripheral mode
-        if let blePeripheral = blePeripheral {
-            print("True")
-            uartData.send(blePeripheral: blePeripheral, text: message)
+        //  Need to send data to the multiple peripherals
+        for peripheral in BleManager.shared.connectedPeripherals(){
+            if peripheral.isUartEnabled(){
+                uartData.send(blePeripheral: peripheral, text: message)
+            }
         }
     }
     

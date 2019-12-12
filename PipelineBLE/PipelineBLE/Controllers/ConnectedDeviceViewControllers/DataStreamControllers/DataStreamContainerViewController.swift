@@ -57,13 +57,16 @@ class DataStreamContainerViewController: UIViewController {
     fileprivate var lastUpdatedData: LineChartDataSet?
     fileprivate var visibleInterval: TimeInterval = 30
     var isAutoScrollEnabled: Bool = true
-    var dataCounter = 0
-    var basicDataSet: [[[Double]]] = [[]]
-    var dataSetForPeripheral = [LineChartDataSet]()
-    var currentPlot = 0
+    var dataCounter: [UUID : Int] = [:]
+    var basicDataSet: [UUID:[[[Double]]]] = [ : ]
+    var dataSetForPeripheral = [UUID : [LineChartDataSet]]()
+    var currentPlot: [UUID : Int] = [:]
+    var newestPlot = 0
     var startReading = false
     var plots: PlotPagesView!
     var totalCount = 0
+    
+    var initialPeripherals: [BlePeripheral] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -74,8 +77,8 @@ class DataStreamContainerViewController: UIViewController {
         //  Initialize Uart data manager
         dataManager = UartDataManager(delegate: self, isRxCacheEnabled: true)
         
-        //  Configure the chart
-        //setUpChart()
+        //  Save the initial peripherals
+        initialPeripherals = BleManager.shared.connectedPeripherals()
         
         //  Get initial start time
         startTime = CFAbsoluteTimeGetCurrent()
@@ -225,12 +228,49 @@ class DataStreamContainerViewController: UIViewController {
         plot.noDataText = "No data received"
     }
     
+    func isInMultiUartMode() -> Bool {
+        return BleManager.shared.connectedPeripherals().count > 1
+    }
+    
     func setUpUART(){
         //  Assign lines for the peripheral
         let lineDashes = UartStyle.defaultLineDashes()
         lineDashForPeripheral.removeAll()
         
-        if let blePeripheral = blePeripheral {
+        if isInMultiUartMode() {            // Multiple peripheral mode
+            let blePeripherals = BleManager.shared.connectedPeripherals()
+            for (i, blePeripheral) in blePeripherals.enumerated() {
+                if blePeripheral.hasUart(){
+                    lineDashForPeripheral[blePeripheral.identifier] = lineDashes[i % lineDashes.count]
+                    blePeripheral.uartEnable(uartRxHandler: dataManager.rxDataReceived) { [weak self] error in
+                        guard let context = self else { return }
+
+                        let peripheralName = blePeripheral.name ?? blePeripheral.identifier.uuidString
+                        DispatchQueue.main.async {
+                            guard error == nil else {
+                                DLog("Error initializing uart")
+                                context.dismiss(animated: true, completion: { [weak self] () -> Void in
+                                    if let context = self {
+                                        let localizationManager = LocalizationManager.shared
+                                        showErrorAlert(from: context, title: localizationManager.localizedString("dialog_error"), message: String(format: localizationManager.localizedString("uart_error_multipleperiperipheralinit_format"), peripheralName))
+
+                                        BleManager.shared.disconnect(from: blePeripheral)
+                                    }
+                                })
+                                return
+                            }
+
+                            // Done
+                            DLog("Uart enabled for \(peripheralName)")
+                        }
+                    }
+                    //  Initialize the data counter for the peripheral
+                    self.dataCounter[blePeripheral.identifier] = 0
+                    self.currentPlot[blePeripheral.identifier] = 0
+                    self.basicDataSet[blePeripheral.identifier] = [[]]
+                }
+            }
+        } else if let blePeripheral = blePeripheral {
             //  Assign a line for the peripheral
             lineDashForPeripheral[blePeripheral.identifier] = lineDashes.first!
             
@@ -257,6 +297,10 @@ class DataStreamContainerViewController: UIViewController {
                     DLog("Uart enabled")
                 }
             }
+            //  Initialize the data counter for the peripheral
+            self.dataCounter[blePeripheral.identifier] = 0
+            self.currentPlot[blePeripheral.identifier] = 0
+            self.basicDataSet[blePeripheral.identifier] = [[]]
         }
     }
     
@@ -267,8 +311,8 @@ class DataStreamContainerViewController: UIViewController {
         print("Here \(currentPlot), \(basicDataSet.count), \(index), \(dataSetForPeripheral.count)")
         
         //  Make sure that the data set exists
-        if dataSetForPeripheral.count > currentPlot, index < dataSetForPeripheral.count{
-            let dataSet = dataSetForPeripheral[index]
+        if let dataSets = dataSetForPeripheral[peripheral], dataSets.count > currentPlot[peripheral]!, index < dataSets.count{
+            let dataSet = dataSets[index]
             dataSet.append(entry)
         }
         else{
@@ -276,15 +320,33 @@ class DataStreamContainerViewController: UIViewController {
             addDataSet(peripheral: peripheral, entry: entry)
             
             //  Send the new data to the plot controller to update
-            let allData = dataSetForPeripheral[index]
+            var allData: [LineChartDataSet]? = []
+            for (uuid, _) in dataSetForPeripheral {
+                //  Need to get the data set for each peripheral at the given index
+                print("Here")
+                if let dataSetForPeripheral = dataSetForPeripheral[uuid], index < dataSetForPeripheral.count {
+                    //  It has the necessary data, so now need to append it
+                    print("Here2")
+                    if allData == [] {
+                        allData = [dataSetForPeripheral[index]]
+                        print("Here3")
+                    }
+                    else {
+                        allData!.append(dataSetForPeripheral[index])
+                        print("Here4")
+                    }
+                }
+            }
+            
+            //let allData = dataSetForPeripheral[peripheral]![index]
             DispatchQueue.main.async {
-                self.plots.addDataSet(plotNum: index, allData: [allData])
+                self.plots.addDataSet(plotNum: index, allData: allData!)
             }
         }
         
         
-        guard /*dataSetForPeripheral.count > currentPlot,*/ index < dataSetForPeripheral.count else { return }
-        let dataSet = dataSetForPeripheral[index]
+        guard index < dataSetForPeripheral[peripheral]!.count else { return }
+        let dataSet = dataSetForPeripheral[peripheral]![index]
         
         lastUpdatedData = dataSet
         plots.lastUpdatedData = lastUpdatedData
@@ -295,21 +357,29 @@ class DataStreamContainerViewController: UIViewController {
         let newDataSet = LineChartDataSet(entries: [entry], label: "Values for \(currentPlot) plot]")
         let _ = newDataSet.append(entry)
         
+        //  Get an int to use for finding a color
+        let colorCount = Int(lineDashForPeripheral[peripheral]!?.first ?? 0)
+        
         //  Add some preferences
         newDataSet.drawCirclesEnabled = false
         newDataSet.drawValuesEnabled = false
         newDataSet.lineWidth = 2
         let colors = UartStyle.defaultColors()
-        let color = colors[currentPlot % colors.count]
+        let color = colors[colorCount % colors.count]
         newDataSet.setColor(color)
         newDataSet.lineDashLengths = lineDashForPeripheral[peripheral]!
         DLog("color: \(color.hexString()!)")
         
         //  Add the new data set to current data set
         DLog("Added new dataset for new graph")
-        dataSetForPeripheral.append(newDataSet)
+        if dataSetForPeripheral[peripheral] != nil {
+            dataSetForPeripheral[peripheral]!.append(newDataSet)
+        }
+        else{
+            dataSetForPeripheral[peripheral] = [newDataSet]
+        }
     }
-    
+    /*
     func addEntry(peripheral: UUID, index: Int, value: Double, timestamp: CFAbsoluteTime){
         //  Create initial entry
         let entry = ChartDataEntry(x: timestamp, y: value)
@@ -358,7 +428,7 @@ class DataStreamContainerViewController: UIViewController {
             //  No current data set, so just create new for peripheral
             dataSetForPeripherals[peripheral] = [newDataSet]
         }
-    }
+    }*/
     
     func notifyDataSetChanged(){
         plots.notifyDataSetChanged()
@@ -416,16 +486,18 @@ class DataStreamContainerViewController: UIViewController {
         
         //  Create action for when the button is saved
         let action = UIAlertAction(title: "Save", style: .default){ (_) in
-            //  Saving the basic data set
-            let dataSet = self.basicDataSet
-            
-            //  Populate data with the dataSet
-            let data = PlotData(context: PersistenceService.context)
-            
-            data.data = dataSet as NSObject
-            let id = alert.textFields!.first!.text ?? ""
-            data.setup(id: id, peripheral: self.blePeripheral!)
-            PersistenceService.saveContext()
+            for peripheral in self.initialPeripherals {
+                //  Make sure we save data for the peripheral if it was connected
+                if let dataSet = self.basicDataSet[peripheral.identifier] {
+                    //  Populate data with the dataSet
+                    let data = PlotData(context: PersistenceService.context)
+                    
+                    data.data = dataSet as NSObject
+                    let id = alert.textFields!.first!.text ?? ""
+                    data.setup(id: id, peripheral: peripheral)
+                    PersistenceService.saveContext()
+                }
+            }
         }
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         
@@ -476,13 +548,16 @@ class DataStreamContainerViewController: UIViewController {
             //  Now we can start reading data in
             self.startReading = true
             
-            //  Will be sending the number of samples first, then run x times
-            self.send(message: "t"+String(samples)+"\n")
-            usleep(500000)
-            self.send(message: "r"+String(runs)+"\n")
-            
-            //  Now let's change the button that is present on the top right
-            self.barButtons(running: true)
+            //  Alert the devices that are connected
+            for peripheral in BleManager.shared.connectedPeripherals(){
+                //  Will be sending the number of samples first, then run x times
+                self.send(message: "t"+String(samples)+"\n", peripheral: peripheral)
+                usleep(500000)
+                self.send(message: "r"+String(runs)+"\n", peripheral: peripheral)
+                
+                //  Now let's change the button that is present on the top right
+                self.barButtons(running: true)
+            }
         }
         
         //  Create action that will do nothing if it is selected
@@ -509,8 +584,10 @@ class DataStreamContainerViewController: UIViewController {
         let alert = UIAlertController(title: "Stop Data Stream", message: "Are you sure you want to tell the device to stop sending data?", preferredStyle: .alert)
         let action = UIAlertAction(title: "Yes", style: .default){ (_) in
             //  Need to send the device the message to stop
-            self.send(message: "s")
-            self.barButtons(running: false)
+            for peripheral in BleManager.shared.connectedPeripherals(){
+                self.send(message: "s", peripheral: peripheral)
+                self.barButtons(running: false)
+            }
         }
         let actionCancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         alert.addAction(action)
@@ -561,44 +638,51 @@ extension DataStreamContainerViewController: UartDataManagerDelegate{
                         if let val = Double(pt){
                             print("\(i). Value: \(val)")
                             //  Check to see if the point is 0, then we know it is a new plot and increase
-                            if self.basicDataSet.count == 0 && val == 0{
+                            if let dataSet = self.basicDataSet[peripheralIdentifier], dataSet.count == 0 && val == 0{
                                 // Just continue and not do anything
                                 print("Nothing here")
                             }
-                            else if self.currentPlot >= self.plots.maxPlots{
+                            else if self.currentPlot[peripheralIdentifier]! >= self.plots.maxPlots{
                                 //  Done reading data in, ignore the rest
                                 return
                             }
                             else if val != 0{
                                 //  Make sure data is even spread
-                                let currentTime = self.dataCounter
+                                let currentTime = self.dataCounter[peripheralIdentifier]!
                                 
                                 //addEntry(peripheral: peripheralIdentifier, index: i, value: val, timestamp: Double(currentTime))
                                 print("Total Count: \(self.totalCount)")
-                                self.addEntry(peripheral: peripheralIdentifier, x: Double(currentTime), y: val,index: Int(self.currentPlot))
+                                self.addEntry(peripheral: peripheralIdentifier, x: Double(currentTime), y: val,index: Int(self.currentPlot[peripheralIdentifier]!))
                                 self.totalCount += 1
                                 
                                 //  Check to see if this is a new dataset we need to add
-                                if self.basicDataSet.count == self.currentPlot, self.currentPlot != 0{
+                                let dataSetCount = self.basicDataSet[peripheralIdentifier] == nil ? 0 : self.basicDataSet[peripheralIdentifier]!.count
+                                if dataSetCount == self.currentPlot[peripheralIdentifier]!, self.currentPlot[peripheralIdentifier] != 0{
                                     //  Add the new data to the new plot
-                                    self.basicDataSet.append([])
-                                    self.basicDataSet[self.currentPlot].append([Double(currentTime), val])
+                                    self.basicDataSet[peripheralIdentifier]!.append([])
+                                self.basicDataSet[peripheralIdentifier]![self.currentPlot[peripheralIdentifier]!].append([Double(currentTime), val])
                                 }
                                 else{
                                     //  Just add data regularly
-                                    self.basicDataSet[self.currentPlot].append([Double(currentTime), val])
+                                self.basicDataSet[peripheralIdentifier]![self.currentPlot[peripheralIdentifier]!].append([Double(currentTime), val])
                                 }
                                 
-                                self.dataCounter += 1
+                                self.dataCounter[peripheralIdentifier]! += 1
                                 i = i + 1
                             }
                             else {
                                 //  Okay, new data set for the new graph
                                 print("Zero")
-                                self.currentPlot += 1
-                                self.dataCounter = 0
-                                DispatchQueue.main.async {
-                                    self.plots.changePage(toPage: self.currentPlot)
+                                self.currentPlot[peripheralIdentifier]! += 1
+                                self.dataCounter[peripheralIdentifier] = 0
+                                
+                                //  If the new plot is after all the other plots, move to the new page.
+                                //  This will prevent moving backwards
+                                if self.currentPlot[peripheralIdentifier]! > self.newestPlot {
+                                    self.newestPlot = self.currentPlot[peripheralIdentifier]!
+                                    DispatchQueue.main.async {
+                                        self.plots.changePage(toPage: self.currentPlot[peripheralIdentifier]!)
+                                    }
                                 }
                             }
                         }
@@ -631,6 +715,17 @@ extension DataStreamContainerViewController: UartDataManagerDelegate{
             if let data = message.data(using: .utf8) {
                 dataManager.send(blePeripheral: blePeripheral, data: data)
             }
+        }
+    }
+    
+    func send(message: String, peripheral: BlePeripheral!) {
+        guard let dataManager = self.dataManager else { DLog("Error send with invalid uartData class"); return }
+        
+        print("Sending message: \(message)")
+        
+        //  Send data to specified peripheral
+        if let data = message.data(using: .utf8) {
+            dataManager.send(blePeripheral: peripheral, data: data)
         }
     }
     

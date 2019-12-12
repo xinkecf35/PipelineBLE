@@ -82,7 +82,6 @@
 		B9CA505E230C953B007E31D8 /* RssiUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9CA505C230C953B007E31D8 /* RssiUI.swift */; };
 		B9CA505F230C953B007E31D8 /* PeripheralList.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9CA505D230C953B007E31D8 /* PeripheralList.swift */; };
 		B9CA5064230DC5D9007E31D8 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = B9CA5062230DC5D9007E31D8 /* Localizable.strings */; };
-		B9CA506B230F3D38007E31D8 /* DataStreamViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9CA506A230F3D38007E31D8 /* DataStreamViewController.swift */; };
 		B9CA506D230F3D83007E31D8 /* SavedDataViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9CA506C230F3D83007E31D8 /* SavedDataViewController.swift */; };
 		B9CA506F230F3E20007E31D8 /* ButtonsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9CA506E230F3E20007E31D8 /* ButtonsViewController.swift */; };
 		B9CA5071230F4C71007E31D8 /* ConnectedDeviceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9CA5070230F4C71007E31D8 /* ConnectedDeviceViewController.swift */; };
@@ -170,7 +169,6 @@
 		B9CA505C230C953B007E31D8 /* RssiUI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RssiUI.swift; sourceTree = "<group>"; };
 		B9CA505D230C953B007E31D8 /* PeripheralList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeripheralList.swift; sourceTree = "<group>"; };
 		B9CA5063230DC5D9007E31D8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Localizable.strings; sourceTree = "<group>"; };
-		B9CA506A230F3D38007E31D8 /* DataStreamViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStreamViewController.swift; sourceTree = "<group>"; };
 		B9CA506C230F3D83007E31D8 /* SavedDataViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedDataViewController.swift; sourceTree = "<group>"; };
 		B9CA506E230F3E20007E31D8 /* ButtonsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonsViewController.swift; sourceTree = "<group>"; };
 		B9CA5070230F4C71007E31D8 /* ConnectedDeviceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectedDeviceViewController.swift; sourceTree = "<group>"; };
@@ -536,7 +534,6 @@
 		B9CA5067230F3CEA007E31D8 /* DataStreamControllers */ = {
 			isa = PBXGroup;
 			children = (
-				B9CA506A230F3D38007E31D8 /* DataStreamViewController.swift */,
 				B9677DA9236CBCD60015E6EA /* DataStreamContainerViewController.swift */,
 				B9677DA3236914E20015E6EA /* PlotPagesView.swift */,
 			);
@@ -709,7 +706,6 @@
 				B9CA5044230C3725007E31D8 /* MSWeakTimer.m in Sources */,
 				B97BC49522FB3EEE00858CA9 /* SavedDevicesViewController.swift in Sources */,
 				B97BC4AE22FB4C7100858CA9 /* UARTViewController.swift in Sources */,
-				B9CA506B230F3D38007E31D8 /* DataStreamViewController.swift in Sources */,
 				B90147222347DF240001E90C /* UARTData+CoreDataClass.swift in Sources */,
 				B97BC4F322FCA27900858CA9 /* PastDataViewController.swift in Sources */,
 				B99E3C58232AA53A00C03948 /* UARTButtons.swift in Sources */,
