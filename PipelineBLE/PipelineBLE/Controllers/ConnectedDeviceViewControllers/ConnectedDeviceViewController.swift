@@ -11,11 +11,11 @@ import UIKit
 class ConnectedDeviceViewController: UIViewController {
     
     //  Data about the device
-    weak var selectedPeripheral: BlePeripheral?
-    var savedPeripheral: SavedPeripheral?
-    var deviceName: String?
+    var savedPeripherals: [UUID:SavedPeripheral] = [:]
     var hasUart = false
     var hasDfu = false
+    var multiplePeripherals: Bool!
+    var connectedDevices: Int!
     
     //  Enum to easily access info about the peripheral
     enum Modes: Int {
@@ -34,14 +34,22 @@ class ConnectedDeviceViewController: UIViewController {
         table.translatesAutoresizingMaskIntoConstraints = false
         return table
     }()
+    
+    //  Notification Variables
+    private weak var willConnectToPeripheralObserver: NSObjectProtocol?
+    private weak var willDisconnectFromPeripheralObserver: NSObjectProtocol?
+    private weak var peripheralDidUpdateRssiObserver: NSObjectProtocol?
+    private weak var didDisconnectFromPeripheralObserver: NSObjectProtocol?
+    
+    //  RSSI refresh timer
+    fileprivate var rssiRefreshTimer: MSWeakTimer?
+    fileprivate static let kRssiRefreshInterval: TimeInterval = 0.3
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         //  Do some initialization
-        if let peripheral = selectedPeripheral {
-            hasUart = peripheral.hasUart()
-        }
+        checkUart()
 
         //  Configure the view
         UISettings()
@@ -54,9 +62,30 @@ class ConnectedDeviceViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        //  Assign device name
-        deviceName = savedPeripheral?.name ?? ""
+        //  See if we are in multi peripheral mode
+        connectedDevices = BleManager.shared.connectedPeripherals().count
+        multiplePeripherals = connectedDevices > 1
+        
+        //  Register notifications
+        registerNotifications(enabled: true)
+        
+        //  Add timer to update RSSI
+        // Schedule Rssi timer
+        rssiRefreshTimer = MSWeakTimer.scheduledTimer(withTimeInterval: ConnectedDeviceViewController.kRssiRefreshInterval, target: self, selector: #selector(rssiRefreshFired), userInfo: nil, repeats: true, dispatchQueue: .global(qos: .background))
+        
+        //  Reload data
         tableView.reloadData()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        //  Deactivate notifications
+        registerNotifications(enabled: false)
+        
+        // Disable Rssi timer
+        rssiRefreshTimer?.invalidate()
+        rssiRefreshTimer = nil
     }
     
     func UISettings(){
@@ -71,9 +100,34 @@ class ConnectedDeviceViewController: UIViewController {
         tableView.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
     }
     
+    @objc private func rssiRefreshFired() {
+        //  Reread Rssi for connected devices
+        for device in BleManager.shared.connectedPeripherals(){
+            device.readRssi()
+        }
+    }
+    
+    func checkUart(){
+        //  Check if uart is available
+        hasUart = false
+        for device in BleManager.shared.connectedPeripherals() {
+            if device.hasUart(){
+                hasUart = true
+            }
+        }
+    }
+    
+    func isInMultiUartMode() -> Bool {
+        return BleManager.shared.connectedPeripherals().count > 1
+    }
+    
     fileprivate func DefineModes() -> [Modes]{
         if hasUart {
-            return [.uart, .buttons, .datastream, .savedData, .info]
+            if isInMultiUartMode(){
+                return [.uart, .datastream, .savedData, .info]
+            } else {
+                return [.uart, .buttons, .datastream, .savedData, .info]
+            }
         }
         else{
             //  Does not conform to the requirements... Decide to maybe display some
@@ -81,22 +135,9 @@ class ConnectedDeviceViewController: UIViewController {
             return [.info]
         }
     }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-    
-    
-
 }
 
-
+//  MARK: - TableView Data Source
 extension ConnectedDeviceViewController: UITableViewDataSource {
     
     //  Use for knowing what section and what information to show
@@ -128,8 +169,8 @@ extension ConnectedDeviceViewController: UITableViewDataSource {
         //  Find out how many modes depending on the section
         switch TableSection(rawValue: section)! {
         case .device:
-            //  Only supporting one device
-            return 1
+            //  Display multiple devices
+            return BleManager.shared.connectedPeripherals().count
         case .modules:
             //  Only have enough rows for the number of modules available
             return DefineModes().count
@@ -153,9 +194,18 @@ extension ConnectedDeviceViewController: UITableViewDataSource {
         return cell
     }
     
-    
+     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        //  Need to set the height of the cells
+        switch TableSection(rawValue: indexPath.section)! {
+        case .device:
+            return 60
+        case .modules:
+            return 44
+        }
+    }
 }
 
+//  MARK: - TableView Delegate
 extension ConnectedDeviceViewController: UITableViewDelegate{
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -168,12 +218,12 @@ extension ConnectedDeviceViewController: UITableViewDelegate{
             //  Make sure that the cell passed is of the right type
             guard let deviceCell = cell as? ConnectedDeviceTableViewCell else { return }
             
-            //  Will now need to send info about the device so it can be displayed
-            deviceCell.deviceName.text = self.deviceName ?? selectedPeripheral!.name ?? localizationManager.localizedString("scanner_unnamed")
-            //deviceCell.deviceName.text = selectedPeripheral!.name ?? localizationManager.localizedString("scanner_unnamed")
+            let peripheral = BleManager.shared.connectedPeripherals()[indexPath.row]
             
-            deviceCell.subtitle.text = selectedPeripheral!.isUartAdvertised() ? localizationManager.localizedString("scanner_uartavailable") : "UART Unavailable"
-            deviceCell.signalImage.image = RssiUI.signalImage(for: selectedPeripheral?.rssi)
+            //  Will now need to send info about the device so it can be displayed
+            deviceCell.deviceName.text = savedPeripherals[peripheral.identifier]?.name! ?? localizationManager.localizedString("scanner_unnamed")
+            deviceCell.subtitle.text = peripheral.hasUart() ? localizationManager.localizedString("scanner_uartavailable") : "UART Unavailable"
+            deviceCell.signalImage.image = RssiUI.signalImage(for: peripheral.rssi)
             
         case .modules:
             //  Need to make sure that the cell is of the right type
@@ -223,44 +273,145 @@ extension ConnectedDeviceViewController: UITableViewDelegate{
             case .uart:
                 //  Selected UART, need to open the view controller
                 let uartViewController = UARTViewController()
-                self.storyboard?.instantiateViewController(withIdentifier: "UARTViewController")
+                
+                //  Send data depending on multi peripherals
+                if multiplePeripherals{
+                    self.storyboard?.instantiateViewController(withIdentifier: "UARTViewController")
+                }
+                else{
+                    let peripheral = BleManager.shared.connectedPeripherals().first
+                    uartViewController.blePeripheral = peripheral
+                }
                 uartViewController.hidesBottomBarWhenPushed = true
-                uartViewController.blePeripheral = selectedPeripheral
                 navigationController?.pushViewController(uartViewController, animated: true)
                 
             case .buttons:
                 //  Need to open the buttons view controller
                 let buttonsViewController = ButtonsViewController()
                 buttonsViewController.hidesBottomBarWhenPushed = true
-                buttonsViewController.savedPeripheral = savedPeripheral
-                buttonsViewController.blePeripheral = selectedPeripheral
+                let peripheral = BleManager.shared.connectedPeripherals().first
+                buttonsViewController.blePeripheral = peripheral
+                buttonsViewController.savedPeripheral = savedPeripherals[peripheral!.identifier]
                 navigationController?.pushViewController(buttonsViewController, animated: true)
             case .datastream:
                 //  Open data stream view controller
                 //let dataStreamViewController = DataStreamViewController()
                 
                 let dataStreamViewController = DataStreamContainerViewController()
-                
-                
                 dataStreamViewController.hidesBottomBarWhenPushed = true
-                dataStreamViewController.blePeripheral = selectedPeripheral
+//                dataStreamViewController.blePeripheral = selectedPeripheral
                 navigationController?.pushViewController(dataStreamViewController, animated: true)
             case .savedData:
-                //  Open saved data view controller
-                let savedDataViewController = SavedDataViewController()
-                savedDataViewController.hidesBottomBarWhenPushed = true
-                savedDataViewController.blePeripheral = selectedPeripheral
-                navigationController?.pushViewController(savedDataViewController, animated: true)
+                //  Open a certain controller depending on wether we are in multiple mode or not
+                if multiplePeripherals {
+                    //  Connected to multiple peripherals, so need to select only one of them
+                    let savedDataViewController = PeripheralInfoSelectorViewController()
+                    savedDataViewController.hidesBottomBarWhenPushed = true
+                    savedDataViewController.infoMode = false
+                    savedDataViewController.connectedPeripherals = BleManager.shared.connectedPeripherals()
+                    savedDataViewController.savedPeripherals = savedPeripherals
+                    navigationController?.pushViewController(savedDataViewController, animated: true)
+                }
+                else{
+                    //  Only connected to one, so send data for the single device
+                    let peripheral = BleManager.shared.connectedPeripherals().first
+                    let savedDataViewController = SavedDataViewController()
+                    savedDataViewController.hidesBottomBarWhenPushed = true
+                    savedDataViewController.blePeripheral = peripheral
+                    navigationController?.pushViewController(savedDataViewController, animated: true)
+                }
+                
             case .info:
-                //  Open info view controller
-                let infoViewController = DeviceInfoViewController()
-                infoViewController.hidesBottomBarWhenPushed = true
-                infoViewController.blePeripheral = selectedPeripheral
-                infoViewController.savedPeripheral = savedPeripheral
-                navigationController?.pushViewController(infoViewController, animated: true)
+                //  Open a certain controller depending on wether we are in multiple mode or not
+                if multiplePeripherals {
+                    //  Connected to multiple peripherals, so need to select only one of them
+                    let infoViewController = PeripheralInfoSelectorViewController()
+                    infoViewController.infoMode = true
+                    infoViewController.hidesBottomBarWhenPushed = true
+                    infoViewController.connectedPeripherals = BleManager.shared.connectedPeripherals()
+                    infoViewController.savedPeripherals = savedPeripherals
+                    navigationController?.pushViewController(infoViewController, animated: true)
+                }
+                else{
+                    //  Only connected to one, so send data for the single device
+                    let peripheral = BleManager.shared.connectedPeripherals().first
+                    let infoViewController = DeviceInfoViewController()
+                    infoViewController.hidesBottomBarWhenPushed = true
+                    infoViewController.blePeripheral = peripheral
+                    infoViewController.savedPeripheral = savedPeripherals[peripheral!.identifier]
+                    navigationController?.pushViewController(infoViewController, animated: true)
+                } 
             }
         }
         tableView.deselectRow(at: indexPath, animated: indexPath.section == 0)
     }
     
+}
+
+//  MARK: - Notifications Manager
+extension ConnectedDeviceViewController {
+    
+    private func registerNotifications(enabled: Bool) {
+        let notificationCenter = NotificationCenter.default
+
+        if enabled {
+            peripheralDidUpdateRssiObserver = notificationCenter.addObserver(forName: .peripheralDidUpdateRssi, object: nil, queue: .main, using: {[weak self] notification in self?.peripheralDidUpdateRssi(notification: notification)})
+            didDisconnectFromPeripheralObserver = notificationCenter.addObserver(forName: .didDisconnectFromPeripheral, object: nil, queue: .main, using: {[weak self] notification in self?.didDisconnectFromPeripheral(notification: notification)})
+        } else {
+            if let peripheralDidUpdateRssiObserver = peripheralDidUpdateRssiObserver {notificationCenter.removeObserver(peripheralDidUpdateRssiObserver)}
+            if let didDisconnectFromPeripheralObserver = didDisconnectFromPeripheralObserver {notificationCenter.removeObserver(didDisconnectFromPeripheralObserver)}
+        }
+    }
+    
+    fileprivate func peripheralDidUpdateRssi(notification: Notification) {
+        //  Make sure the device that is disconnecting is one we are connected to
+        guard let identifier = notification.userInfo?[BleManager.NotificationUserInfoKey.uuid.rawValue] as? UUID, savedPeripherals[identifier] != nil else { return }
+        
+        // Update section
+        tableView.reloadSections([TableSection.device.rawValue], with: .none)
+    }
+    
+    private func didDisconnectFromPeripheral(notification: Notification) {
+        guard let identifier = notification.userInfo?[BleManager.NotificationUserInfoKey.uuid.rawValue] as? UUID, savedPeripherals[identifier] != nil else { return }
+        
+        let savedPeripheral = savedPeripherals[identifier]
+
+        DLog("detail: peripheral \(savedPeripheral!.name!) didDisconnect")
+        
+        //  Need to update variables depending on devices that are disconnecting
+        if connectedDevices == 1 {
+            //  We are not in multi peripheral mode
+            //  need to return since we are no longer connected to a device
+            savedPeripherals[identifier] = nil
+            
+            // Disable Rssi timer
+            rssiRefreshTimer?.invalidate()
+            rssiRefreshTimer = nil
+            
+            //  Now return
+            goBackToPeripheralList()
+        }
+        else{
+            // Still have devices that are connected, need to update
+            connectedDevices -= 1
+            
+            //  Check if we are in single peripheral mode now
+            multiplePeripherals = connectedDevices > 1
+            
+            //  Remove the device from the saved peripherals
+            savedPeripherals[identifier] = nil
+            
+            //  Need to check if we have uart still available
+            checkUart()
+            
+            //  Reload data
+            tableView.reloadData()
+        }
+
+    }
+
+    private func goBackToPeripheralList() {
+        // Back to peripheral list
+        navigationController?.popToRootViewController(animated: true)
+    }
 }

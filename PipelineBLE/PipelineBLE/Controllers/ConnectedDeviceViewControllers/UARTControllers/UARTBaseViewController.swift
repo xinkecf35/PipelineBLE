@@ -39,6 +39,7 @@ class UARTBaseViewController: UIViewController {
     }()
     var saveBarButton: UIBarButtonItem!
     var exportButton: UIBarButtonItem!
+    var sendCountToPeripherals = 0
     
     var originalHeight: CGFloat?
     
@@ -248,17 +249,26 @@ extension UARTBaseViewController {
         print("Trying to save data")
         inputTextField.resignFirstResponder()
         //  Need to get an identifier for this data
-        let alert = UIAlertController(title: "Save UART Data", message: "Please enter an identifier for this data:", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Save UART Data", message: "This data will be saved for each device. Please enter an identifier for this data:", preferredStyle: .alert)
         alert.addTextField{ (textField) in
             textField.placeholder = "identifier"
         }
         let action = UIAlertAction(title: "Save", style: .default){ (_) in
             //  Save the text that is in the textfield currently
-            let data = UARTData(context: PersistenceService.context)
-            data.data = self.comTextView.text
             let id = alert.textFields!.first!.text ?? " "
-            data.setup(id: id, peripheral: self.blePeripheral!)
-            PersistenceService.saveContext()
+            
+            //  Save to all if in multi peripheral
+            if self.isInMultiUartMode(){
+                for peripheral in BleManager.shared.connectedPeripherals(){
+                    //  Save the data for each peripheral
+                    if peripheral.hasUart(){
+                        self.save(id: id, peripheral: peripheral)
+                    }
+                }
+            }
+            else {
+                self.save(id: id, peripheral: self.blePeripheral!)
+            }
         }
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         
@@ -268,11 +278,17 @@ extension UARTBaseViewController {
         
         
         self.present(alert, animated: true, completion: nil)
-        //alert.view.layoutIfNeeded()
-        //self.view.layoutIfNeeded()
         
         inputTextField.resignFirstResponder()
         //view.frame.size = CGSize(width: view.frame.width, height: originalHeight!)
+    }
+    
+    func save(id: String, peripheral: BlePeripheral){
+        //  Save the data automatically
+        let data = UARTData(context: PersistenceService.context)
+        data.data = self.comTextView.text
+        data.setup(id: id, peripheral: peripheral)
+        PersistenceService.saveContext()
     }
     
     @objc func onClickExport(_ export: UIBarButtonItem){
@@ -326,9 +342,19 @@ extension UARTBaseViewController: UartPacketManagerDelegate{
     fileprivate func onUartPacketText(_ packet: UartPacket) {
         guard Preferences.uartIsEchoEnabled || packet.mode == .rx else { return }
         
-        let color = colorForPacket(packet: packet)
+        var color = colorForPacket(packet: packet)
         let font = fontForPacket(packet: packet)
         
+        //  Only want to display the sent message once
+        if isInMultiUartMode() && sendCountToPeripherals != 0 && packet.mode == .tx {
+            return
+        }
+        else if isInMultiUartMode() && sendCountToPeripherals == 0 && packet.mode == .tx {
+            //  Won't want to update the UI for the same message.
+            sendCountToPeripherals += 1
+            color = .black
+        }
+
         if let attributedString = attributedStringFromData(packet.data, useHexMode: Preferences.uartIsInHexMode, color: color, font: font) {
             textCachedBuffer.append(attributedString)
         }

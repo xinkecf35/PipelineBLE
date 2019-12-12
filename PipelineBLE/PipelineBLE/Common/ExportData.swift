@@ -83,6 +83,23 @@ class ExportData {
                 //  TODO: - Implement csv and others
             }
         }
+        else if let dataSets = data as? [UUID : [[[Double]]]]{
+            //  Check the formatting to be returned
+            if type == "txt"{
+                //  Build the string to return
+                var deviceNumber = 1
+                var output = ""
+                for (uuid, dataSet) in dataSets {
+                    //  Display what the device is
+                    output += "Device \(deviceNumber): \(uuid.uuidString)\n"
+                    output += PlotData.dataToString(data: dataSet)
+                    
+                    //  Increment the device number when done
+                    deviceNumber += 1
+                }
+                return output
+            }
+        }
         //  All fails, so return nil
         return nil
     }

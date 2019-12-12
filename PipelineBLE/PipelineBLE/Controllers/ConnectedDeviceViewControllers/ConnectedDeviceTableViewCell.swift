@@ -43,14 +43,27 @@ class ConnectedDeviceTableViewCell: UITableViewCell {
     func SetUpConstraints(){
         //  Add device name
         addSubview(deviceName)
+        addSubview(subtitle)
+        addSubview(signalImage)
         
         //  Add constraints to the label
-        deviceName.topAnchor.constraint(equalTo: topAnchor, constant: 10).isActive = true
-        deviceName.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10).isActive = true
-        deviceName.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10).isActive = true
-        deviceName.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10).isActive = true
+        deviceName.topAnchor.constraint(equalTo: topAnchor, constant: 5).isActive = true
+        deviceName.bottomAnchor.constraint(equalTo: subtitle.topAnchor, constant: -5).isActive = true
+        deviceName.trailingAnchor.constraint(equalTo: signalImage.leadingAnchor, constant: -5).isActive = true
+        deviceName.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 5).isActive = true
         
+        //  Add constraints to the subtitle
+        subtitle.topAnchor.constraint(equalTo: deviceName.bottomAnchor, constant: 5).isActive = true
+        subtitle.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -5).isActive = true
+        subtitle.trailingAnchor.constraint(equalTo: signalImage.leadingAnchor, constant: -5).isActive = true
+        subtitle.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 5).isActive = true
         
+        //  Add constraints to the image
+        signalImage.widthAnchor.constraint(equalToConstant: 28).isActive = true
+        signalImage.heightAnchor.constraint(equalToConstant: 32).isActive = true
+        signalImage.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10).isActive = true
+        signalImage.leadingAnchor.constraint(equalTo: subtitle.trailingAnchor, constant: 5).isActive = true
+        signalImage.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         
         //  Change color
         backgroundView?.tintColor = .darkGray

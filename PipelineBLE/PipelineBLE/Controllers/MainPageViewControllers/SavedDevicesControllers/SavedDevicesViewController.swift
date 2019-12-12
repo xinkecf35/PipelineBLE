@@ -114,6 +114,9 @@ extension SavedDevicesViewController {
         infoViewController.hidesBottomBarWhenPushed = true
         infoViewController.savedPeripheral = savedPeripheral
         navigationController?.pushViewController(infoViewController, animated: true)
+        
+        //  Deselect the selected row
+        tableView.deselectRow(at: indexPath, animated: true)
     }
     
 }

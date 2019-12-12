@@ -20,7 +20,6 @@ class PlotPagesView: UIView {
     }()
     var pageControl: UIPageControl = {
         let page = UIPageControl()
-        
         page.translatesAutoresizingMaskIntoConstraints = false
         return page
     }()

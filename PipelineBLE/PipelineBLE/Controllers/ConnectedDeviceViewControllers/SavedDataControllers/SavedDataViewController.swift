@@ -142,7 +142,12 @@ extension SavedDataViewController: UITableViewDataSource {
         return cell
     }
     
-    
+    func cantDisplay(){
+        let alert = UIAlertController(title: "Error", message: "Unable to display the plot. Data is corrupt.", preferredStyle: .alert)
+        let actionCancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        alert.addAction(actionCancel)
+        self.present(alert, animated: true, completion: nil)
+    }
     
 }
 
@@ -156,11 +161,19 @@ extension SavedDataViewController: UITableViewDelegate {
         
         switch TableSection(rawValue: indexPath.section)! {
         case .plot:
-            //  Give it the data it needs
+            //  Make sure the data isnt corrupt
             let dataInstance = plotData[indexPath.row] as! PlotData
+            guard let data = dataInstance.data as? [[[Double]]] else {
+                self.cantDisplay()
+                return
+                
+            }
+            
+            //  Give it the data it needs
+            
             displayDataController.pageTitle = dataInstance.id
             displayDataController.plot = true
-            displayDataController.plotData = (dataInstance.data as! [[[Double]]])
+            displayDataController.plotData = (data)
             displayDataController.dataAsString = PlotData.dataToString(data: dataInstance.data as! [[[Double]]])
         case .uart:
             //  Give it the data it needs

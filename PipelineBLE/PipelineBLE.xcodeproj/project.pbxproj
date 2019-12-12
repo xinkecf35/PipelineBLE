@@ -16,6 +16,7 @@
 		B90147202347DEC80001E90C /* PlotData+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = B901471E2347DEC80001E90C /* PlotData+CoreDataProperties.swift */; };
 		B90147222347DF240001E90C /* UARTData+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90147212347DF240001E90C /* UARTData+CoreDataClass.swift */; };
 		B90147242347DF270001E90C /* UARTData+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = B90147232347DF270001E90C /* UARTData+CoreDataProperties.swift */; };
+		B924C5432385F2960013B0AB /* PeripheralInfoSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B924C5422385F2960013B0AB /* PeripheralInfoSelectorViewController.swift */; };
 		B94CD1EA23071C050077F77E /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = B94CD1E923071C040077F77E /* Preferences.swift */; };
 		B94CD1F0230735C80077F77E /* WatchSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B94CD1EE230735C80077F77E /* WatchSessionManager.swift */; };
 		B94CD1F1230735C80077F77E /* HandoffManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B94CD1EF230735C80077F77E /* HandoffManager.swift */; };
@@ -81,7 +82,6 @@
 		B9CA505E230C953B007E31D8 /* RssiUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9CA505C230C953B007E31D8 /* RssiUI.swift */; };
 		B9CA505F230C953B007E31D8 /* PeripheralList.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9CA505D230C953B007E31D8 /* PeripheralList.swift */; };
 		B9CA5064230DC5D9007E31D8 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = B9CA5062230DC5D9007E31D8 /* Localizable.strings */; };
-		B9CA506B230F3D38007E31D8 /* DataStreamViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9CA506A230F3D38007E31D8 /* DataStreamViewController.swift */; };
 		B9CA506D230F3D83007E31D8 /* SavedDataViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9CA506C230F3D83007E31D8 /* SavedDataViewController.swift */; };
 		B9CA506F230F3E20007E31D8 /* ButtonsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9CA506E230F3E20007E31D8 /* ButtonsViewController.swift */; };
 		B9CA5071230F4C71007E31D8 /* ConnectedDeviceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9CA5070230F4C71007E31D8 /* ConnectedDeviceViewController.swift */; };
@@ -98,6 +98,7 @@
 		B901471E2347DEC80001E90C /* PlotData+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "PlotData+CoreDataProperties.swift"; path = "/Users/samuelpeterson/Desktop/PipelineBLE/PipelineBLE/PipelineBLE/Common/PersistentData/PlotData+CoreDataProperties.swift"; sourceTree = "<absolute>"; };
 		B90147212347DF240001E90C /* UARTData+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "UARTData+CoreDataClass.swift"; path = "/Users/samuelpeterson/Desktop/PipelineBLE/PipelineBLE/PipelineBLE/Common/PersistentData/UARTData+CoreDataClass.swift"; sourceTree = "<absolute>"; };
 		B90147232347DF270001E90C /* UARTData+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "UARTData+CoreDataProperties.swift"; path = "/Users/samuelpeterson/Desktop/PipelineBLE/PipelineBLE/PipelineBLE/Common/PersistentData/UARTData+CoreDataProperties.swift"; sourceTree = "<absolute>"; };
+		B924C5422385F2960013B0AB /* PeripheralInfoSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeripheralInfoSelectorViewController.swift; sourceTree = "<group>"; };
 		B94CD1E923071C040077F77E /* Preferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		B94CD1EE230735C80077F77E /* WatchSessionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WatchSessionManager.swift; sourceTree = "<group>"; };
 		B94CD1EF230735C80077F77E /* HandoffManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HandoffManager.swift; sourceTree = "<group>"; };
@@ -168,7 +169,6 @@
 		B9CA505C230C953B007E31D8 /* RssiUI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RssiUI.swift; sourceTree = "<group>"; };
 		B9CA505D230C953B007E31D8 /* PeripheralList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PeripheralList.swift; sourceTree = "<group>"; };
 		B9CA5063230DC5D9007E31D8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Localizable.strings; sourceTree = "<group>"; };
-		B9CA506A230F3D38007E31D8 /* DataStreamViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStreamViewController.swift; sourceTree = "<group>"; };
 		B9CA506C230F3D83007E31D8 /* SavedDataViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedDataViewController.swift; sourceTree = "<group>"; };
 		B9CA506E230F3E20007E31D8 /* ButtonsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonsViewController.swift; sourceTree = "<group>"; };
 		B9CA5070230F4C71007E31D8 /* ConnectedDeviceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectedDeviceViewController.swift; sourceTree = "<group>"; };
@@ -408,6 +408,7 @@
 		B99E3C2E2314BB2A00C03948 /* DeviceInfoController */ = {
 			isa = PBXGroup;
 			children = (
+				B924C5422385F2960013B0AB /* PeripheralInfoSelectorViewController.swift */,
 				B99E3C2F2314BB5300C03948 /* DeviceInfoViewController.swift */,
 			);
 			path = DeviceInfoController;
@@ -533,7 +534,6 @@
 		B9CA5067230F3CEA007E31D8 /* DataStreamControllers */ = {
 			isa = PBXGroup;
 			children = (
-				B9CA506A230F3D38007E31D8 /* DataStreamViewController.swift */,
 				B9677DA9236CBCD60015E6EA /* DataStreamContainerViewController.swift */,
 				B9677DA3236914E20015E6EA /* PlotPagesView.swift */,
 			);
@@ -706,7 +706,6 @@
 				B9CA5044230C3725007E31D8 /* MSWeakTimer.m in Sources */,
 				B97BC49522FB3EEE00858CA9 /* SavedDevicesViewController.swift in Sources */,
 				B97BC4AE22FB4C7100858CA9 /* UARTViewController.swift in Sources */,
-				B9CA506B230F3D38007E31D8 /* DataStreamViewController.swift in Sources */,
 				B90147222347DF240001E90C /* UARTData+CoreDataClass.swift in Sources */,
 				B97BC4F322FCA27900858CA9 /* PastDataViewController.swift in Sources */,
 				B99E3C58232AA53A00C03948 /* UARTButtons.swift in Sources */,
@@ -719,6 +718,7 @@
 				B901471B2347DE5E0001E90C /* SavedData+CoreDataProperties.swift in Sources */,
 				B97BC4DB22FB683400858CA9 /* LogHelper.swift in Sources */,
 				B9CA5049230C7435007E31D8 /* ReleasesParser.swift in Sources */,
+				B924C5432385F2960013B0AB /* PeripheralInfoSelectorViewController.swift in Sources */,
 				B9014714234795BF0001E90C /* PersistenceService.swift in Sources */,
 				B94CD1F1230735C80077F77E /* HandoffManager.swift in Sources */,
 				B97BC4E222FB6AE400858CA9 /* AlertHelper.swift in Sources */,
