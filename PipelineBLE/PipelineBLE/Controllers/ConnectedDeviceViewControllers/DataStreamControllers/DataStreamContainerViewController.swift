@@ -270,7 +270,7 @@ class DataStreamContainerViewController: UIViewController {
                     self.basicDataSet[blePeripheral.identifier] = [[]]
                 }
             }
-        } else if let blePeripheral = blePeripheral {
+        } else if let blePeripheral = BleManager.shared.connectedPeripherals().first {
             //  Assign a line for the peripheral
             lineDashForPeripheral[blePeripheral.identifier] = lineDashes.first!
             
@@ -301,6 +301,15 @@ class DataStreamContainerViewController: UIViewController {
             self.dataCounter[blePeripheral.identifier] = 0
             self.currentPlot[blePeripheral.identifier] = 0
             self.basicDataSet[blePeripheral.identifier] = [[]]
+        } else{
+            //  Provide a warning that uart wasn't enabled
+            let alert = UIAlertController(title: "Alert", message: "Unable to initialize UART. Please try again. If the problem persists, please report this issue.", preferredStyle: .alert)
+            let action = UIAlertAction(title: "Ok", style: .default, handler: nil)
+            alert.addAction(action)
+            self.present(alert, animated: true, completion: nil)
+            
+            //  Log the error
+            DLog("Unable to initialize UART")
         }
     }
     
@@ -552,7 +561,7 @@ class DataStreamContainerViewController: UIViewController {
             for peripheral in BleManager.shared.connectedPeripherals(){
                 //  Will be sending the number of samples first, then run x times
                 self.send(message: "t"+String(samples)+"\n", peripheral: peripheral)
-                usleep(500000)
+                //usleep(500000)
                 self.send(message: "r"+String(runs)+"\n", peripheral: peripheral)
                 
                 //  Now let's change the button that is present on the top right
