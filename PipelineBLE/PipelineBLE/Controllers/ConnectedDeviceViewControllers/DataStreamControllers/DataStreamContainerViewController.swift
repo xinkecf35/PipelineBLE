@@ -561,7 +561,7 @@ class DataStreamContainerViewController: UIViewController {
             for peripheral in BleManager.shared.connectedPeripherals(){
                 //  Will be sending the number of samples first, then run x times
                 self.send(message: "t"+String(samples)+"\n", peripheral: peripheral)
-                //usleep(500000)
+                usleep(500000)
                 self.send(message: "r"+String(runs)+"\n", peripheral: peripheral)
                 
                 //  Now let's change the button that is present on the top right
